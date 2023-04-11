@@ -2,6 +2,7 @@ package ui.mainContainer
 
 import controller.MainController
 import androidx.compose.runtime.Composable
+import ui.cliente.ClienteScreen
 import ui.empleado.EmpleadoScreen
 import ui.producto.ProductoScreen
 import ui.promocion.PromocionScreen
@@ -41,4 +42,7 @@ fun MainContainer() {
 
     // Sucursal screen
     SucursalScreen()
+
+    // Cliente screen
+    ClienteScreen()
 }
