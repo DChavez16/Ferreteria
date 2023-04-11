@@ -1,6 +1,7 @@
 import ui.mainContainer.MainContainer
 import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.window.*
+import ui.proveedor.ProveedorScreen
 
 fun main() = application {
     Window(
