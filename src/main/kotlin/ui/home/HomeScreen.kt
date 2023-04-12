@@ -1,8 +1,8 @@
-package ui.mainContainer
+package ui.home
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun MakeVentaScreen() {
+fun HomeScreen() {
 
 }

@@ -4,6 +4,7 @@ import controller.MainController
 import androidx.compose.runtime.Composable
 import ui.cliente.ClienteScreen
 import ui.empleado.EmpleadoScreen
+import ui.home.MakeVentaScreen
 import ui.producto.ProductoScreen
 import ui.promocion.PromocionScreen
 import ui.proveedor.ProveedorScreen
@@ -30,9 +31,6 @@ fun MainContainer() {
 
     // Venta screen
     VentaScreen()
-
-    // Make Venta screen
-    MakeVentaScreen()
 
     // Reporte screen
     ReporteScreen()
