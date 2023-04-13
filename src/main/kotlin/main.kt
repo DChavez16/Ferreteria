@@ -1,16 +1,16 @@
 import ui.mainContainer.MainContainer
 import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.window.*
-import ui.proveedor.ProveedorScreen
 
 fun main() = application {
     Window(
         onCloseRequest = { exitApplication() },
         title = "Ferreteria",
-        state = WindowState(placement = WindowPlacement.Maximized)
+        state = WindowState(placement = WindowPlacement.Fullscreen),
+        resizable = false
     ) {
         MaterialTheme {
-            MainContainer()
+            MainContainer { exitApplication() }
         }
     }
 }

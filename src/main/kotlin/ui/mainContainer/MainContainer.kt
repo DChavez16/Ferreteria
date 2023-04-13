@@ -1,46 +1,69 @@
 package ui.mainContainer
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.MaterialTheme
 import controller.MainController
 import androidx.compose.runtime.Composable
-import ui.cliente.ClienteScreen
-import ui.empleado.EmpleadoScreen
-import ui.home.MakeVentaScreen
-import ui.producto.ProductoScreen
-import ui.promocion.PromocionScreen
-import ui.proveedor.ProveedorScreen
-import ui.reporte.ReporteScreen
-import ui.sucursal.SucursalScreen
-import ui.venta.VentaScreen
+import data.util.NavigationOptions
+import data.util.UserType
+import ui.home.HomeScreen
 
 
 /**
  * MainContainer main composable
  */
 @Composable
-fun MainContainer() {
+fun MainContainer(closeProgram: () -> Unit) {
     val mainController = MainController()
 
-    // Proveedor screen
-    ProveedorScreen()
-
-    // Producto screen
-    ProductoScreen()
-
-    // Promocion screen
-    PromocionScreen()
-
-    // Venta screen
-    VentaScreen()
-
-    // Reporte screen
-    ReporteScreen()
-
-    // Empleado Screen
-    EmpleadoScreen()
-
-    // Sucursal screen
-    SucursalScreen()
-
-    // Cliente screen
-    ClienteScreen()
+    Column {
+        TopBar()
+        Row {
+            NavigationSideBar(NavigationOptions(UserType.ADMINISTRATOR).navigationList, closeProgram)
+            HomeScreen()
+        }
+    }
 }
+
+
+/*
+Main container preview
+*/
+@Preview
+@Composable
+fun MainContainerPreview() {
+    MaterialTheme {
+        MainContainer {}
+    }
+}
+
+/* Program screens
+// Home screen
+HomeScreen()
+
+// Venta screen
+VentaScreen()
+
+// Producto screen
+ProductoScreen()
+
+// Promocion screen
+PromocionScreen()
+
+// Proveedor screen
+ProveedorScreen()
+
+// Reporte screen
+ReporteScreen()
+
+// Empleado Screen
+EmpleadoScreen()
+
+// Sucursal screen
+SucursalScreen()
+
+// Cliente screen
+ClienteScreen()
+*/
