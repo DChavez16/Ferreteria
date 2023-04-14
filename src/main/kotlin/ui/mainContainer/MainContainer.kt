@@ -1,5 +1,6 @@
 package ui.mainContainer
 
+import androidx.compose.animation.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,12 +24,14 @@ import ui.venta.VentaScreen
 /**
  * MainContainer main composable
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainContainer(closeProgram: () -> Unit) {
     val mainController = MainController()
+    val userType = UserType.ADMINISTRATOR
 
     // State variable that defines which screen is showing in the main container
-    var currentMainContainerContent by remember { mutableStateOf<NavigationOptionsCodes>(NavigationOptionsCodes.INICIO) }
+    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.INICIO) }
 
     Column {
         // Draws the top bar of the program, it'll be static during all the program's lifecycle
@@ -36,24 +39,45 @@ fun MainContainer(closeProgram: () -> Unit) {
         Row {
             // Draws the navigation sidebar of the program, it'll be static during all the program's lifecycle
             NavigationSideBar(
-                navigationOptionsList = NavigationOptions(UserType.ADMINISTRATOR).navigationList,
+                navigationOptionsList = NavigationOptions(userType).navigationList,
+                userType = userType,
                 closeProgram = closeProgram,
                 selectedItem = currentMainContainerContent,
                 onNavigationOptionClicked = { currentMainContainerContent = it }
             )
-            // Draws the corresponding screen depending on the current navigation option selected at the sidebar
-            when (currentMainContainerContent) {
-                NavigationOptionsCodes.INICIO -> HomeScreen()
-                NavigationOptionsCodes.VENTAS -> VentaScreen()
-                NavigationOptionsCodes.PRODUCTO -> ProductoScreen()
-                NavigationOptionsCodes.PROMOCION -> PromocionScreen()
-                NavigationOptionsCodes.PROVEEDOR -> ProveedorScreen()
-                NavigationOptionsCodes.REPORTE -> ReporteScreen()
-                NavigationOptionsCodes.EMPLEADO -> EmpleadoScreen()
-                NavigationOptionsCodes.SUCURSAL -> SucursalScreen()
-                NavigationOptionsCodes.CLIENTE -> ClienteScreen()
+            /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
+               Uses a vertical slide in animation towards the top or bottom of the screen
+               depending on the navigation option's position in the sidebar */
+            AnimatedContent(
+                targetState = currentMainContainerContent,
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        slideInVertically { height -> height } + fadeIn() with
+                                slideOutVertically { height -> -height } + fadeOut()
+                    } else {
+                        slideInVertically { height -> -height } + fadeIn() with
+                                slideOutVertically { height -> height } + fadeOut()
+                    }
+                }
+            ) {
+                screenContainer(currentScreen = it)
             }
         }
+    }
+}
+
+@Composable
+fun screenContainer(currentScreen: NavigationOptionsCodes) {
+    when (currentScreen) {
+        NavigationOptionsCodes.INICIO -> HomeScreen()
+        NavigationOptionsCodes.VENTAS -> VentaScreen()
+        NavigationOptionsCodes.PRODUCTO -> ProductoScreen()
+        NavigationOptionsCodes.PROMOCION -> PromocionScreen()
+        NavigationOptionsCodes.PROVEEDOR -> ProveedorScreen()
+        NavigationOptionsCodes.REPORTE -> ReporteScreen()
+        NavigationOptionsCodes.EMPLEADO -> EmpleadoScreen()
+        NavigationOptionsCodes.SUCURSAL -> SucursalScreen()
+        NavigationOptionsCodes.CLIENTE -> ClienteScreen()
     }
 }
 

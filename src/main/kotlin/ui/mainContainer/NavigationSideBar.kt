@@ -27,6 +27,7 @@ import data.util.UserType
 @Composable
 fun NavigationSideBar(
     navigationOptionsList: List<NavigationOption>,
+    userType: UserType,
     closeProgram: () -> Unit,
     selectedItem: NavigationOptionsCodes,
     onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit
@@ -46,7 +47,7 @@ fun NavigationSideBar(
                     )
                 }
             }
-            UserInfo(closeProgram)
+            UserInfo(userType, closeProgram)
         }
     }
 }
@@ -105,11 +106,13 @@ private fun NavigationOptionItem(
 }
 
 @Composable
-private fun UserInfo(closeProgram: () -> Unit) {
+private fun UserInfo(userType: UserType, closeProgram: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Daniel Chavez", style = MaterialTheme.typography.body1)
-        Spacer(Modifier.height(4.dp))
-        Text(text = "Administrador", style = MaterialTheme.typography.body1)
+        if(userType == UserType.ADMINISTRATOR) {
+            Spacer(Modifier.height(4.dp))
+            Text(text = "Administrador", style = MaterialTheme.typography.body1)
+        }
         Spacer(Modifier.height(8.dp))
         Button(
             onClick = closeProgram,
@@ -143,9 +146,10 @@ Navigation sidebar preview
 fun NavigationSideBarPreview() {
     MaterialTheme {
         NavigationSideBar(
-            NavigationOptions(UserType.ADMINISTRATOR).navigationList,
-            {},
-            NavigationOptionsCodes.INICIO,
-            {})
+            navigationOptionsList = NavigationOptions(UserType.ADMINISTRATOR).navigationList,
+            userType = UserType.CASHIER,
+            closeProgram = {},
+            selectedItem = NavigationOptionsCodes.INICIO,
+            onNavigationOptionClicked = {})
     }
 }
