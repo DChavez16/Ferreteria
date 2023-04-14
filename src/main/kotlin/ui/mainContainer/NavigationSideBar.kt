@@ -1,5 +1,8 @@
 package ui.mainContainer
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,25 +20,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import data.util.NavigationOption
 import data.util.NavigationOptions
+import data.util.NavigationOptionsCodes
 import data.util.UserType
 
 
-// TODO Add functionality
-// TODO Modify to use SelectableGroup modifier
-
 @Composable
-fun NavigationSideBar(navigationOptionsList: List<NavigationOption>, closeProgram: () -> Unit) {
+fun NavigationSideBar(
+    navigationOptionsList: List<NavigationOption>,
+    closeProgram: () -> Unit,
+    selectedItem: NavigationOptionsCodes,
+    onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit
+) {
     Surface(
-        color = MaterialTheme.colors.secondary,
-        elevation = 8.dp
+        color = MaterialTheme.colors.secondary, elevation = 8.dp
     ) {
         Column(
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxHeight().width(200.dp)
+            verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight().width(200.dp)
         ) {
             LazyColumn(contentPadding = PaddingValues(0.dp)) {
                 items(navigationOptionsList) { navigationOption ->
-                    NavigationOptionItem(navigationOption)
+                    NavigationOptionItem(
+                        navigationOption = navigationOption,
+                        isItemSelected = { selectedItem == it },
+                        onNavigationOptionClicked = onNavigationOptionClicked
+                    )
                 }
             }
             UserInfo(closeProgram)
@@ -44,23 +52,54 @@ fun NavigationSideBar(navigationOptionsList: List<NavigationOption>, closeProgra
 }
 
 @Composable
-private fun NavigationOptionItem(navigationOption: NavigationOption) {
-    var selected by remember { mutableStateOf(false) }
+private fun NavigationOptionItem(
+    navigationOption: NavigationOption,
+    isItemSelected: (NavigationOptionsCodes) -> Boolean,
+    onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit
+) {
+    val isSelected = isItemSelected(navigationOption.code)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().height(50.dp).clickable { selected = !selected }
-            .background(if (selected) MaterialTheme.colors.secondaryVariant else MaterialTheme.colors.secondary)
-    ) {
+        modifier = Modifier.fillMaxWidth()
+            .height(
+                if (isSelected) 60.dp
+                else 50.dp
+            )
+            .background(
+                if (isSelected) MaterialTheme.colors.secondaryVariant
+                else MaterialTheme.colors.secondary
+            )
+            .clickable {
+                onNavigationOptionClicked(navigationOption.code)
+            }
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessHigh
+                )
+            )
+            .padding(vertical = 10.dp)
+    )
+    {
         Image(
             painter = painterResource(navigationOption.imagePath),
-            modifier = Modifier.fillMaxHeight().padding(10.dp).padding(horizontal = 10.dp),
+            modifier = Modifier
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessHigh
+                    )
+                )
+                .padding(
+                    horizontal =
+                    if (isSelected) 10.dp
+                    else 15.dp
+                ),
             contentDescription = null
         )
-        Spacer(Modifier.width(4.dp))
         Text(
-            text = navigationOption.name,
-            style = MaterialTheme.typography.body1
+            text = navigationOption.name, style = MaterialTheme.typography.body1
         )
     }
 }
@@ -92,7 +131,7 @@ Navigation item preview
 @Composable
 fun NavigationOptionItemPreview() {
     MaterialTheme {
-        NavigationOptionItem(NavigationOptions(UserType.ADMINISTRATOR).navigationList[4])
+        NavigationOptionItem(NavigationOptions(UserType.ADMINISTRATOR).navigationList[4], { false }) {}
     }
 }
 
@@ -103,6 +142,10 @@ Navigation sidebar preview
 @Composable
 fun NavigationSideBarPreview() {
     MaterialTheme {
-        NavigationSideBar(NavigationOptions(UserType.ADMINISTRATOR).navigationList) {}
+        NavigationSideBar(
+            NavigationOptions(UserType.ADMINISTRATOR).navigationList,
+            {},
+            NavigationOptionsCodes.INICIO,
+            {})
     }
 }
