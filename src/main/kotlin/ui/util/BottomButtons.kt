@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 fun BottomButtons(
     twoButtons: Boolean,
     firstButtonText: String,
-    firstButtonAction: Unit,
+    firstButtonAction: () -> Unit,
     secondButtonText: String = "",
-    secondButtonAction: Unit = Unit,
+    secondButtonAction: () -> Unit = {},
     firstButtonEnabled: Boolean = true,
     secondButtonEnabled: Boolean = true
 ) {
@@ -25,12 +25,12 @@ fun BottomButtons(
         modifier = Modifier.padding(8.dp).fillMaxWidth()
     ) {
         if (twoButtons) {
-            OutlinedButton(onClick = { secondButtonAction }, enabled = secondButtonEnabled) {
+            OutlinedButton(onClick = secondButtonAction, enabled = secondButtonEnabled) {
                 Text(text = secondButtonText, style = MaterialTheme.typography.button)
             }
             Spacer(Modifier.width(10.dp))
         }
-        Button(onClick = { firstButtonAction }, enabled = firstButtonEnabled) {
+        Button(onClick = firstButtonAction, enabled = firstButtonEnabled) {
             Text(text = firstButtonText, style = MaterialTheme.typography.button)
         }
     }
@@ -42,7 +42,7 @@ fun BottomButtons(
 @Composable
 private fun BottomButtonsOneButtonPreview() {
     MaterialTheme {
-        BottomButtons(false, "Agregar", Unit)
+        BottomButtons(false, "Agregar", {})
     }
 }
 
@@ -50,6 +50,6 @@ private fun BottomButtonsOneButtonPreview() {
 @Composable
 private fun BottomButtonsPreview() {
     MaterialTheme {
-        BottomButtons(true, "Limpiar campos", Unit, "Aceptar", Unit, secondButtonEnabled = false)
+        BottomButtons(true, "Limpiar campos", {}, "Aceptar", {}, secondButtonEnabled = false)
     }
 }

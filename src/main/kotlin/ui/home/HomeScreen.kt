@@ -28,10 +28,11 @@ import kotlin.random.Random
 @Composable
 fun HomeScreen() {
     Surface(color = MaterialTheme.colors.background) {
-        Column(verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxHeight()) {
+        Column(verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxHeight().padding(16.dp)) {
             Row(Modifier.fillMaxWidth().weight(1f)) {
                 // Productos incluidos en la venta
                 SelectedProductsList(Modifier.weight(2f), ProductoTestList)
+                Spacer(Modifier.width(16.dp))
 
                 // Productos disponibles en el inventario
                 AvailableProductsList(Modifier.weight(1f), ProductoTestList)
@@ -41,9 +42,9 @@ fun HomeScreen() {
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = "Aceptar",
-                firstButtonAction = Unit,
+                firstButtonAction = {},
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = Unit,
+                secondButtonAction = {},
                 firstButtonEnabled = false
             )
         }
@@ -52,12 +53,12 @@ fun HomeScreen() {
 
 @Composable
 private fun SelectedProductsList(modifier: Modifier = Modifier, productoList: List<Producto>) {
-    Column(modifier = modifier.fillMaxHeight().padding(16.dp)) {
+    Column(modifier = modifier.fillMaxHeight()) {
         // Selected products list header
         SelectedProductListHeader()
-        Divider(color = Color.Gray, thickness = Dp.Hairline, modifier = Modifier.padding(horizontal = 10.dp))
+        Divider(color = Color.Gray, thickness = Dp.Hairline, modifier = Modifier.padding(horizontal = 4.dp))
         // Selected products list content
-        LazyColumn(modifier.weight(1f)) {
+        LazyColumn(modifier.weight(1f).padding(8.dp)) {
             items(productoList) {
                 SelectedProductListContent(it)
             }
@@ -69,22 +70,22 @@ private fun SelectedProductsList(modifier: Modifier = Modifier, productoList: Li
 
 @Composable
 private fun SelectedProductListHeader() {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
         Text(
             text = "Producto",
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             modifier = Modifier.weight(3f),
-            textAlign = TextAlign.Left
+            textAlign = TextAlign.Center
         )
         Text(
             text = "Cantidad",
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
             text = "Precio",
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
@@ -186,7 +187,7 @@ private fun AvailableProductsListItem(producto: Producto) {
             )
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                    Icon(painterResource("icons/minus.png"), contentDescription = null, modifier = Modifier.padding(10.dp))
+                    Icon(painterResource("icons/minus.png"), contentDescription = null, modifier = Modifier.padding(8.dp))
                 }
                 Text(
                     text = "1",
@@ -195,7 +196,7 @@ private fun AvailableProductsListItem(producto: Producto) {
                     textAlign = TextAlign.Center
                 )
                 IconButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                    Icon(painterResource("icons/add.png"), contentDescription = null, modifier = Modifier.padding(10.dp))
+                    Icon(painterResource("icons/add.png"), contentDescription = null, modifier = Modifier.padding(8.dp))
                 }
             }
             Button(onClick = {}, modifier = Modifier.fillMaxWidth()) {

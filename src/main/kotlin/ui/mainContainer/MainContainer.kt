@@ -28,10 +28,10 @@ import ui.venta.VentaScreen
 @Composable
 fun MainContainer(closeProgram: () -> Unit) {
     val mainController = MainController()
-    var userType by remember { mutableStateOf(UserType.CASHIER) }
+    var userType by remember { mutableStateOf(UserType.ADMINISTRATOR) }
 
     // State variable that defines which screen is showing in the main container
-    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.INICIO) }
+    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.PRODUCTO) }
 
     Column {
         // Draws the top bar of the program, it'll be static during all the program's lifecycle
