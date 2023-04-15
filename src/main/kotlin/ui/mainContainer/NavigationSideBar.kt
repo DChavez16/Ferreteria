@@ -33,7 +33,8 @@ fun NavigationSideBar(
     userType: UserType,
     closeProgram: () -> Unit,
     selectedItem: NavigationOptionsCodes,
-    onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit
+    onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit,
+    onUserInfoClicked: () -> Unit
 ) {
     Surface(
         color = MaterialTheme.colors.secondary, elevation = 8.dp
@@ -60,7 +61,7 @@ fun NavigationSideBar(
                         }
                     }
                 }
-                UserInfo(userType, closeProgram)
+                UserInfo(userType, closeProgram, onUserInfoClicked)
             }
             Divider(color = Color.Gray, modifier = Modifier.fillMaxHeight().width(Dp.Hairline))
         }
@@ -122,9 +123,9 @@ private fun NavigationOptionItem(
 }
 
 @Composable
-private fun UserInfo(userType: UserType, closeProgram: () -> Unit) {
+private fun UserInfo(userType: UserType, closeProgram: () -> Unit, onUserInfoClicked: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Daniel Chavez", style = MaterialTheme.typography.body1)
+        Text(text = "Daniel Chavez", style = MaterialTheme.typography.body1, modifier = Modifier.clickable { onUserInfoClicked() })
         if (userType == UserType.ADMINISTRATOR) {
             Spacer(Modifier.height(4.dp))
             Text(text = "Administrador", style = MaterialTheme.typography.body1)
@@ -166,6 +167,8 @@ fun NavigationSideBarPreview() {
             userType = UserType.CASHIER,
             closeProgram = {},
             selectedItem = NavigationOptionsCodes.INICIO,
-            onNavigationOptionClicked = {})
+            onNavigationOptionClicked = {},
+            onUserInfoClicked = {}
+        )
     }
 }

@@ -28,7 +28,7 @@ import ui.venta.VentaScreen
 @Composable
 fun MainContainer(closeProgram: () -> Unit) {
     val mainController = MainController()
-    val userType = UserType.ADMINISTRATOR
+    var userType by remember { mutableStateOf(UserType.CASHIER) }
 
     // State variable that defines which screen is showing in the main container
     var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.INICIO) }
@@ -43,7 +43,10 @@ fun MainContainer(closeProgram: () -> Unit) {
                 userType = userType,
                 closeProgram = closeProgram,
                 selectedItem = currentMainContainerContent,
-                onNavigationOptionClicked = { currentMainContainerContent = it }
+                onNavigationOptionClicked = { currentMainContainerContent = it },
+                onUserInfoClicked = {
+                    userType = if (userType == UserType.CASHIER) UserType.ADMINISTRATOR else UserType.CASHIER
+                }
             )
             /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
                Uses a vertical slide in animation towards the top or bottom of the screen
