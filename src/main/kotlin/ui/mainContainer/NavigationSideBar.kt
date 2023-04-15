@@ -16,7 +16,10 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import data.util.NavigationOption
 import data.util.NavigationOptions
@@ -35,19 +38,31 @@ fun NavigationSideBar(
     Surface(
         color = MaterialTheme.colors.secondary, elevation = 8.dp
     ) {
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight().width(200.dp)
-        ) {
-            LazyColumn(contentPadding = PaddingValues(0.dp)) {
-                items(navigationOptionsList) { navigationOption ->
-                    NavigationOptionItem(
-                        navigationOption = navigationOption,
-                        isItemSelected = { selectedItem == it },
-                        onNavigationOptionClicked = onNavigationOptionClicked
-                    )
+        Row {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight().width(200.dp)
+            ) {
+                LazyColumn(contentPadding = PaddingValues(0.dp)) {
+                    items(navigationOptionsList) { navigationOption ->
+                        Column {
+                            if (navigationOption.code == NavigationOptionsCodes.PRODUCTO) {
+                                Divider(
+                                    color = MaterialTheme.colors.secondaryVariant,
+                                    thickness = Dp.Hairline,
+                                    modifier = Modifier.padding(horizontal = 10.dp)
+                                )
+                            }
+                            NavigationOptionItem(
+                                navigationOption = navigationOption,
+                                isItemSelected = { selectedItem == it },
+                                onNavigationOptionClicked = onNavigationOptionClicked
+                            )
+                        }
+                    }
                 }
+                UserInfo(userType, closeProgram)
             }
-            UserInfo(userType, closeProgram)
+            Divider(color = Color.Gray, modifier = Modifier.fillMaxHeight().width(Dp.Hairline))
         }
     }
 }
@@ -85,6 +100,8 @@ private fun NavigationOptionItem(
     {
         Image(
             painter = painterResource(navigationOption.imagePath),
+            contentDescription = null,
+            contentScale = ContentScale.FillHeight,
             modifier = Modifier
                 .animateContentSize(
                     animationSpec = spring(
@@ -96,8 +113,7 @@ private fun NavigationOptionItem(
                     horizontal =
                     if (isSelected) 10.dp
                     else 15.dp
-                ),
-            contentDescription = null
+                )
         )
         Text(
             text = navigationOption.name, style = MaterialTheme.typography.body1
@@ -109,7 +125,7 @@ private fun NavigationOptionItem(
 private fun UserInfo(userType: UserType, closeProgram: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Daniel Chavez", style = MaterialTheme.typography.body1)
-        if(userType == UserType.ADMINISTRATOR) {
+        if (userType == UserType.ADMINISTRATOR) {
             Spacer(Modifier.height(4.dp))
             Text(text = "Administrador", style = MaterialTheme.typography.body1)
         }

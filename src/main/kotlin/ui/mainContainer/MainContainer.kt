@@ -67,7 +67,7 @@ fun MainContainer(closeProgram: () -> Unit) {
 }
 
 @Composable
-fun screenContainer(currentScreen: NavigationOptionsCodes) {
+private fun screenContainer(currentScreen: NavigationOptionsCodes) {
     when (currentScreen) {
         NavigationOptionsCodes.INICIO -> HomeScreen()
         NavigationOptionsCodes.VENTAS -> VentaScreen()
@@ -87,7 +87,7 @@ Main container preview
 */
 @Preview
 @Composable
-fun MainContainerPreview() {
+private fun MainContainerPreview() {
     MaterialTheme {
         MainContainer {}
     }
