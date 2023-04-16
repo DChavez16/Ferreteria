@@ -31,7 +31,7 @@ fun MainContainer(closeProgram: () -> Unit) {
     var userType by remember { mutableStateOf(UserType.ADMINISTRATOR) }
 
     // State variable that defines which screen is showing in the main container
-    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.PRODUCTO) }
+    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.INICIO) }
 
     Column {
         // Draws the top bar of the program, it'll be static during all the program's lifecycle
