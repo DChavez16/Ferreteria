@@ -18,11 +18,12 @@ fun BottomButtons(
     secondButtonText: String = "",
     secondButtonAction: () -> Unit = {},
     firstButtonEnabled: Boolean = true,
-    secondButtonEnabled: Boolean = true
+    secondButtonEnabled: Boolean = true,
+    modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = if (twoButtons) Arrangement.End else Arrangement.Start,
-        modifier = Modifier.padding(8.dp).fillMaxWidth()
+        modifier = modifier.padding(8.dp).fillMaxWidth()
     ) {
         if (twoButtons) {
             OutlinedButton(onClick = secondButtonAction, enabled = secondButtonEnabled) {

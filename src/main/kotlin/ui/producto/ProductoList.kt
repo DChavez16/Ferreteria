@@ -2,7 +2,6 @@ package ui.producto
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,7 +21,11 @@ import data.model.Producto
 import ui.util.BottomButtons
 
 @Composable
-fun ProductoList(productoList: List<Producto>, onClickA: () -> Unit) {
+fun ProductoList(
+    productoList: List<Producto>,
+    onAddProductoClicked: () -> Unit,
+    onEditProductoClicked: (Producto) -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize().padding(32.dp)) {
         Surface(modifier = Modifier.weight(1f)) {
             Column(modifier = Modifier.fillMaxSize().border(width = Dp.Hairline, color = Color.Gray)) {
@@ -30,14 +33,14 @@ fun ProductoList(productoList: List<Producto>, onClickA: () -> Unit) {
                 ProductoListContent(
                     productoList = productoList,
                     modifier = Modifier.weight(1f),
-                    onItemEditClick = onClickA
+                    onEditProductoClicked = onEditProductoClicked
                 )
             }
         }
         BottomButtons(
             twoButtons = false,
             firstButtonText = "Agregar",
-            firstButtonAction = onClickA
+            firstButtonAction = onAddProductoClicked
         )
     }
 }
@@ -76,13 +79,17 @@ private fun ProductoListHeader() {
 }
 
 @Composable
-private fun ProductoListContent(productoList: List<Producto>, modifier: Modifier = Modifier, onItemEditClick: () -> Unit) {
+private fun ProductoListContent(
+    productoList: List<Producto>,
+    modifier: Modifier = Modifier,
+    onEditProductoClicked: (Producto) -> Unit
+) {
     Box {
         val state = rememberLazyListState()
 
         LazyColumn(modifier = modifier, state = state) {
             items(productoList) {
-                ProductoListContentItem(it, onItemEditClick)
+                ProductoListContentItem(it, onEditProductoClicked)
                 Divider(color = Color.Gray, thickness = Dp.Hairline)
             }
         }
@@ -95,7 +102,7 @@ private fun ProductoListContent(productoList: List<Producto>, modifier: Modifier
 }
 
 @Composable
-private fun ProductoListContentItem(producto: Producto, onItemEditClick: () -> Unit) {
+private fun ProductoListContentItem(producto: Producto, onEditProductoClicked: (Producto) -> Unit) {
     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = "${producto.id}",
@@ -121,7 +128,7 @@ private fun ProductoListContentItem(producto: Producto, onItemEditClick: () -> U
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )
-        IconButton(modifier = Modifier.weight(0.5f).height(20.dp), onClick = onItemEditClick) {
+        IconButton(modifier = Modifier.weight(0.5f).height(20.dp), onClick = { onEditProductoClicked(producto) }) {
             Icon(imageVector = Icons.Default.Edit, contentDescription = null)
         }
     }
