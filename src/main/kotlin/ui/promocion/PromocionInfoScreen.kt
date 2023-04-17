@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import data.model.Producto
 import data.model.ProductoTestList
 import data.model.Promocion
+import data.util.decimalFormat
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
@@ -59,7 +57,11 @@ private fun PromocionForm(
     modifier: Modifier = Modifier
 ) {
     var promocionDescription by remember { mutableStateOf(promocion?.description ?: "") }
-    var promocionDiscount by remember { mutableStateOf("${promocion?.descuento}" ?: "") }
+    var promocionDiscount by remember {
+        mutableStateOf(
+            if (promocion?.descuento != null) (promocion.descuento * 100).toInt().toString() else ""
+        )
+    }
     var promocionAvailability by remember { mutableStateOf(promocion?.disponibilidad ?: false) }
     var promocionProductos by remember { mutableStateOf(promocion?.productos ?: emptyList()) }
 
@@ -67,20 +69,33 @@ private fun PromocionForm(
         Row(modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = 16.dp)) {
             Column(modifier = Modifier.fillMaxHeight().weight(2f)) {
                 // Draws the editable form for promotions
-                PromocionFormContent(modifier = Modifier.weight(3f))
+                PromocionFormContent(modifier = Modifier.weight(3f),
+                    description = promocionDescription,
+                    onDescriptionValueChange = { newValue -> promocionDescription = newValue },
+                    descuento = promocionDiscount,
+                    onDescuentoValueChange = { newValue ->
+                        // Validate if the introduced discount is a valid Double type value
+                        try {
+                            if (newValue.toInt() <= 100.0 && newValue.toDouble() % 1 == 0.0) {
+                                promocionDiscount = newValue.toInt().toString()
+                            }
+                        } catch (_: NumberFormatException) {
+                            promocionDiscount = ""
+                        }
+                    },
+                    disponibilidad = promocionAvailability,
+                    onDisponibilidadValueChange = { newValue -> promocionAvailability = newValue })
 
                 // Draws the list of products included in the promotion
                 PromocionProductsList(
                     productsList = promocionProductos,
-                    // TODO Temporal fixed argument, change to pass promocionDicount when it's validated to be of Double type
-                    currentPromotionDiscount = ListaDescuentos.random(),
+                    currentPromotionDiscount = if (promocionDiscount == "") 0 else promocionDiscount.toInt(),
                     modifier = Modifier.weight(2f)
                 )
             }
 
             // List of available products to add to the promotion
-            AvailableProductsList(
-                modifier = Modifier.weight(1f),
+            AvailableProductsList(modifier = Modifier.weight(1f),
                 productoList = ProductoTestList,
                 quantitySelectionEnabled = false,
                 onAddProductoClick = { producto, _ ->
@@ -120,8 +135,7 @@ private fun PromocionForm(
                     promocionProductos = emptyList()
                 },
                 firstButtonEnabled = validateFields(
-                    promocionDescription,
-                    promocionDiscount
+                    promocionDescription, promocionDiscount
                 ),
                 modifier = Modifier.weight(1f)
             )
@@ -130,17 +144,69 @@ private fun PromocionForm(
 }
 
 @Composable
-private fun PromocionFormContent(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        // TODO Implement form
+private fun PromocionFormContent(
+    modifier: Modifier = Modifier,
+    description: String,
+    onDescriptionValueChange: (String) -> Unit,
+    descuento: String,
+    onDescuentoValueChange: (String) -> Unit,
+    disponibilidad: Boolean,
+    onDisponibilidadValueChange: (Boolean) -> Unit
+) {
+    Column(modifier.fillMaxWidth(0.5f), verticalArrangement = Arrangement.Center) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        ) {
+            Text(text = "Descripcion:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            OutlinedTextField(
+                value = description,
+                onValueChange = onDescriptionValueChange,
+                singleLine = true,
+                modifier = Modifier.weight(2f)
+            )
+        }
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        ) {
+            Text(text = "Descuento:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(2f)) {
+                OutlinedTextField(
+                    value = descuento,
+                    onValueChange = onDescuentoValueChange,
+                    singleLine = true,
+                    textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                    modifier = Modifier.weight(8f)
+                )
+                Text(
+                    text = " %",
+                    style = MaterialTheme.typography.h6,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(2f)
+                )
+            }
+        }
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Disponible:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Checkbox(
+                checked = disponibilidad,
+                onCheckedChange = onDisponibilidadValueChange,
+                modifier = Modifier.weight(2f).padding(0.dp)
+            )
+        }
     }
 }
 
 @Composable
 private fun PromocionProductsList(
-    productsList: List<Producto>,
-    currentPromotionDiscount: Double,
-    modifier: Modifier = Modifier
+    productsList: List<Producto>, currentPromotionDiscount: Int, modifier: Modifier = Modifier
 ) {
     Surface(modifier = modifier) {
         Column(modifier = Modifier.fillMaxHeight().border(width = Dp.Hairline, color = Color.Gray)) {
@@ -157,8 +223,7 @@ private fun PromocionProductsList(
                 }
 
                 VerticalScrollbar(
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    adapter = ScrollbarAdapter(scrollState = state)
+                    modifier = Modifier.align(Alignment.CenterEnd), adapter = ScrollbarAdapter(scrollState = state)
                 )
             }
         }
@@ -198,7 +263,7 @@ private fun PromocionProductsListHeader() {
 }
 
 @Composable
-private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscount: Double) {
+private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscount: Int) {
     Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text(
             text = "${producto.id}",
@@ -219,7 +284,7 @@ private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscou
             textAlign = TextAlign.Center
         )
         Text(
-            text = "${producto.precioVenta - (producto.precioVenta * currentPromotionDiscount)}",
+            text = decimalFormat(producto.precioVenta - (producto.precioVenta * (currentPromotionDiscount.toDouble() / 100))),
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.body2,
             textAlign = TextAlign.Center
@@ -231,20 +296,15 @@ private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscou
 /*
 * Helper methods
 */
-private fun validateFields(description: String, discount: String) =
-    description != "" && discount != ""
+private fun validateFields(description: String, discount: String) = description != "" && discount != ""
 
 private fun List<Producto>.addProducto(producto: Producto): List<Producto> {
     val newList = this.toMutableList()
 
     // Validate if is already in the list, if so, update the element content
-    if(!this.contains(producto)) {
+    if (!this.contains(producto)) {
         newList.add(producto)
     }
 
     return newList
 }
-
-private val ListaDescuentos = listOf(
-    0.05, 0.10, 0.15, 0.20, 0.25
-)

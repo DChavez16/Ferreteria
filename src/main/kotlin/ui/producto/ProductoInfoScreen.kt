@@ -143,7 +143,7 @@ fun ProductoInfoScreen(
 private fun EditTextField(
     value: String, onValueChange: (String) -> Unit, singleLine: Boolean = true, modifier: Modifier = Modifier
 ) {
-    TextField(
+    OutlinedTextField(
         value = value, onValueChange = onValueChange, maxLines = 5, singleLine = singleLine, modifier = modifier
     )
 }
