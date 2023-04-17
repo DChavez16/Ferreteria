@@ -1,26 +1,24 @@
 package ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import data.model.Producto
 import data.model.ProductoTestList
+import data.util.decimalFormat
+import ui.util.AvailableProductsList
 import ui.util.BottomButtons
-import java.text.DecimalFormat
 import kotlin.random.Random
 
 
@@ -32,20 +30,20 @@ fun HomeScreen() {
     Surface(color = MaterialTheme.colors.background) {
         Column(verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxHeight().padding(16.dp)) {
             Row(Modifier.fillMaxWidth().weight(1f)) {
-                // Productos incluidos en la venta
+                // Included products in the sell
                 SelectedProductsList(Modifier.weight(2f), selectedProductos, saleInfo)
                 Spacer(Modifier.width(16.dp))
 
-                // Productos disponibles en el inventario
-                AvailableProductsList(Modifier.weight(1f), ProductoTestList) { producto, quantity ->
+                // Available products for sale
+                AvailableProductsList(Modifier.weight(1f), ProductoTestList, quantitySelectionEnabled = true) { producto, quantity ->
                     selectedProductos = selectedProductos.toMutableList().addProducto(
-                        producto, quantity
+                        producto, quantity!!
                     )
                     saleInfo.update(selectedProductos)
                 }
             }
 
-            // Botones
+            // Bottom buttons to interact with the program
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = "Aceptar",
@@ -117,7 +115,7 @@ private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "$precioVenta",
+                text = decimalFormat(precioVenta),
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center
@@ -136,22 +134,19 @@ private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
 
 @Composable
 private fun SelectedProductListSaleInfo(saleInfo: SaleInfo) {
-    // Placeholder info
-    val df = DecimalFormat("#.##")
-
     Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
         // Sale subtotal
         Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
             Text("Subtotal:", style = MaterialTheme.typography.body1)
             Spacer(Modifier.width(5.dp))
-            Text(text = df.format(saleInfo.subTotal), style = MaterialTheme.typography.body2)
+            Text(text = decimalFormat(saleInfo.subTotal), style = MaterialTheme.typography.body2)
         }
         // Sale discount
         Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
             Text("Descuento:", style = MaterialTheme.typography.body1)
             Spacer(Modifier.width(5.dp))
             Text(
-                text = if (saleInfo.descuento > 0.0) df.format(saleInfo.descuento) else "~",
+                text = if (saleInfo.descuento > 0.0) decimalFormat(saleInfo.descuento) else "~",
                 style = MaterialTheme.typography.body2
             )
         }
@@ -159,72 +154,7 @@ private fun SelectedProductListSaleInfo(saleInfo: SaleInfo) {
         Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
             Text("Total:", style = MaterialTheme.typography.body1)
             Spacer(Modifier.width(5.dp))
-            Text(text = df.format(saleInfo.total), style = MaterialTheme.typography.body2)
-        }
-    }
-}
-
-@Composable
-private fun AvailableProductsList(
-    modifier: Modifier = Modifier, productoList: List<Producto>, onAddProductoClick: (Producto, Int) -> Unit
-) {
-    Column(modifier = modifier.fillMaxHeight()) {
-        Text(text = "Seleccionar cliente plaheholder")
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3), modifier = Modifier.weight(1f)
-        ) {
-            items(productoList) {
-                AvailableProductsListItem(it, onAddProductoClick)
-            }
-        }
-    }
-}
-
-@Composable
-private fun AvailableProductsListItem(producto: Producto, onAddProductoClick: (Producto, Int) -> Unit) {
-    var quantity by remember { mutableStateOf(1) }
-    var decreaseButtonEnabled by remember { mutableStateOf(false) }
-
-    Card(elevation = 4.dp, modifier = Modifier.padding(8.dp)) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Image(
-                painter = painterResource("icons/producto.png"),
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = producto.nombre,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body2,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                IconButton(
-                    onClick = { quantity--; decreaseButtonEnabled = validateDecreaseButtonEnabled(quantity) },
-                    modifier = Modifier.weight(1f),
-                    enabled = decreaseButtonEnabled
-                ) {
-                    Icon(
-                        painterResource("icons/minus.png"), contentDescription = null, modifier = Modifier.padding(8.dp)
-                    )
-                }
-                Text(
-                    text = "$quantity",
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.weight(2f).fillMaxHeight(),
-                    textAlign = TextAlign.Center
-                )
-                IconButton(
-                    onClick = { quantity++; decreaseButtonEnabled = validateDecreaseButtonEnabled(quantity) },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(painterResource("icons/add.png"), contentDescription = null, modifier = Modifier.padding(8.dp))
-                }
-            }
-            Button(onClick = { onAddProductoClick(producto, quantity) }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Agregar", textAlign = TextAlign.Center, style = MaterialTheme.typography.button)
-            }
+            Text(text = decimalFormat(saleInfo.total), style = MaterialTheme.typography.body2)
         }
     }
 }
@@ -233,7 +163,6 @@ private fun AvailableProductsListItem(producto: Producto, onAddProductoClick: (P
 /*
 Helper methods
 */
-private fun validateDecreaseButtonEnabled(quantityValue: Int) = quantityValue > 1
 
 private fun getDescuento() = if (Random.nextBoolean()) ListaDescuentos[(0..4).random()] else 0.0
 

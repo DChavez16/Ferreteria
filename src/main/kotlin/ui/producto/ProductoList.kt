@@ -103,7 +103,7 @@ private fun ProductoListContent(
 
 @Composable
 private fun ProductoListContentItem(producto: Producto, onEditProductoClicked: (Producto) -> Unit) {
-    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
         Text(
             text = "${producto.id}",
             modifier = Modifier.weight(1f),
