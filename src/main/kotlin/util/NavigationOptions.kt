@@ -1,4 +1,4 @@
-package data.util
+package util
 
 class NavigationOptions(userType: UserType) {
     val navigationList: List<NavigationOption> =

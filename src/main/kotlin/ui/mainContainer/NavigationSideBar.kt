@@ -21,10 +21,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import data.util.NavigationOption
-import data.util.NavigationOptions
-import data.util.NavigationOptionsCodes
-import data.util.UserType
+import util.NavigationOption
+import util.NavigationOptions
+import util.NavigationOptionsCodes
+import util.UserType
 
 
 @Composable

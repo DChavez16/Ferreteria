@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import data.model.Producto
 import data.model.ProductoTestList
-import data.util.decimalFormat
+import util.decimalFormat
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import kotlin.random.Random

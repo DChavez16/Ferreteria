@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import controller.MainController
-import data.util.NavigationOptions
-import data.util.NavigationOptionsCodes
-import data.util.UserType
+import util.NavigationOptions
+import util.NavigationOptionsCodes
+import util.UserType
 import ui.cliente.ClienteScreen
 import ui.empleado.EmpleadoScreen
 import ui.home.HomeScreen

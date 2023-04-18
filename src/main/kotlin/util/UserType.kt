@@ -1,4 +1,4 @@
-package data.util
+package util
 
 enum class UserType {
     CASHIER,
