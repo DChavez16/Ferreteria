@@ -39,7 +39,7 @@ fun PromocionScreen() {
                 }
 
                 PromocionScreenCodes.PRODUCTO_PROMOCION -> {
-                    ProductoPromocionList(onReturnButtonClick = {
+                    ProductoPromocionList(promocion = currentPromocion!!, onReturnButtonClick = {
                         currentScreen = PromocionScreenCodes.LIST
                     })
                 }

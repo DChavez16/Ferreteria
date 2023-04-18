@@ -1,10 +1,12 @@
 package ui.util
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollbarAdapter
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,15 +24,19 @@ fun AvailableProductsList(
     quantitySelectionEnabled: Boolean = false,
     onAddProductoClick: (Producto, Int?) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxHeight()) {
-        //Text(text = "Seleccionar cliente plaheholder")
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(120.dp), modifier = Modifier.weight(1f)
-        ) {
+    Box(modifier = modifier.fillMaxHeight()) {
+        val state = rememberLazyListState()
+
+        LazyColumn(state = state) {
             items(productoList) {
                 AvailableProductsListItem(it, onAddProductoClick, quantitySelectionEnabled)
             }
         }
+
+        VerticalScrollbar(
+            adapter = ScrollbarAdapter(scrollState = state),
+            modifier = Modifier.align(Alignment.CenterEnd)
+        )
     }
 }
 
@@ -40,56 +46,69 @@ private fun AvailableProductsListItem(
     onAddProductoClick: (Producto, Int) -> Unit,
     quantitySelectionEnabled: Boolean
 ) {
-    var quantity by remember { mutableStateOf(if(quantitySelectionEnabled) 1 else null) }
+    var quantity by remember { mutableStateOf(if (quantitySelectionEnabled) 1 else null) }
     var decreaseButtonEnabled by remember { mutableStateOf(false) }
 
     Card(elevation = 4.dp, modifier = Modifier.padding(8.dp)) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.height(100.dp).padding(16.dp).fillMaxWidth()
+        ) {
             Image(
                 painter = painterResource("icons/producto.png"),
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.FillHeight
             )
-            Spacer(Modifier.height(4.dp))
             Text(
                 text = producto.nombre,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.body2,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.weight(1f)
             )
-            if (quantitySelectionEnabled) {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(
-                        onClick = { quantity = quantity?.minus(1); decreaseButtonEnabled = validateDecreaseButtonEnabled(quantity!!) },
-                        modifier = Modifier.weight(1f),
-                        enabled = decreaseButtonEnabled
-                    ) {
-                        Icon(
-                            painterResource("icons/minus.png"),
-                            contentDescription = null,
-                            modifier = Modifier.padding(8.dp)
+            Column(modifier = Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                if (quantitySelectionEnabled) {
+                    Row(modifier = Modifier.fillMaxWidth().weight(1f), verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(
+                            onClick = {
+                                quantity = quantity?.minus(1); decreaseButtonEnabled =
+                                validateDecreaseButtonEnabled(quantity!!)
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = decreaseButtonEnabled
+                        ) {
+                            Icon(
+                                painterResource("icons/minus.png"),
+                                contentDescription = null,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
+                        Text(
+                            text = "$quantity",
+                            style = MaterialTheme.typography.body2,
+                            modifier = Modifier.weight(2f),
+                            textAlign = TextAlign.Center
                         )
-                    }
-                    Text(
-                        text = "$quantity",
-                        style = MaterialTheme.typography.body2,
-                        modifier = Modifier.weight(2f).fillMaxHeight(),
-                        textAlign = TextAlign.Center
-                    )
-                    IconButton(
-                        onClick = { quantity = quantity?.plus(1); decreaseButtonEnabled = validateDecreaseButtonEnabled(quantity!!) },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(
-                            painterResource("icons/add.png"),
-                            contentDescription = null,
-                            modifier = Modifier.padding(8.dp)
-                        )
+                        IconButton(
+                            onClick = {
+                                quantity = quantity?.plus(1); decreaseButtonEnabled =
+                                validateDecreaseButtonEnabled(quantity!!)
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(
+                                painterResource("icons/add.png"),
+                                contentDescription = null,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
                     }
                 }
-            }
-            Button(onClick = { onAddProductoClick(producto, quantity ?: 0) }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Agregar", textAlign = TextAlign.Center, style = MaterialTheme.typography.button)
+                Button(
+                    onClick = { onAddProductoClick(producto, quantity ?: 0) },
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f)
+                ) {
+                    Text(text = "Agregar", textAlign = TextAlign.Center, style = MaterialTheme.typography.button)
+                }
             }
         }
     }

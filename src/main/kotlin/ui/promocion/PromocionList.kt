@@ -112,7 +112,7 @@ private fun PromocionListContentItem(
     onPromocionClicked: (Promocion) -> Unit,
     onEditPromocionClicked: (Promocion) -> Unit
 ) {
-    Row(modifier = Modifier.clickable { onPromocionClicked(promocion) }.padding(16.dp)) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { onPromocionClicked(promocion) }.padding(16.dp)) {
         Text(
             text = "${promocion.id}",
             modifier = Modifier.weight(1f),
