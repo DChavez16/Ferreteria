@@ -96,13 +96,13 @@ private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscou
             textAlign = TextAlign.Start
         )
         Text(
-            text = "${producto.precioVenta}",
+            text = "$ ${decimalFormat(producto.precioVenta)}",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.body2,
             textAlign = TextAlign.Center
         )
         Text(
-            text = decimalFormat(producto.precioVenta - (producto.precioVenta * (currentPromotionDiscount.toDouble() / 100))),
+            text = "$ ${decimalFormat(producto.precioVenta - (producto.precioVenta * (currentPromotionDiscount.toDouble() / 100)))}",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.body2,
             textAlign = TextAlign.Center

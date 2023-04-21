@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import data.model.Producto
 import ui.util.BottomButtons
+import util.decimalFormat
 
 @Composable
 fun ProductoList(
@@ -123,7 +124,7 @@ private fun ProductoListContentItem(producto: Producto, onEditProductoClicked: (
             textAlign = TextAlign.Left
         )
         Text(
-            text = "${producto.precioVenta}",
+            text = "$ ${decimalFormat(producto.precioVenta)}",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center

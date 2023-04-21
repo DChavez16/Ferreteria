@@ -2,7 +2,9 @@ package ui.producto
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import data.model.Producto
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
+import util.decimalFormat
 
 @Composable
 fun ProductoInfoScreen(
@@ -92,13 +95,13 @@ fun ProductoInfoScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Precio sin IVA:", style = MaterialTheme.typography.h6)
+                    Text(text = "Precio sin IVA: $", style = MaterialTheme.typography.h6)
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = getPrecioSinIVA(
+                        text = decimalFormat(getPrecioSinIVA(
                             if (currentProductoSellPrice == "") 0.0
                             else currentProductoSellPrice.toDouble()
-                        ).toString(),
+                        )),
                         style = MaterialTheme.typography.body1
                     )
                 }

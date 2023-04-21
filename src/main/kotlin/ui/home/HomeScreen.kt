@@ -16,16 +16,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import data.model.Producto
 import data.model.ProductoTestList
-import util.decimalFormat
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
+import util.decimalFormat
 import kotlin.random.Random
 
 
 @Composable
 fun HomeScreen() {
     var selectedProductos by remember { mutableStateOf(listOf<SelectedProductos>()) }
-    val saleInfo by remember { mutableStateOf(SaleInfo(0.0, 0.0, 0.0)) }
+    var saleInfo by remember { mutableStateOf(SaleInfo(0.0, 0.0, 0.0, total = 0.0)) }
 
     Surface(color = MaterialTheme.colors.background) {
         Column(verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxHeight().padding(16.dp)) {
@@ -49,7 +49,7 @@ fun HomeScreen() {
                 firstButtonText = "Aceptar",
                 firstButtonAction = {},
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = { selectedProductos = emptyList() },
+                secondButtonAction = { selectedProductos = emptyList(); saleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0) },
                 firstButtonEnabled = selectedProductos.isNotEmpty()
             )
         }
@@ -135,15 +135,22 @@ private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
 @Composable
 private fun SelectedProductListSaleInfo(saleInfo: SaleInfo) {
     Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+
         // Sale subtotal
         Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Subtotal:", style = MaterialTheme.typography.body1)
+            Text("Subtotal: $", style = MaterialTheme.typography.body1)
             Spacer(Modifier.width(5.dp))
             Text(text = decimalFormat(saleInfo.subTotal), style = MaterialTheme.typography.body2)
         }
+        // Sale IVA
+        Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("IVA: $", style = MaterialTheme.typography.body1)
+            Spacer(Modifier.width(5.dp))
+            Text(text = decimalFormat(saleInfo.incrementoIVA), style = MaterialTheme.typography.body2)
+        }
         // Sale discount
         Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Descuento:", style = MaterialTheme.typography.body1)
+            Text("Descuento: $", style = MaterialTheme.typography.body1)
             Spacer(Modifier.width(5.dp))
             Text(
                 text = if (saleInfo.descuento > 0.0) decimalFormat(saleInfo.descuento) else "~",
@@ -152,7 +159,7 @@ private fun SelectedProductListSaleInfo(saleInfo: SaleInfo) {
         }
         // Sale total
         Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Total:", style = MaterialTheme.typography.body1)
+            Text("Total: $", style = MaterialTheme.typography.body1)
             Spacer(Modifier.width(5.dp))
             Text(text = decimalFormat(saleInfo.total), style = MaterialTheme.typography.body2)
         }
@@ -194,16 +201,19 @@ private fun MutableList<SelectedProductos>.addProducto(
  */
 private fun SaleInfo.update(selectedProductosList: List<SelectedProductos>) {
     var newSubtotal = 0.0
+    var newIVA = 0.0
     var newDescuento = 0.0
 
     selectedProductosList.forEach { selectedProducto ->
-        newSubtotal += selectedProducto.producto.precioVenta * selectedProducto.cantidad
-        newDescuento += selectedProducto.producto.precioVenta * selectedProducto.cantidad * selectedProducto.descuento
+        newSubtotal += selectedProducto.producto.precioReal * selectedProducto.cantidad
+        newIVA += (selectedProducto.producto.precioVenta - selectedProducto.producto.precioReal) * selectedProducto.cantidad
+        newDescuento += selectedProducto.producto.precioReal * selectedProducto.cantidad * selectedProducto.descuento
     }
 
     this.subTotal = newSubtotal
+    this.incrementoIVA = newIVA
     this.descuento = newDescuento
-    this.total = newSubtotal - newDescuento
+    this.total = newSubtotal + newIVA - newDescuento
 }
 
 private data class SelectedProductos(
@@ -211,7 +221,10 @@ private data class SelectedProductos(
 )
 
 private data class SaleInfo(
-    var subTotal: Double, var descuento: Double, var total: Double = subTotal - descuento
+    var subTotal: Double,
+    var incrementoIVA: Double,
+    var descuento: Double,
+    var total: Double = subTotal - descuento
 )
 
 private val ListaDescuentos = listOf(

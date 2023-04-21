@@ -123,7 +123,7 @@ private fun VentaListContentItem(venta: DetalleVentaProducto) {
             textAlign = TextAlign.Center
         )
         Text(
-            text = decimalFormat(venta.venta.netoVenta),
+            text = "$ ${decimalFormat(venta.venta.netoVenta)}",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
