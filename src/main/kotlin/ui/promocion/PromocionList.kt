@@ -86,13 +86,12 @@ private fun PromocionListHeader() {
 private fun PromocionListContent(
     promocionList: List<Promocion>,
     onPromocionClicked: (Promocion) -> Unit,
-    onEditPromocionClicked: (Promocion) -> Unit,
-    modifier: Modifier = Modifier
+    onEditPromocionClicked: (Promocion) -> Unit
 ) {
     Box {
         val state = rememberLazyListState()
 
-        LazyColumn(modifier = modifier, state = state) {
+        LazyColumn(state = state) {
             items(promocionList) {
                 PromocionListContentItem(it, onPromocionClicked, onEditPromocionClicked)
                 Divider(color = Color.Gray, thickness = Dp.Hairline)
@@ -112,7 +111,10 @@ private fun PromocionListContentItem(
     onPromocionClicked: (Promocion) -> Unit,
     onEditPromocionClicked: (Promocion) -> Unit
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { onPromocionClicked(promocion) }.padding(16.dp)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable { onPromocionClicked(promocion) }.padding(16.dp)
+    ) {
         Text(
             text = "${promocion.id}",
             modifier = Modifier.weight(1f),

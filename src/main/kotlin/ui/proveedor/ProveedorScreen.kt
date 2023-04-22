@@ -26,44 +26,37 @@ fun ProveedorScreen() {
         }) {
             when (it) {
                 ProveedorScreenCodes.LIST -> {
-                    ProveedorList(proveedorList = ProveedorTestList,
-                        onAddClicked = {
-                            currentScreen = ProveedorScreenCodes.INFO
-                            currentProveedor = null
-                        },
-                        onEditClicked = { selectedProveedor ->
-                            currentScreen = ProveedorScreenCodes.INFO
-                            currentProveedor = selectedProveedor
-                        },
-                        onElementClicked = { selectedProveedor ->
-                            currentScreen = ProveedorScreenCodes.PROVEEDOR_PRODUCTOS
-                            currentProveedor = selectedProveedor
-                        }
-                    )
+                    ProveedorList(proveedorList = ProveedorTestList, onAddClicked = {
+                        currentScreen = ProveedorScreenCodes.INFO
+                        currentProveedor = null
+                    }, onEditClicked = { selectedProveedor ->
+                        currentScreen = ProveedorScreenCodes.INFO
+                        currentProveedor = selectedProveedor
+                    }, onElementClicked = { selectedProveedor ->
+                        currentScreen = ProveedorScreenCodes.PROVEEDOR_PRODUCTOS
+                        currentProveedor = selectedProveedor
+                    })
                 }
 
                 ProveedorScreenCodes.PROVEEDOR_PRODUCTOS -> {
-                    ProductosProveedorList(
-                        selectedProveedor = currentProveedor!!,
-                        onReturnClicked = { currentScreen = ProveedorScreenCodes.LIST })
+                    ProductosProveedorList(selectedProveedor = currentProveedor!!,
+                        onReturnButtonClick = { currentScreen = ProveedorScreenCodes.LIST })
                 }
 
                 ProveedorScreenCodes.INFO -> {
                     if (currentProveedor != null) {
                         // Draws the proveedor info screen on edit mode
-                        ProveedorInfoScreen(
-                            editable = true,
-                            onReturnButtonClicked = { currentScreen = ProveedorScreenCodes.LIST },
-                            onMainButtonClicked = {},
-                            onDeleteClicked = {},
+                        ProveedorInfoScreen(editable = true,
+                            onReturnButtonClick = { currentScreen = ProveedorScreenCodes.LIST },
+                            onMainButtonClick = {},
+                            onDeleteClick = {},
                             selectedProveedor = currentProveedor
                         )
                     } else {
                         // Draws the proveedor info screen on add mode
                         ProveedorInfoScreen(editable = false,
-                            onReturnButtonClicked = { currentScreen = ProveedorScreenCodes.LIST },
-                            onMainButtonClicked = {}
-                        )
+                            onReturnButtonClick = { currentScreen = ProveedorScreenCodes.LIST },
+                            onMainButtonClick = {})
                     }
                 }
             }

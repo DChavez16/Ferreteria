@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import controller.MainController
-import util.NavigationOptions
-import util.NavigationOptionsCodes
-import util.UserType
 import ui.cliente.ClienteScreen
 import ui.empleado.EmpleadoScreen
 import ui.home.HomeScreen
@@ -19,6 +16,9 @@ import ui.proveedor.ProveedorScreen
 import ui.reporte.ReporteScreen
 import ui.sucursal.SucursalScreen
 import ui.venta.VentaScreen
+import util.NavigationOptions
+import util.NavigationOptionsCodes
+import util.UserType
 
 
 /**
@@ -31,7 +31,7 @@ fun MainContainer(closeProgram: () -> Unit) {
     var userType by remember { mutableStateOf(UserType.ADMINISTRATOR) }
 
     // State variable that defines which screen is showing in the main container
-    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.INICIO) }
+    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.PROVEEDOR) }
 
     Column {
         // Draws the top bar of the program, it'll be static during all the program's lifecycle
