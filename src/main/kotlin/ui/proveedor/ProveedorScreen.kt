@@ -1,28 +1,77 @@
 package ui.proveedor
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Icon
+import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.runtime.*
+import data.model.Proveedor
+import data.model.ProveedorTestList
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ProveedorScreen() {
+    var currentScreen by remember { mutableStateOf(ProveedorScreenCodes.LIST) }
+    var currentProveedor by remember { mutableStateOf<Proveedor?>(null) }
+
     Surface(color = MaterialTheme.colors.background) {
-        Icon(painter = painterResource("icons/proveedor.png"), contentDescription = null, modifier = Modifier.fillMaxSize())
+        /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
+               Uses a vertical slide in animation towards the top or bottom of the screen
+               depending on the navigation option's position in the sidebar */
+        AnimatedContent(targetState = currentScreen, transitionSpec = {
+            if (targetState > initialState) {
+                slideInHorizontally { width -> width } + fadeIn() with slideOutHorizontally { width -> -width } + fadeOut()
+            } else {
+                slideInHorizontally { width -> -width } + fadeIn() with slideOutHorizontally { width -> width } + fadeOut()
+            }
+        }) {
+            when (it) {
+                ProveedorScreenCodes.LIST -> {
+                    ProveedorList(proveedorList = ProveedorTestList,
+                        onAddClicked = {
+                            currentScreen = ProveedorScreenCodes.INFO
+                            currentProveedor = null
+                        },
+                        onEditClicked = { selectedProveedor ->
+                            currentScreen = ProveedorScreenCodes.INFO
+                            currentProveedor = selectedProveedor
+                        },
+                        onElementClicked = { selectedProveedor ->
+                            currentScreen = ProveedorScreenCodes.PROVEEDOR_PRODUCTOS
+                            currentProveedor = selectedProveedor
+                        }
+                    )
+                }
+
+                ProveedorScreenCodes.PROVEEDOR_PRODUCTOS -> {
+                    ProductosProveedorList(
+                        selectedProveedor = currentProveedor!!,
+                        onReturnClicked = { currentScreen = ProveedorScreenCodes.LIST })
+                }
+
+                ProveedorScreenCodes.INFO -> {
+                    if (currentProveedor != null) {
+                        // Draws the proveedor info screen on edit mode
+                        ProveedorInfoScreen(
+                            editable = true,
+                            onReturnButtonClicked = { currentScreen = ProveedorScreenCodes.LIST },
+                            onMainButtonClicked = {},
+                            onDeleteClicked = {},
+                            selectedProveedor = currentProveedor
+                        )
+                    } else {
+                        // Draws the proveedor info screen on add mode
+                        ProveedorInfoScreen(editable = false,
+                            onReturnButtonClicked = { currentScreen = ProveedorScreenCodes.LIST },
+                            onMainButtonClicked = {}
+                        )
+                    }
+                }
+            }
+        }
     }
+}
 
-    // Proveedor list screen
-    ProveedorList()
 
-    // Productos Proveedor list screen
-    ProductosProveedorList()
-
-    // Add Proveedor screen
-    AddProveedorScreen()
-
-    // EditProveedorScreen()
-    EditProveedorScreen()
+private enum class ProveedorScreenCodes {
+    LIST, INFO, PROVEEDOR_PRODUCTOS
 }
