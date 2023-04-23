@@ -16,9 +16,7 @@ import ui.util.ScreenHeader
 fun ProductoPromocionList(promocion: Promocion, onReturnButtonClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxHeight()) {
         // Draws the screen header, the header's title varies with the defined screen mode
-        ScreenHeader(
-            headerTitle = "Productos de la promocion", onReturnButtonClick = onReturnButtonClick
-        )
+        ScreenHeader(headerTitle = "Productos de la promocion", onReturnButtonClick = onReturnButtonClick)
 
         // Draws the promotion info
         PromotionDetails(promocion = promocion, modifier = Modifier.padding(16.dp))
@@ -43,9 +41,7 @@ private fun PromotionDetails(promocion: Promocion, modifier: Modifier = Modifier
             Text(text = "ID: ", style = MaterialTheme.typography.h5)
             Spacer(Modifier.width(4.dp))
             Text(
-                text = "${promocion.id}",
-                style = MaterialTheme.typography.h6,
-                textDecoration = TextDecoration.Underline
+                text = "${promocion.id}", style = MaterialTheme.typography.h6, textDecoration = TextDecoration.Underline
             )
         }
         Row(

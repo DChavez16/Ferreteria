@@ -1,6 +1,5 @@
 package ui.proveedor
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -18,7 +17,6 @@ import ui.util.BottomButtons
 import ui.util.ProductosProveedorDetailsList
 import ui.util.ScreenHeader
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProveedorInfoScreen(
     editable: Boolean,
@@ -52,6 +50,7 @@ private fun ProveedorForm(
     onDeleteClick: () -> Unit,
     modifier: Modifier
 ) {
+    // Form variables
     var proveedorNombre by remember { mutableStateOf(currentProveedor?.nombre ?: "") }
     var proveedorCorreo by remember { mutableStateOf(currentProveedor?.contacto?.correo ?: "") }
     var proveedorTelefono by remember { mutableStateOf(currentProveedor?.contacto?.telefono ?: "") }
@@ -146,6 +145,7 @@ private fun ProveedorFormContent(
                 value = nombre, onValueChange = onNombreValueChange, singleLine = true, modifier = Modifier.weight(2f)
             )
         }
+
         // Correo form field
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -157,6 +157,7 @@ private fun ProveedorFormContent(
                 value = correo, onValueChange = onCorreoValueChange, singleLine = true, modifier = Modifier.weight(2f)
             )
         }
+
         // Telefono form field
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -171,6 +172,7 @@ private fun ProveedorFormContent(
                 modifier = Modifier.weight(2f)
             )
         }
+
         // Direccion form field
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,

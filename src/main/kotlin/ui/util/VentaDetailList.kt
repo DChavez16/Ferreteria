@@ -1,4 +1,4 @@
-package ui.venta
+package ui.util
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.border
@@ -23,17 +23,17 @@ import util.decimalFormat
 
 
 @Composable
-fun VentaList(ventasList: List<DetalleVentaProducto>) {
-    Surface(modifier = Modifier.padding(32.dp)) {
+fun VentaList(ventasList: List<DetalleVentaProducto>, showEmpleado: Boolean = true, modifier: Modifier = Modifier) {
+    Surface(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize().border(width = Dp.Hairline, color = Color.Gray)) {
-            VentaListHeader()
-            VentaListContent(ventaList = ventasList, modifier = Modifier.weight(1f))
+            VentaListHeader(showEmpleado)
+            VentaListContent(ventaList = ventasList, showEmpleado = showEmpleado, modifier = Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun VentaListHeader() {
+private fun VentaListHeader(showEmpleado: Boolean) {
     Surface(elevation = 8.dp) {
         Column {
             Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
@@ -55,12 +55,14 @@ private fun VentaListHeader() {
                     style = MaterialTheme.typography.h6,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    text = "Empleado",
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.h6,
-                    textAlign = TextAlign.Center
-                )
+                if(showEmpleado) {
+                    Text(
+                        text = "Empleado",
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.h6,
+                        textAlign = TextAlign.Center
+                    )
+                }
                 Text(
                     text = "Total",
                     modifier = Modifier.weight(1f),
@@ -73,13 +75,13 @@ private fun VentaListHeader() {
 }
 
 @Composable
-private fun VentaListContent(ventaList: List<DetalleVentaProducto>, modifier: Modifier = Modifier) {
+private fun VentaListContent(ventaList: List<DetalleVentaProducto>, showEmpleado: Boolean, modifier: Modifier = Modifier) {
     Box {
         val state = rememberLazyListState()
 
         LazyColumn(modifier = modifier, state = state) {
             items(ventaList) {
-                VentaListContentItem(it)
+                VentaListContentItem(it, showEmpleado)
                 Divider(color = Color.Gray, thickness = Dp.Hairline)
             }
         }
@@ -92,7 +94,7 @@ private fun VentaListContent(ventaList: List<DetalleVentaProducto>, modifier: Mo
 }
 
 @Composable
-private fun VentaListContentItem(venta: DetalleVentaProducto) {
+private fun VentaListContentItem(venta: DetalleVentaProducto, showEmpleado: Boolean) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
         Text(
             text = "${venta.venta.id}",
@@ -116,12 +118,14 @@ private fun VentaListContentItem(venta: DetalleVentaProducto) {
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )
-        Text(
-            text = venta.venta.empleado.nombre,
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
-            textAlign = TextAlign.Center
-        )
+        if(showEmpleado) {
+            Text(
+                text = venta.venta.empleado.nombre,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center
+            )
+        }
         Text(
             text = "$ ${decimalFormat(venta.venta.netoVenta)}",
             modifier = Modifier.weight(1f),

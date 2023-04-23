@@ -34,3 +34,23 @@ val EmpleadoTestList = listOf(
     Empleado(19, "Empleado 19", 500.0, UserType.CASHIER, ContactoTestList[18], SucursalTestList[4]),
     Empleado(20, "Empleado 20", 500.0, UserType.CASHIER, ContactoTestList[19], SucursalTestList[4])
 )
+
+fun getVentasEmpleado(id: Long?): List<Venta> {
+    val newList = mutableListOf<Venta>()
+
+    VentaTestList.forEach { venta ->
+        if(venta.empleado.id == id) newList.add(venta)
+    }
+
+    return newList
+}
+
+fun getDetalleVentasEmpleado(id: Long?): List<DetalleVentaProducto> {
+    val newList = mutableListOf<DetalleVentaProducto>()
+
+    DetalleVentaProductoTestList.forEach { venta ->
+        if(venta.venta.empleado.id == id) newList.add(venta)
+    }
+
+    return newList
+}

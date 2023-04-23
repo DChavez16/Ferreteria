@@ -26,13 +26,13 @@ fun ProveedorScreen() {
         }) {
             when (it) {
                 ProveedorScreenCodes.LIST -> {
-                    ProveedorList(proveedorList = ProveedorTestList, onAddClicked = {
+                    ProveedorList(proveedorList = ProveedorTestList, onAddProveedorClick = {
                         currentScreen = ProveedorScreenCodes.INFO
                         currentProveedor = null
-                    }, onEditClicked = { selectedProveedor ->
+                    }, onEdirtProveedorClick = { selectedProveedor ->
                         currentScreen = ProveedorScreenCodes.INFO
                         currentProveedor = selectedProveedor
-                    }, onElementClicked = { selectedProveedor ->
+                    }, onProveedorElementClick = { selectedProveedor ->
                         currentScreen = ProveedorScreenCodes.PROVEEDOR_PRODUCTOS
                         currentProveedor = selectedProveedor
                     })

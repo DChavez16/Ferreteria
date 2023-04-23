@@ -1,6 +1,6 @@
 package util
 
-enum class UserType {
-    CASHIER,
-    ADMINISTRATOR
+enum class UserType(var text: String) {
+    CASHIER("Cajero"),
+    ADMINISTRATOR("Administrador")
 }

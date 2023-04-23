@@ -24,9 +24,9 @@ import ui.util.BottomButtons
 @Composable
 fun ProveedorList(
     proveedorList: List<Proveedor>,
-    onAddClicked: () -> Unit,
-    onEditClicked: (Proveedor) -> Unit,
-    onElementClicked: (Proveedor) -> Unit
+    onAddProveedorClick: () -> Unit,
+    onEdirtProveedorClick: (Proveedor) -> Unit,
+    onProveedorElementClick: (Proveedor) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(32.dp)) {
         Surface(modifier = Modifier.weight(1f)) {
@@ -34,8 +34,8 @@ fun ProveedorList(
                 ProveedorListHeader()
                 ProveedorListContent(
                     proveedorList = proveedorList,
-                    onProveedorElementClick = onElementClicked,
-                    onEditProveedorClick = onEditClicked
+                    onProveedorElementClick = onProveedorElementClick,
+                    onEditProveedorClick = onEdirtProveedorClick
                 )
             }
         }
@@ -43,7 +43,7 @@ fun ProveedorList(
         BottomButtons(
             twoButtons = false,
             firstButtonText = "Agregar proveedor",
-            firstButtonAction = onAddClicked
+            firstButtonAction = onAddProveedorClick
         )
     }
 }

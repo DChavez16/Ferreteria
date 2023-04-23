@@ -16,9 +16,7 @@ import ui.util.ScreenHeader
 fun ProductosProveedorList(selectedProveedor: Proveedor, onReturnButtonClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxHeight()) {
         // Draws the screen header, the header's title varies with the defined screen mode
-        ScreenHeader(
-            headerTitle = "Productos del proveedor", onReturnButtonClick = onReturnButtonClick
-        )
+        ScreenHeader(headerTitle = "Productos del proveedor", onReturnButtonClick = onReturnButtonClick)
 
         // Draws the promotion info
         ProveedorDetails(proveedor = selectedProveedor, modifier = Modifier.padding(16.dp))
@@ -38,7 +36,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
         Row(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
             // Row of name details
             Row(
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.weight(1f)
             ) {
@@ -53,7 +51,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
 
             // Row of id details
             Row(
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.weight(1f)
             ) {
@@ -71,7 +69,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
         Row(modifier = Modifier.fillMaxWidth()) {
             // Row of email details
             Row(
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.weight(1f)
             ) {
@@ -86,7 +84,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
 
             // Row of phone details
             Row(
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.weight(1f)
             ) {
@@ -101,7 +99,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
 
             // Row of address details
             Row(
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.weight(1f)
             ) {

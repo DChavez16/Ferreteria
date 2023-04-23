@@ -28,10 +28,12 @@ import util.UserType
 @Composable
 fun MainContainer(closeProgram: () -> Unit) {
     val mainController = MainController()
+    // TODO Codeline for debug purposes
     var userType by remember { mutableStateOf(UserType.ADMINISTRATOR) }
 
     // State variable that defines which screen is showing in the main container
-    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.PROVEEDOR) }
+    // TODO Codeline for debug purposes
+    var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.EMPLEADO) }
 
     Column {
         // Draws the top bar of the program, it'll be static during all the program's lifecycle
