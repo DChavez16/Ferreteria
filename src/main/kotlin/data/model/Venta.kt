@@ -9,8 +9,7 @@ data class Venta(
     var netoVenta: Double,
     var fechaVenta: FechaVenta,
     var cliente: Cliente,
-    var empleado: Empleado,
-    val fechaVentaTexto: String = "${fechaVenta.dia}/${fechaVenta.mes}/${fechaVenta.anio}"
+    var empleado: Empleado
 )
 
 

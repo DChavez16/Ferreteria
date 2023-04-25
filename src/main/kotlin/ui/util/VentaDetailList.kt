@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import data.model.DetalleVentaProducto
 import util.decimalFormat
+import util.getFechaString
 
 
 @Composable
@@ -113,7 +114,7 @@ private fun VentaListContentItem(venta: DetalleVentaProducto, showEmpleado: Bool
             }
         }
         Text(
-            text = venta.venta.fechaVentaTexto,
+            text = getFechaString(venta.venta.fechaVenta),
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
