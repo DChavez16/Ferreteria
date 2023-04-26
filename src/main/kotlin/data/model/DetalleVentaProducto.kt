@@ -67,3 +67,13 @@ private fun getProductsList(): List<Producto> {
 
     return productoList
 }
+
+fun getClientsPurchases(idCliente: Long): List<DetalleVentaProducto> {
+    val newList = mutableListOf<DetalleVentaProducto>()
+
+    DetalleVentaProductoTestList.forEach { detalleVentaProducto ->
+        if(detalleVentaProducto.venta.cliente.id == idCliente) newList.add(detalleVentaProducto)
+    }
+
+    return newList
+}
