@@ -95,7 +95,7 @@ private fun ClienteDetails(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Telefono: ", style = MaterialTheme.typography.h5)
+            Text(text = "Teléfono: ", style = MaterialTheme.typography.h5)
             Spacer(Modifier.width(4.dp))
             Text(
                 text = cliente.contacto.telefono,

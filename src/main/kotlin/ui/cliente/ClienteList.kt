@@ -60,25 +60,25 @@ private fun ClienteListHeader() {
             Text(
                 text = "id",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Nombre",
                 modifier = Modifier.weight(2.5f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Suscripcion",
+                text = "Suscripción",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Compras",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.weight(0.5f))
@@ -122,13 +122,13 @@ private fun ClienteListItem(
         Text(
             text = "${cliente.id}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = cliente.nombre,
             modifier = Modifier.weight(2.5f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Left
         )
         Icon(
@@ -140,7 +140,7 @@ private fun ClienteListItem(
         Text(
             text = "${cliente.compras}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         IconButton(

@@ -10,7 +10,7 @@ data class Promocion(
 
 
 val PromocionTestList = listOf(
-    Promocion(1, "Promocion 5%", 0.05, true, listOf(
+    Promocion(1, "Promoción 5%", 0.05, true, listOf(
         ProductoTestList[1],
         ProductoTestList[5],
         ProductoTestList[7],
@@ -18,7 +18,7 @@ val PromocionTestList = listOf(
         ProductoTestList[35],
         ProductoTestList[27]
     )),
-    Promocion(2, "Promocion 10%", 0.10, false, listOf(
+    Promocion(2, "Promoción 10%", 0.10, false, listOf(
         ProductoTestList[17],
         ProductoTestList[23],
         ProductoTestList[10],
@@ -26,7 +26,7 @@ val PromocionTestList = listOf(
         ProductoTestList[9],
         ProductoTestList[5]
     )),
-    Promocion(3, "Promocion 15%", 0.15, false, listOf(
+    Promocion(3, "Promoción 15%", 0.15, false, listOf(
         ProductoTestList[2],
         ProductoTestList[6],
         ProductoTestList[25],
@@ -35,12 +35,12 @@ val PromocionTestList = listOf(
         ProductoTestList[20],
         ProductoTestList[8]
     )),
-    Promocion(4, "Promocion 20%", 0.20, true, listOf(
+    Promocion(4, "Promoción 20%", 0.20, true, listOf(
         ProductoTestList[35],
         ProductoTestList[36],
         ProductoTestList[15]
     )),
-    Promocion(5, "Promocion 25%", 0.25, true, listOf(
+    Promocion(5, "Promoción 25%", 0.25, true, listOf(
         ProductoTestList[18],
         ProductoTestList[2],
         ProductoTestList[21],

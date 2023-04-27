@@ -48,35 +48,35 @@ fun ProductoInfoScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
                         value = currentProductoName,
                         onValueChange = { currentProductoName = it },
-                        modifier = Modifier.weight(3f)
+                        modifier = Modifier.weight(2f)
                     )
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth()
+                    modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Descripcion:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    Text(text = "Descripción:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
                         value = currentProductoDescription,
                         onValueChange = { currentProductoDescription = it },
                         singleLine = false,
-                        modifier = Modifier.weight(3f)
+                        modifier = Modifier.weight(2f)
                     )
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth()
+                    modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()
                 ) {
                     Text(
-                        text = "Precio de venta:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f)
+                        text = "Precio de venta:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f)
                     )
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
@@ -87,22 +87,22 @@ fun ProductoInfoScreen(
                                 }
                             } catch (_: NumberFormatException) {
                             }
-                        }, modifier = Modifier.weight(3f)
+                        }, modifier = Modifier.weight(2f)
                     )
                 }
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth()
+                    modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Precio sin IVA: $", style = MaterialTheme.typography.h6)
+                    Text(text = "Precio sin IVA: $", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text = decimalFormat(getPrecioSinIVA(
                             if (currentProductoSellPrice == "") 0.0
                             else currentProductoSellPrice.toDouble()
                         )),
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.h6, modifier = Modifier.weight(2f)
                     )
                 }
             }

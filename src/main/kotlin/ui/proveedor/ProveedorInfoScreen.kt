@@ -140,7 +140,7 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = nombre, onValueChange = onNombreValueChange, singleLine = true, modifier = Modifier.weight(2f)
             )
@@ -152,7 +152,7 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Correo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = correo, onValueChange = onCorreoValueChange, singleLine = true, modifier = Modifier.weight(2f)
             )
@@ -164,7 +164,7 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Telefono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Teléfono:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = telefono,
                 onValueChange = onTelefonoValueChange,
@@ -179,7 +179,7 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Direccion:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Dirección:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = direccion,
                 onValueChange = onDireccionValueChange,

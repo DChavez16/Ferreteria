@@ -43,7 +43,7 @@ fun PromocionList(
         }
         BottomButtons(
             twoButtons = false,
-            firstButtonText = "Agregar promocion",
+            firstButtonText = "Agregar promoción",
             firstButtonAction = onAddPromocionClicked
         )
     }
@@ -54,27 +54,27 @@ private fun PromocionListHeader() {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = "id",
+                text = "Id",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Descripcion",
+                text = "Descripción",
                 modifier = Modifier.weight(2.5f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Descuento",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Disponible",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.weight(0.5f))
@@ -118,19 +118,19 @@ private fun PromocionListContentItem(
         Text(
             text = "${promocion.id}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = promocion.description,
             modifier = Modifier.weight(2.5f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Left
         )
         Text(
             text = "${(promocion.descuento * 100).toInt()} %",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Icon(

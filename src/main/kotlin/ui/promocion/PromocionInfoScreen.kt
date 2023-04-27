@@ -151,7 +151,7 @@ private fun PromocionFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Descripcion:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Descripción:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = description,
                 onValueChange = onDescriptionValueChange,
@@ -164,7 +164,7 @@ private fun PromocionFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Descuento:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Descuento:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(2f)) {
                 OutlinedTextField(
                     value = descuento,
@@ -175,7 +175,7 @@ private fun PromocionFormContent(
                 )
                 Text(
                     text = " %",
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.weight(2f)
                 )
@@ -186,7 +186,7 @@ private fun PromocionFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Disponible:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Disponible:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             Checkbox(
                 checked = disponibilidad,
                 onCheckedChange = onDisponibilidadValueChange,

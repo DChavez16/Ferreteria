@@ -120,7 +120,7 @@ private fun SucursalFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(bottom = 8.dp)
             ) {
-                Text(text = "Direccion:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Dirección:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = direccion, onValueChange = onDireccionValueChange, singleLine = true, modifier = Modifier.weight(2f)
                 )
@@ -131,7 +131,7 @@ private fun SucursalFormContent(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Telefono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = telefono, onValueChange = onTelefonoValueChange, singleLine = true, modifier = Modifier.weight(2f)
                 )

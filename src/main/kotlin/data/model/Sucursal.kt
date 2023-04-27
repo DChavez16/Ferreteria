@@ -8,7 +8,7 @@ data class Sucursal(
 
 
 val SucursalTestList = listOf(
-    Sucursal(1, "San Nicolas", ContactoTestList[5]),
+    Sucursal(1, "San Nicolás", ContactoTestList[5]),
     Sucursal(2, "Apodaca", ContactoTestList[6]),
     Sucursal(3, "Monterrey", ContactoTestList[7]),
     Sucursal(4, "Escobedo", ContactoTestList[8]),

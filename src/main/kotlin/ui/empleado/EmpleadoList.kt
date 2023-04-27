@@ -57,39 +57,39 @@ private fun EmpleadoListHeader() {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = "id",
+                text = "Id",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Nombre",
                 modifier = Modifier.weight(2f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Sueldo",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Ventas",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Puesto",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Sucursal",
                 modifier = Modifier.weight(1.5f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.weight(0.5f))
@@ -133,37 +133,37 @@ private fun EmpleadoListItem(
         Text(
             text = "${empleado.id}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = empleado.nombre,
             modifier = Modifier.weight(2f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Start
         )
         Text(
             text = "$ ${decimalFormat(empleado.sueldo)}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = "${getVentasEmpleado(empleado.id).size}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = empleado.puesto.text,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Start
         )
         Text(
             text = empleado.sucursal.name,
             modifier = Modifier.weight(1.5f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Start
         )
         IconButton(

@@ -36,27 +36,27 @@ private fun ProductosProveedorListHeader() {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = "id",
+                text = "Id",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Producto",
-                modifier = Modifier.weight(2f),
-                style = MaterialTheme.typography.body1,
+                modifier = Modifier.weight(1.5f),
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Descripcion",
+                text = "Descripción",
                 modifier = Modifier.weight(2f),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Precio de venta",
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.body1,
+                modifier = Modifier.weight(1.5f),
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
         }
@@ -93,7 +93,7 @@ private fun ProductosProveedorListItem(producto: Producto) {
         )
         Text(
             text = producto.nombre,
-            modifier = Modifier.weight(2f),
+            modifier = Modifier.weight(1.5f),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Start
         )
@@ -105,7 +105,7 @@ private fun ProductosProveedorListItem(producto: Producto) {
         )
         Text(
             text = "$ ${decimalFormat(producto.precioVenta)}",
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1.5f),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )

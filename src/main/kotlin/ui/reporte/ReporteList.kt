@@ -42,25 +42,25 @@ private fun ReporteListHeader() {
             Text(
                 text = "Fecha",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Ventas",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Ventas por promocion",
+                text = "Ventas por promoción",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Ingresos",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
         }
@@ -97,25 +97,25 @@ private fun ReporteListItem(
         Text(
             text = getFechaString(reporte.id!!),
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = "${reporte.ventas}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = "${reporte.ventasPromocion}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = "$ ${decimalFormat(reporte.ingresos)}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
     }

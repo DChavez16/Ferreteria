@@ -24,7 +24,7 @@ private lateinit var cal: Calendar
 @Composable
 fun TopBar() {
     var dateTime by remember { mutableStateOf(getDateTime()) }
-    var day by remember { mutableStateOf(getDay()) }
+    val day by remember { mutableStateOf(getDay()) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -51,16 +51,16 @@ fun TopBar() {
                     )
                     Spacer(Modifier.width(16.dp))
                     Column {
-                        Text("Sucursal Anahuac", style = MaterialTheme.typography.body1)
+                        Text("Sucursal Anáhuac", style = MaterialTheme.typography.h6)
                         Spacer(Modifier.height(8.dp))
-                        Text("San Nicolas, Nuevo Leon, 123", style = MaterialTheme.typography.body1)
+                        Text("San Nicolás, Nuevo León, 123", style = MaterialTheme.typography.h6)
                     }
                 }
                 // Current hour and date
                 Column(horizontalAlignment = Alignment.End) {
-                    Text(text = dateTime, style = MaterialTheme.typography.body1)
+                    Text(text = dateTime, style = MaterialTheme.typography.h6)
                     Spacer(Modifier.height(8.dp))
-                    Text(text = day, style = MaterialTheme.typography.body1)
+                    Text(text = day, style = MaterialTheme.typography.h6)
                 }
             }
             Divider(color = Color.Gray, thickness = Dp.Hairline)

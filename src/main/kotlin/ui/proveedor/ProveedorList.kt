@@ -53,27 +53,27 @@ private fun ProveedorListHeader() {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = "id",
+                text = "Id",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Proveedor",
                 modifier = Modifier.weight(2.5f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Correo",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Telefono",
+                text = "Teléfono",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.weight(0.5f))
@@ -117,25 +117,25 @@ private fun ProveedorListItem(
         Text(
             text = "${proveedor.id}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = proveedor.nombre,
             modifier = Modifier.weight(2.5f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Start
         )
         Text(
             text = proveedor.contacto.correo,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = proveedor.contacto.telefono,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         IconButton(

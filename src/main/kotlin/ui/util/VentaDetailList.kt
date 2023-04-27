@@ -39,35 +39,35 @@ private fun VentaListHeader(showEmpleado: Boolean) {
         Column {
             Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 Text(
-                    text = "id",
+                    text = "Id",
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = "Productos",
                     modifier = Modifier.weight(3f),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = "Fecha",
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center
                 )
                 if(showEmpleado) {
                     Text(
                         text = "Empleado",
                         modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.h5,
                         textAlign = TextAlign.Center
                     )
                 }
                 Text(
                     text = "Total",
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center
                 )
             }
@@ -100,14 +100,14 @@ private fun VentaListContentItem(venta: DetalleVentaProducto, showEmpleado: Bool
         Text(
             text = "${venta.venta.id}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Column(modifier = Modifier.weight(3f)) {
             for (index in 0 until venta.productos.size) {
                 Text(
                     text = venta.productos[index].nombre,
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.h6,
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
@@ -116,21 +116,21 @@ private fun VentaListContentItem(venta: DetalleVentaProducto, showEmpleado: Bool
         Text(
             text = getFechaString(venta.venta.fechaVenta),
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         if(showEmpleado) {
             Text(
                 text = venta.venta.empleado.nombre,
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
         }
         Text(
             text = "$ ${decimalFormat(venta.venta.netoVenta)}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
     }

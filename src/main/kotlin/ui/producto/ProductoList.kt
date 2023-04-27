@@ -51,27 +51,27 @@ private fun ProductoListHeader() {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = "id",
+                text = "Id",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Producto",
                 modifier = Modifier.weight(2f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Descripcion",
+                text = "Descripción",
                 modifier = Modifier.weight(2.5f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Precio",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.weight(0.5f))
@@ -108,25 +108,25 @@ private fun ProductoListContentItem(producto: Producto, onEditProductoClicked: (
         Text(
             text = "${producto.id}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         Text(
             text = producto.nombre,
             modifier = Modifier.weight(2f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Left
         )
         Text(
             text = producto.descripcion,
             modifier = Modifier.weight(2.5f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Left
         )
         Text(
             text = "$ ${decimalFormat(producto.precioVenta)}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
         IconButton(modifier = Modifier.weight(0.5f).height(20.dp), onClick = { onEditProductoClicked(producto) }) {

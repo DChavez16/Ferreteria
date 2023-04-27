@@ -35,7 +35,11 @@ fun HomeScreen() {
                 Spacer(Modifier.width(16.dp))
 
                 // Available products for sale
-                AvailableProductsList(Modifier.weight(1f), ProductoTestList, quantitySelectionEnabled = true) { producto, quantity ->
+                AvailableProductsList(
+                    Modifier.weight(1f),
+                    ProductoTestList,
+                    quantitySelectionEnabled = true
+                ) { producto, quantity ->
                     selectedProductos = selectedProductos.toMutableList().addProducto(
                         producto, quantity!!
                     )
@@ -80,19 +84,19 @@ private fun SelectedProductListHeader() {
     Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
         Text(
             text = "Producto",
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.h5,
             modifier = Modifier.weight(3f),
             textAlign = TextAlign.Center
         )
         Text(
             text = "Cantidad",
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.h5,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
             text = "Precio",
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.h5,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
@@ -107,16 +111,21 @@ private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
 
     Column(modifier = Modifier.padding(bottom = 4.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            Text(text = selectedProducto.producto.nombre, modifier = Modifier.weight(3f), textAlign = TextAlign.Left)
+            Text(
+                text = selectedProducto.producto.nombre,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.weight(3f),
+                textAlign = TextAlign.Left
+            )
             Text(
                 text = "${selectedProducto.cantidad}",
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center
             )
             Text(
                 text = decimalFormat(precioVenta),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center
             )
@@ -125,7 +134,7 @@ private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
             Text(
                 text = "Descuento aplicado (${(selectedProducto.descuento * 100).toInt()} %)",
                 color = Color.Red,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1,
                 modifier = Modifier.padding(start = 4.dp)
             )
         }
@@ -134,34 +143,49 @@ private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
 
 @Composable
 private fun SelectedProductListSaleInfo(saleInfo: SaleInfo) {
-    Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         // Sale subtotal
-        Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Subtotal: $", style = MaterialTheme.typography.body1)
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp).weight(1f),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text("Subtotal: $", style = MaterialTheme.typography.h6)
             Spacer(Modifier.width(5.dp))
-            Text(text = decimalFormat(saleInfo.subTotal), style = MaterialTheme.typography.body2)
+            Text(text = decimalFormat(saleInfo.subTotal), style = MaterialTheme.typography.body1)
         }
         // Sale IVA
-        Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("IVA: $", style = MaterialTheme.typography.body1)
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp).weight(1f),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text("IVA: $", style = MaterialTheme.typography.h6)
             Spacer(Modifier.width(5.dp))
-            Text(text = decimalFormat(saleInfo.incrementoIVA), style = MaterialTheme.typography.body2)
+            Text(text = decimalFormat(saleInfo.incrementoIVA), style = MaterialTheme.typography.body1)
         }
         // Sale discount
-        Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Descuento: $", style = MaterialTheme.typography.body1)
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp).weight(1f),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text("Descuento: $", style = MaterialTheme.typography.h6)
             Spacer(Modifier.width(5.dp))
             Text(
                 text = if (saleInfo.descuento > 0.0) decimalFormat(saleInfo.descuento) else "~",
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.body1
             )
         }
         // Sale total
-        Row(modifier = Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Total: $", style = MaterialTheme.typography.body1)
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp).weight(1f),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text("Total: $", style = MaterialTheme.typography.h6)
             Spacer(Modifier.width(5.dp))
-            Text(text = decimalFormat(saleInfo.total), style = MaterialTheme.typography.body2)
+            Text(text = decimalFormat(saleInfo.total), style = MaterialTheme.typography.body1)
         }
     }
 }

@@ -113,7 +113,7 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = nombre,
                 onValueChange = onNombreValueChange,
@@ -128,7 +128,7 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Correo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = correo,
                 onValueChange = onCorreoValueChange,
@@ -143,7 +143,7 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Telefono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Telefono:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = telefono,
                 onValueChange = onTelefonoValueChange,
@@ -158,7 +158,7 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Suscripción:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Suscripción:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
             Checkbox(
                 checked = sucripcion,
                 onCheckedChange = onSuscripcionValueChange,

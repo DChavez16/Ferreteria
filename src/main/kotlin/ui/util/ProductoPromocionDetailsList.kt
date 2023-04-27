@@ -53,27 +53,27 @@ private fun PromocionProductsListHeader() {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = "id",
+                text = "Id",
                 modifier = Modifier.weight(0.5f),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Producto",
                 modifier = Modifier.weight(1.5f),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Precio de venta",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Precio con descuento",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center
             )
         }
@@ -86,25 +86,25 @@ private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscou
         Text(
             text = "${producto.id}",
             modifier = Modifier.weight(0.5f),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )
         Text(
             text = producto.nombre,
             modifier = Modifier.weight(1.5f),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Start
         )
         Text(
             text = "$ ${decimalFormat(producto.precioVenta)}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )
         Text(
             text = "$ ${decimalFormat(producto.precioVenta - (producto.precioVenta * (currentPromotionDiscount.toDouble() / 100)))}",
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
         )
     }

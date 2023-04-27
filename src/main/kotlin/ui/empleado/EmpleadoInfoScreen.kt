@@ -153,7 +153,7 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = onNombreValueChange,
@@ -175,7 +175,7 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Sueldo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Sueldo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = sueldo,
                     onValueChange = onSueldoValueChange,
@@ -198,7 +198,7 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Correo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = correo,
                     onValueChange = onCorreoValueChange,
@@ -214,7 +214,7 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Telefono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Teléfono:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = telefono,
                     onValueChange = onTelefonoValueChange,
@@ -236,7 +236,7 @@ private fun EmpleadoFormContent(
                 modifier = Modifier.weight(1f)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f).height(50.dp)) {
-                    Text(text = "Sucursal:", style = MaterialTheme.typography.h6)
+                    Text(text = "Sucursal:", style = MaterialTheme.typography.h5)
                 }
                 // Column of Sucursal options
                 Column(modifier = Modifier.weight(2f)) {
@@ -289,7 +289,7 @@ private fun EmpleadoFormContent(
                 modifier = Modifier.weight(1f)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f).height(50.dp)) {
-                    Text(text = "Puesto:", style = MaterialTheme.typography.h6)
+                    Text(text = "Puesto:", style = MaterialTheme.typography.h5)
                 }
                 // Column of Puesto's radio button options
                 Column(
@@ -300,14 +300,14 @@ private fun EmpleadoFormContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(selected = !isAdmin, onClick = { onIsAdminValueChange(false) })
-                        Text("Cajero", style = MaterialTheme.typography.body1)
+                        Text("Cajero", style = MaterialTheme.typography.h6)
                     }
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(selected = isAdmin, onClick = { onIsAdminValueChange(true) })
-                        Text("Administrador", style = MaterialTheme.typography.body1)
+                        Text("Administrador", style = MaterialTheme.typography.h6)
                     }
                 }
             }

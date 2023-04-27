@@ -13,7 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -117,7 +117,7 @@ private fun NavigationOptionItem(
                 )
         )
         Text(
-            text = navigationOption.name, style = MaterialTheme.typography.body1
+            text = navigationOption.name, style = MaterialTheme.typography.h6
         )
     }
 }
