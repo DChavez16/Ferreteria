@@ -13,6 +13,8 @@ import data.model.Cliente
 import data.model.ClienteTestList
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
+import util.getCustomCheckboxColor
+import util.getCustomOutlinedTextFieldColor
 
 @Composable
 fun ClienteInfoScreen(
@@ -113,10 +115,12 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = nombre,
                 onValueChange = onNombreValueChange,
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
                 singleLine = true,
                 modifier = Modifier.weight(2f)
             )
@@ -128,10 +132,13 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Correo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = correo,
                 onValueChange = onCorreoValueChange,
+                placeholder = { Text("example@email.com") },
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
                 singleLine = true,
                 modifier = Modifier.weight(2f)
             )
@@ -143,10 +150,13 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Telefono:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = telefono,
                 onValueChange = onTelefonoValueChange,
+                placeholder = { Text("00 0000 0000") },
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
                 singleLine = true,
                 modifier = Modifier.weight(2f)
             )
@@ -158,10 +168,11 @@ private fun ClienteFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Suscripción:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Suscripción:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             Checkbox(
                 checked = sucripcion,
                 onCheckedChange = onSuscripcionValueChange,
+                colors = getCustomCheckboxColor(),
                 modifier = Modifier.weight(2f)
             )
         }

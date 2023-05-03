@@ -14,6 +14,7 @@ import data.model.Producto
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
 import util.decimalFormat
+import util.getCustomOutlinedTextFieldColor
 
 @Composable
 fun ProductoInfoScreen(
@@ -48,7 +49,7 @@ fun ProductoInfoScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+                    Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
                         value = currentProductoName,
@@ -61,7 +62,7 @@ fun ProductoInfoScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Descripción:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+                    Text(text = "Descripción:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
                         value = currentProductoDescription,
@@ -76,7 +77,7 @@ fun ProductoInfoScreen(
                     modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()
                 ) {
                     Text(
-                        text = "Precio de venta:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f)
+                        text = "Precio de venta:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f)
                     )
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
@@ -95,14 +96,17 @@ fun ProductoInfoScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Precio sin IVA: $", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Precio sin IVA: $", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f)
+                    )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = decimalFormat(getPrecioSinIVA(
-                            if (currentProductoSellPrice == "") 0.0
-                            else currentProductoSellPrice.toDouble()
-                        )),
-                        style = MaterialTheme.typography.h6, modifier = Modifier.weight(2f)
+                        text = decimalFormat(
+                            getPrecioSinIVA(
+                                if (currentProductoSellPrice == "") 0.0
+                                else currentProductoSellPrice.toDouble()
+                            )
+                        ), style = MaterialTheme.typography.h6, modifier = Modifier.weight(2f)
                     )
                 }
             }
@@ -147,7 +151,13 @@ private fun EditTextField(
     value: String, onValueChange: (String) -> Unit, singleLine: Boolean = true, modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
-        value = value, onValueChange = onValueChange, maxLines = 5, singleLine = singleLine, modifier = modifier
+        value = value,
+        onValueChange = onValueChange,
+        textStyle = MaterialTheme.typography.h6,
+        colors = getCustomOutlinedTextFieldColor(),
+        maxLines = 5,
+        singleLine = singleLine,
+        modifier = modifier
     )
 }
 

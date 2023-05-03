@@ -1,10 +1,10 @@
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import ui.mainContainer.MainContainer
+import ui.util.theme.FerreteriaTheme
 
 fun main() = application {
     Window(
@@ -13,7 +13,7 @@ fun main() = application {
         state = WindowState(placement = WindowPlacement.Fullscreen),
         resizable = false
     ) {
-        MaterialTheme {
+        FerreteriaTheme {
             MainContainer { exitApplication() }
         }
     }

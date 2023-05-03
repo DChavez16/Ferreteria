@@ -37,7 +37,7 @@ fun NavigationSideBar(
     onUserInfoClicked: () -> Unit
 ) {
     Surface(
-        color = MaterialTheme.colors.secondary, elevation = 8.dp
+        color = MaterialTheme.colors.secondaryVariant, elevation = 8.dp
     ) {
         Row {
             Column(
@@ -48,7 +48,7 @@ fun NavigationSideBar(
                         Column {
                             if (navigationOption.code == NavigationOptionsCodes.PRODUCTO) {
                                 Divider(
-                                    color = MaterialTheme.colors.secondaryVariant,
+                                    color = MaterialTheme.colors.secondary,
                                     thickness = Dp.Hairline,
                                     modifier = Modifier.padding(horizontal = 10.dp)
                                 )
@@ -84,8 +84,8 @@ private fun NavigationOptionItem(
                 else 50.dp
             )
             .background(
-                if (isSelected) MaterialTheme.colors.secondaryVariant
-                else MaterialTheme.colors.secondary
+                if (isSelected) MaterialTheme.colors.secondary
+                else MaterialTheme.colors.secondaryVariant
             )
             .clickable {
                 onNavigationOptionClicked(navigationOption.code)

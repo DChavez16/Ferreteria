@@ -21,6 +21,8 @@ import data.model.SucursalTestList
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
 import util.UserType
+import util.getCustomOutlinedTextFieldColor
+import util.getCustomRadioButtonColor
 
 @Composable
 fun EmpleadoInfoScreen(
@@ -153,10 +155,12 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+                Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = onNombreValueChange,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -175,10 +179,12 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Sueldo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+                Text(text = "Sueldo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = sueldo,
                     onValueChange = onSueldoValueChange,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -198,10 +204,13 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Correo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+                Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = correo,
                     onValueChange = onCorreoValueChange,
+                    placeholder = { Text("example@email.com") },
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -214,10 +223,13 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Teléfono:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+                Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = telefono,
                     onValueChange = onTelefonoValueChange,
+                    placeholder = { Text("00 0000 0000") },
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -236,22 +248,33 @@ private fun EmpleadoFormContent(
                 modifier = Modifier.weight(1f)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f).height(50.dp)) {
-                    Text(text = "Sucursal:", style = MaterialTheme.typography.h5)
+                    Text(text = "Sucursal:", style = MaterialTheme.typography.h6)
                 }
                 // Column of Sucursal options
                 Column(modifier = Modifier.weight(2f)) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        TextField(
-                            value = sucursal,
-                            onValueChange = {},
-                            readOnly = true,
-                            modifier = Modifier.weight(1f).height(50.dp)
-                        )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().height(55.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxHeight().weight(1f).background(Color.LightGray).border(
+                                width = Dp.Hairline,
+                                color = Color.LightGray,
+                                shape = MaterialTheme.shapes.large
+                            )
+                        ) {
+                            Text(
+                                text = sucursal,
+                                style = MaterialTheme.typography.h6
+                            )
+                        }
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier.background(color = Color.Gray)
                                 .clickable { expandedSucursalOptions = !expandedSucursalOptions }
-                                .size(50.dp)
+                                .size(55.dp)
                         ) {
                             Icon(
                                 painter = painterResource("icons/${if (expandedSucursalOptions) "expand_less" else "expand_more"}.png"),
@@ -288,8 +311,8 @@ private fun EmpleadoFormContent(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.weight(1f)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f).height(50.dp)) {
-                    Text(text = "Puesto:", style = MaterialTheme.typography.h5)
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f).height(55.dp)) {
+                    Text(text = "Puesto:", style = MaterialTheme.typography.h6)
                 }
                 // Column of Puesto's radio button options
                 Column(
@@ -299,14 +322,22 @@ private fun EmpleadoFormContent(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RadioButton(selected = !isAdmin, onClick = { onIsAdminValueChange(false) })
+                        RadioButton(
+                            selected = !isAdmin,
+                            onClick = { onIsAdminValueChange(false) },
+                            colors = getCustomRadioButtonColor()
+                        )
                         Text("Cajero", style = MaterialTheme.typography.h6)
                     }
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RadioButton(selected = isAdmin, onClick = { onIsAdminValueChange(true) })
+                        RadioButton(
+                            selected = isAdmin,
+                            onClick = { onIsAdminValueChange(true) },
+                            colors = getCustomRadioButtonColor()
+                        )
                         Text("Administrador", style = MaterialTheme.typography.h6)
                     }
                 }

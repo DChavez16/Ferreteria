@@ -34,7 +34,7 @@ fun TopBar() {
     }
 
     Surface(
-        color = MaterialTheme.colors.secondaryVariant, elevation = 16.dp
+        color = MaterialTheme.colors.secondary, elevation = 16.dp
     ) {
         Column {
             Row(

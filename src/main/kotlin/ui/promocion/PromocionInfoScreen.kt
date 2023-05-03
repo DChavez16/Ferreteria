@@ -1,7 +1,10 @@
 package ui.promocion
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Checkbox
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +17,8 @@ import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import ui.util.ProductoPromocionDetailsList
 import ui.util.ScreenHeader
+import util.getCustomCheckboxColor
+import util.getCustomOutlinedTextFieldColor
 
 @Composable
 fun PromocionInfoScreen(
@@ -151,9 +156,11 @@ private fun PromocionFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Descripción:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Descripción:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = description,
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
                 onValueChange = onDescriptionValueChange,
                 singleLine = true,
                 modifier = Modifier.weight(2f)
@@ -164,18 +171,19 @@ private fun PromocionFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Descuento:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Descuento:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(2f)) {
                 OutlinedTextField(
                     value = descuento,
                     onValueChange = onDescuentoValueChange,
+                    textStyle = MaterialTheme.typography.h6.copy(textAlign = TextAlign.Center),
+                    colors = getCustomOutlinedTextFieldColor(),
                     singleLine = true,
-                    textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
                     modifier = Modifier.weight(8f)
                 )
                 Text(
                     text = " %",
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.h6,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.weight(2f)
                 )
@@ -186,10 +194,11 @@ private fun PromocionFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Disponible:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Disponible:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             Checkbox(
                 checked = disponibilidad,
                 onCheckedChange = onDisponibilidadValueChange,
+                colors = getCustomCheckboxColor(),
                 modifier = Modifier.weight(2f).padding(0.dp)
             )
         }

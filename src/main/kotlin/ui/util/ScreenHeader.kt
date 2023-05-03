@@ -11,7 +11,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ScreenHeader(headerTitle: String, onReturnButtonClick: () -> Unit) {
@@ -22,7 +24,7 @@ fun ScreenHeader(headerTitle: String, onReturnButtonClick: () -> Unit) {
         ) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
             Spacer(Modifier.width(4.dp))
-            Text(text = "Regresar", style = MaterialTheme.typography.h6)
+            Text(text = "Regresar", fontWeight = FontWeight.W500, fontSize = 20.sp, style = MaterialTheme.typography.h6)
         }
         Row(
             horizontalArrangement = Arrangement.Center,

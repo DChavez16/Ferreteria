@@ -103,7 +103,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Direccion: ", style = MaterialTheme.typography.h5)
+                Text(text = "Dirección: ", style = MaterialTheme.typography.h5)
                 Spacer(Modifier.width(4.dp))
                 Text(
                     text = proveedor.contacto.direccion,

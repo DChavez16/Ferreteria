@@ -16,6 +16,7 @@ import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import ui.util.ProductosProveedorDetailsList
 import ui.util.ScreenHeader
+import util.getCustomOutlinedTextFieldColor
 
 @Composable
 fun ProveedorInfoScreen(
@@ -140,9 +141,14 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Nombre:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
-                value = nombre, onValueChange = onNombreValueChange, singleLine = true, modifier = Modifier.weight(2f)
+                value = nombre,
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
+                onValueChange = onNombreValueChange,
+                singleLine = true,
+                modifier = Modifier.weight(2f)
             )
         }
 
@@ -152,9 +158,15 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Correo:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
-                value = correo, onValueChange = onCorreoValueChange, singleLine = true, modifier = Modifier.weight(2f)
+                value = correo,
+                placeholder = { Text("example@email.com") },
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
+                onValueChange = onCorreoValueChange,
+                singleLine = true,
+                modifier = Modifier.weight(2f)
             )
         }
 
@@ -164,9 +176,12 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Teléfono:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = telefono,
+                placeholder = { Text("00 0000 0000") },
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
                 onValueChange = onTelefonoValueChange,
                 singleLine = true,
                 modifier = Modifier.weight(2f)
@@ -179,9 +194,11 @@ private fun ProveedorFormContent(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Dirección:", style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Text(text = "Dirección:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
                 value = direccion,
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
                 onValueChange = onDireccionValueChange,
                 singleLine = true,
                 modifier = Modifier.weight(2f)

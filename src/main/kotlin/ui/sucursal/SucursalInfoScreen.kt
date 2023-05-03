@@ -12,6 +12,7 @@ import data.model.Sucursal
 import data.model.SucursalTestList
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
+import util.getCustomOutlinedTextFieldColor
 
 @Composable
 fun SucursalInfoScreen(
@@ -110,7 +111,12 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = nombre, onValueChange = onNombreValueChange, singleLine = true, modifier = Modifier.weight(2f)
+                    value = nombre,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    onValueChange = onNombreValueChange,
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
                 )
             }
 
@@ -122,7 +128,12 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Dirección:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = direccion, onValueChange = onDireccionValueChange, singleLine = true, modifier = Modifier.weight(2f)
+                    value = direccion,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    onValueChange = onDireccionValueChange,
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
                 )
             }
 
@@ -133,7 +144,13 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = telefono, onValueChange = onTelefonoValueChange, singleLine = true, modifier = Modifier.weight(2f)
+                    value = telefono,
+                    placeholder = { Text("00 0000 0000") },
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    onValueChange = onTelefonoValueChange,
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
                 )
             }
         }

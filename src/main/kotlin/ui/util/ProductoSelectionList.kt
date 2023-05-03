@@ -61,9 +61,9 @@ private fun AvailableProductsListItem(
             )
             Text(
                 text = producto.nombre,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.body2,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).padding(start = 4.dp)
             )
             Column(modifier = Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.Center) {
                 if (quantitySelectionEnabled) {

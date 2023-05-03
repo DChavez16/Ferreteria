@@ -58,7 +58,7 @@ private fun ClienteListHeader() {
     Surface(elevation = 8.dp) {
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                text = "id",
+                text = "Id",
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
