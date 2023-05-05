@@ -204,7 +204,7 @@ private fun EmpleadoFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Municipio:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Sucursal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 ExpandableDropDownMenu(
                     value = sucursal,
                     optionsList = sucursalOptions,
