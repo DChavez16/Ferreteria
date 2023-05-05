@@ -8,9 +8,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import data.model.Direccion
 import data.model.Sucursal
 import data.model.SucursalTestList
+import data.model.municipiosList
 import ui.util.BottomButtons
+import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader
 import util.getCustomOutlinedTextFieldColor
 
@@ -50,19 +53,22 @@ private fun SucursalForm(
 ) {
     // Form variables
     var sucursalNombre by remember { mutableStateOf(currentSucursal?.name ?: "") }
-    var sucursalDireccion by remember { mutableStateOf(currentSucursal?.contacto?.direccion ?: "") }
+    var sucursalDireccion by remember { mutableStateOf(currentSucursal?.contacto?.direccion ?: emptyDireccion()) }
     var sucursalTelefono by remember { mutableStateOf(currentSucursal?.contacto?.telefono ?: "") }
 
     Column(modifier = modifier.fillMaxHeight()) {
         // Form body
         SucursalFormContent(
-            nombre = sucursalNombre, onNombreValueChange = { sucursalNombre = it },
-            direccion = sucursalDireccion, onDireccionValueChange = { sucursalDireccion = it },
-            telefono = sucursalTelefono, onTelefonoValueChange = { sucursalTelefono = it },
+            nombre = sucursalNombre,
+            onNombreValueChange = { sucursalNombre = it },
+            direccion = sucursalDireccion,
+            onDireccionValueChange = { sucursalDireccion = it },
+            telefono = sucursalTelefono,
+            onTelefonoValueChange = { sucursalTelefono = it },
             modifier = Modifier.weight(1f)
         )
 
-        // Bottom button sto interact with the screen
+        // Bottom buttons to interact with the screen
         Row(modifier = Modifier.fillMaxWidth()) {
             if (editable) {
                 BottomButtons(
@@ -79,7 +85,7 @@ private fun SucursalForm(
                 secondButtonText = "Limpiar campos",
                 secondButtonAction = {
                     sucursalNombre = ""
-                    sucursalDireccion = ""
+                    sucursalDireccion = emptyDireccion()
                     sucursalTelefono = ""
                 },
                 firstButtonEnabled = validateCorrectFields(
@@ -95,8 +101,8 @@ private fun SucursalForm(
 private fun SucursalFormContent(
     nombre: String,
     onNombreValueChange: (String) -> Unit,
-    direccion: String,
-    onDireccionValueChange: (String) -> Unit,
+    direccion: Direccion,
+    onDireccionValueChange: (Direccion) -> Unit,
     telefono: String,
     onTelefonoValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -120,27 +126,97 @@ private fun SucursalFormContent(
                 )
             }
 
-            // Direccion form field
+            // Municipio form field
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(bottom = 8.dp)
             ) {
-                Text(text = "Dirección:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Municipio:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                ExpandableDropDownMenu(
+                    value = direccion.municipio,
+                    optionsList = municipiosList,
+                    onValueChange = { onDireccionValueChange(direccion.copy(municipio = it.toString())) },
+                    modifier = Modifier.weight(2f)
+                )
+            }
+
+            // Colonia form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text(text = "Colonia:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = direccion,
+                    value = direccion.colonia,
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
-                    onValueChange = onDireccionValueChange,
+                    onValueChange = { onDireccionValueChange(direccion.copy(colonia = it)) },
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
             }
 
-            // Correo form field
+            // Calle form field
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text(text = "Calle:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                OutlinedTextField(
+                    value = direccion.calle,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    onValueChange = { onDireccionValueChange(direccion.copy(calle = it)) },
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
+                )
+            }
+
+            // Numero form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text(text = "Numero:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                OutlinedTextField(
+                    value = if (direccion.numero > 0) direccion.numero.toString() else "",
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    onValueChange = {
+                        try {
+                            onDireccionValueChange(direccion.copy(numero = it.toInt()))
+                        } catch (_: Exception) {
+                        }
+                    },
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
+                )
+            }
+
+            // Codigo Postal form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text(text = "Codigo Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                OutlinedTextField(
+                    value = direccion.codigoPostal,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    onValueChange = { onDireccionValueChange(direccion.copy(codigoPostal = it)) },
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
+                )
+            }
+
+            // Telefono form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
@@ -161,5 +237,10 @@ private fun SucursalFormContent(
 /*
 Helper methods
 */
-private fun validateCorrectFields(nombre: String, direccion: String, telefono: String) =
-    nombre.isNotEmpty() && direccion.isNotEmpty() && telefono.isNotEmpty()
+private fun validateCorrectFields(nombre: String, direccion: Direccion, telefono: String) =
+    nombre.isNotEmpty() && direccion.municipio.isNotEmpty() && validateDireccion(direccion) && telefono.isNotEmpty()
+
+private fun validateDireccion(direccion: Direccion) =
+    direccion.colonia.isNotEmpty() && direccion.calle.isNotEmpty() && direccion.numero > 0 && direccion.codigoPostal.isNotEmpty()
+
+private fun emptyDireccion() = Direccion(null, "", "", "", 0, "")

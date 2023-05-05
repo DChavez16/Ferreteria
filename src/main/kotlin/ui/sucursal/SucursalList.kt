@@ -124,7 +124,7 @@ private fun SucursalListItem(
             textAlign = TextAlign.Start
         )
         Text(
-            text = sucursal.contacto.direccion,
+            text = sucursal.contacto.direccion.formato,
             modifier = Modifier.weight(2.5f),
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center

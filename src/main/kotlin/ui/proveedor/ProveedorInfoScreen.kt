@@ -8,14 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.model.Producto
-import data.model.ProductoTestList
-import data.model.Proveedor
-import data.model.ProveedorTestList
-import ui.util.AvailableProductsList
-import ui.util.BottomButtons
-import ui.util.ProductosProveedorDetailsList
-import ui.util.ScreenHeader
+import data.model.*
+import ui.util.*
 import util.getCustomOutlinedTextFieldColor
 
 @Composable
@@ -55,7 +49,7 @@ private fun ProveedorForm(
     var proveedorNombre by remember { mutableStateOf(currentProveedor?.nombre ?: "") }
     var proveedorCorreo by remember { mutableStateOf(currentProveedor?.contacto?.correo ?: "") }
     var proveedorTelefono by remember { mutableStateOf(currentProveedor?.contacto?.telefono ?: "") }
-    var proveedorDireccion by remember { mutableStateOf(currentProveedor?.contacto?.direccion ?: "") }
+    var proveedorDireccion by remember { mutableStateOf(currentProveedor?.contacto?.direccion ?: emptyDireccion()) }
     var proveedorProductos by remember { mutableStateOf(currentProveedor?.productos ?: emptyList()) }
 
     Column(modifier = modifier.fillMaxHeight()) {
@@ -110,7 +104,7 @@ private fun ProveedorForm(
                     proveedorNombre = ""
                     proveedorCorreo = ""
                     proveedorTelefono = ""
-                    proveedorDireccion = ""
+                    proveedorDireccion = emptyDireccion()
                     proveedorProductos = emptyList()
                 },
                 firstButtonEnabled = validateCorrectFields(
@@ -130,79 +124,184 @@ private fun ProveedorFormContent(
     onCorreoValueChange: (String) -> Unit,
     telefono: String,
     onTelefonoValueChange: (String) -> Unit,
-    direccion: String,
-    onDireccionValueChange: (String) -> Unit,
+    direccion: Direccion,
+    onDireccionValueChange: (Direccion) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier.fillMaxWidth(0.5f), verticalArrangement = Arrangement.Center) {
-        // Nombre form field
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-        ) {
-            Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
-            OutlinedTextField(
-                value = nombre,
-                textStyle = MaterialTheme.typography.h6,
-                colors = getCustomOutlinedTextFieldColor(),
-                onValueChange = onNombreValueChange,
-                singleLine = true,
-                modifier = Modifier.weight(2f)
-            )
-        }
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.fillMaxWidth().fillMaxHeight().padding(16.dp)
+    ) {
+        Column {
+            // Row of Nombre and Correo form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            ) {
+                // Nombre form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = nombre,
+                        textStyle = MaterialTheme.typography.h6,
+                        colors = getCustomOutlinedTextFieldColor(),
+                        onValueChange = onNombreValueChange,
+                        singleLine = true,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+                Spacer(Modifier.padding(horizontal = 32.dp))
 
-        // Correo form field
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-        ) {
-            Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
-            OutlinedTextField(
-                value = correo,
-                placeholder = { Text("example@email.com") },
-                textStyle = MaterialTheme.typography.h6,
-                colors = getCustomOutlinedTextFieldColor(),
-                onValueChange = onCorreoValueChange,
-                singleLine = true,
-                modifier = Modifier.weight(2f)
-            )
-        }
+                // Correo form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Correo:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = correo,
+                        placeholder = { Text("example@email.com") },
+                        textStyle = MaterialTheme.typography.h6,
+                        colors = getCustomOutlinedTextFieldColor(),
+                        onValueChange = onCorreoValueChange,
+                        singleLine = true,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+            }
 
-        // Telefono form field
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-        ) {
-            Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
-            OutlinedTextField(
-                value = telefono,
-                placeholder = { Text("00 0000 0000") },
-                textStyle = MaterialTheme.typography.h6,
-                colors = getCustomOutlinedTextFieldColor(),
-                onValueChange = onTelefonoValueChange,
-                singleLine = true,
-                modifier = Modifier.weight(2f)
-            )
-        }
+            // Row of Telefono and Municipio form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            ) {
+                // Telefono form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Teléfono:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = telefono,
+                        placeholder = { Text("00 0000 0000") },
+                        textStyle = MaterialTheme.typography.h6,
+                        colors = getCustomOutlinedTextFieldColor(),
+                        onValueChange = onTelefonoValueChange,
+                        singleLine = true,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+                Spacer(Modifier.padding(horizontal = 32.dp))
 
-        // Direccion form field
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-        ) {
-            Text(text = "Dirección:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
-            OutlinedTextField(
-                value = direccion,
-                textStyle = MaterialTheme.typography.h6,
-                colors = getCustomOutlinedTextFieldColor(),
-                onValueChange = onDireccionValueChange,
-                singleLine = true,
-                modifier = Modifier.weight(2f)
-            )
+                // Municipio form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Municipio:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    ExpandableDropDownMenu(
+                        value = direccion.municipio,
+                        optionsList = municipiosList,
+                        onValueChange = { onDireccionValueChange(direccion.copy(municipio = it.toString())) },
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+            }
+
+            // Row of Colonia and Calle form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            ) {
+                // Colonia form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Colonia:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = direccion.colonia,
+                        textStyle = MaterialTheme.typography.h6,
+                        colors = getCustomOutlinedTextFieldColor(),
+                        onValueChange = { onDireccionValueChange(direccion.copy(colonia = it)) },
+                        singleLine = true,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+                Spacer(Modifier.padding(horizontal = 32.dp))
+
+                // Calle form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Calle:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = direccion.calle,
+                        textStyle = MaterialTheme.typography.h6,
+                        colors = getCustomOutlinedTextFieldColor(),
+                        onValueChange = { onDireccionValueChange(direccion.copy(calle = it)) },
+                        singleLine = true,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+            }
+
+            // Row of Numero and Codigo Postal form field
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            ) {
+                // Numero form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Numero:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = if (direccion.numero > 0) direccion.numero.toString() else "",
+                        textStyle = MaterialTheme.typography.h6,
+                        colors = getCustomOutlinedTextFieldColor(),
+                        onValueChange = {
+                            try {
+                                onDireccionValueChange(direccion.copy(numero = it.toInt()))
+                            } catch (_: Exception) {
+                            }
+                        },
+                        singleLine = true,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+                Spacer(Modifier.padding(horizontal = 32.dp))
+
+                // Codigo Postal form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Codigo Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    OutlinedTextField(
+                        value = direccion.codigoPostal,
+                        textStyle = MaterialTheme.typography.h6,
+                        colors = getCustomOutlinedTextFieldColor(),
+                        onValueChange = { onDireccionValueChange(direccion.copy(codigoPostal = it)) },
+                        singleLine = true,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+            }
         }
     }
 }
@@ -211,8 +310,11 @@ private fun ProveedorFormContent(
 /*
 Helper methods
 */
-private fun validateCorrectFields(nombre: String, correo: String, telefono: String, direccion: String) =
-    nombre.isNotEmpty() && correo.isNotEmpty() && telefono.isNotEmpty() && direccion.isNotEmpty()
+private fun validateCorrectFields(nombre: String, correo: String, telefono: String, direccion: Direccion) =
+    nombre.isNotEmpty() && correo.isNotEmpty() && telefono.isNotEmpty() && validateDireccion(direccion)
+
+private fun validateDireccion(direccion: Direccion) =
+    direccion.colonia.isEmpty() && direccion.calle.isNotEmpty() && direccion.numero > 0 && direccion.codigoPostal.isNotEmpty()
 
 private fun List<Producto>.addProducto(producto: Producto): List<Producto> {
     val newList = this.toMutableList()
@@ -224,3 +326,6 @@ private fun List<Producto>.addProducto(producto: Producto): List<Producto> {
 
     return newList
 }
+
+private fun emptyDireccion() = Direccion(null, "", "", "", 0, "")
+

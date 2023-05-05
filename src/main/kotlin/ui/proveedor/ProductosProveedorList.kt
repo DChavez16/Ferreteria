@@ -106,7 +106,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
                 Text(text = "Dirección: ", style = MaterialTheme.typography.h5)
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = proveedor.contacto.direccion,
+                    text = proveedor.contacto.direccion.formato,
                     style = MaterialTheme.typography.h6,
                     textDecoration = TextDecoration.Underline
                 )
