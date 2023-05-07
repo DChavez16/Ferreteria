@@ -1,5 +1,5 @@
 package util
 
-import data.model.FechaVenta
+import model.fechaVenta.FechaVenta
 
 fun getFechaString(fechaVenta: FechaVenta) = "${fechaVenta.dia}/${fechaVenta.mes}/${fechaVenta.anio}"

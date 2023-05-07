@@ -1,5 +1,9 @@
-package data.model
+package model.proveedor
 
+import model.contacto.Contacto
+import model.contacto.ContactoTestList
+import model.producto.Producto
+import model.producto.ProductoTestList
 import kotlin.random.Random
 
 data class Proveedor(

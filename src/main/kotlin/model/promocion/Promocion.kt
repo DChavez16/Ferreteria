@@ -1,4 +1,7 @@
-package data.model
+package model.promocion
+
+import model.producto.Producto
+import model.producto.ProductoTestList
 
 data class Promocion(
     var id: Long?,

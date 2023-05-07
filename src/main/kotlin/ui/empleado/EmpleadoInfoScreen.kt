@@ -9,9 +9,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.model.Empleado
-import data.model.EmpleadoTestList
-import data.model.SucursalTestList
+import model.empleado.Empleado
+import model.empleado.EmpleadoTestList
+import model.sucursal.SucursalTestList
 import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader

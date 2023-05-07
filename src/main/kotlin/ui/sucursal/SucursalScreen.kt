@@ -4,8 +4,8 @@ import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import data.model.Sucursal
-import data.model.SucursalTestList
+import model.sucursal.Sucursal
+import model.sucursal.SucursalTestList
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

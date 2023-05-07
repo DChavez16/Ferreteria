@@ -1,4 +1,7 @@
-package data.model
+package model.contacto
+
+import model.direccion.Direccion
+import model.direccion.DireccionTestList
 
 data class Contacto(
     var id: Long?,

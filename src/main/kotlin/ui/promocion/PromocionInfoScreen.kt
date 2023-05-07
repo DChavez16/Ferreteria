@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import data.model.Producto
-import data.model.ProductoTestList
-import data.model.Promocion
+import model.producto.Producto
+import model.producto.ProductoTestList
+import model.promocion.Promocion
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import ui.util.ProductoPromocionDetailsList

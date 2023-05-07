@@ -1,4 +1,4 @@
-package data.model
+package model.direccion
 
 data class Direccion(
     var id: Long?,

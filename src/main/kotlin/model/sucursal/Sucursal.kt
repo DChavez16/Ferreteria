@@ -1,4 +1,9 @@
-package data.model
+package model.sucursal
+
+import model.contacto.Contacto
+import model.contacto.ContactoTestList
+import model.empleado.Empleado
+import model.empleado.EmpleadoTestList
 
 data class Sucursal(
     var id: Long?,

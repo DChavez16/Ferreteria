@@ -4,8 +4,8 @@ import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import data.model.Cliente
-import data.model.ClienteTestList
+import model.cliente.Cliente
+import model.cliente.ClienteTestList
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

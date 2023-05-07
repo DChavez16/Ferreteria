@@ -1,9 +1,15 @@
-package data.model
+package model.detalleVentaProducto
 
+import model.producto.ProductoTestList
+import model.productoVenta.ProductoVenta
+import model.reporte.Reporte
+import model.reporte.ReporteTestList
+import model.venta.Venta
+import model.venta.VentaTestList
 import kotlin.random.Random
 
 data class DetalleVentaProducto(
-    var venta: Venta, var productos: List<ProductosVenta>, var reporte: Reporte
+    var venta: Venta, var productos: List<ProductoVenta>, var reporte: Reporte
 )
 
 
@@ -50,12 +56,12 @@ var DetalleVentaProductoTestList = listOf(
     DetalleVentaProducto(VentaTestList[39], getProductsList(), ReporteTestList[29])
 )
 
-private fun getProductsList(): List<ProductosVenta> {
-    val productoList = mutableListOf<ProductosVenta>()
+private fun getProductsList(): List<ProductoVenta> {
+    val productoList = mutableListOf<ProductoVenta>()
 
     (1..Random.nextInt(1, 10)).forEach { _ ->
         productoList.add(
-            ProductosVenta(
+            ProductoVenta(
                 producto = ProductoTestList[Random.nextInt(0, 29)],
                 cantidad = (1..10).random()
             )

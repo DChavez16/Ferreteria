@@ -1,4 +1,11 @@
-package data.model
+package model.venta
+
+import model.cliente.Cliente
+import model.cliente.ClienteTestList
+import model.empleado.Empleado
+import model.empleado.EmpleadoTestList
+import model.fechaVenta.FechaVenta
+import model.fechaVenta.FechaVentaTestList
 
 data class Venta(
     var id: Long,

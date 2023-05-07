@@ -1,4 +1,4 @@
-package data.model
+package model.fechaVenta
 
 data class FechaVenta(
     var id: Long?,

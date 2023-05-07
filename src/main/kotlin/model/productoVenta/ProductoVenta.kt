@@ -1,6 +1,9 @@
-package data.model
+package model.productoVenta
 
-data class ProductosVenta(
+import model.producto.Producto
+import model.promocion.Promocion
+
+data class ProductoVenta(
     var producto: Producto,
     var cantidad: Int,
     var subtotal: Double = producto.precioReal * cantidad,

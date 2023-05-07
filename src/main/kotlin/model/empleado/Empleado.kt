@@ -1,5 +1,13 @@
-package data.model
+package model.empleado
 
+import model.sucursal.Sucursal
+import model.sucursal.SucursalTestList
+import model.venta.Venta
+import model.venta.VentaTestList
+import model.contacto.Contacto
+import model.contacto.ContactoTestList
+import model.detalleVentaProducto.DetalleVentaProducto
+import model.detalleVentaProducto.DetalleVentaProductoTestList
 import util.UserType
 
 data class Empleado(

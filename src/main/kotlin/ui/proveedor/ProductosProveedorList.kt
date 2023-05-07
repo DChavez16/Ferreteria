@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import data.model.Proveedor
+import model.proveedor.Proveedor
 import ui.util.ProductosProveedorDetailsList
 import ui.util.ScreenHeader
 

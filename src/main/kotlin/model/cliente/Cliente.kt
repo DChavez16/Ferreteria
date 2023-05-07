@@ -1,4 +1,7 @@
-package data.model
+package model.cliente
+
+import model.contacto.Contacto
+import model.contacto.ContactoTestList
 
 data class Cliente(
     var id: Long?,

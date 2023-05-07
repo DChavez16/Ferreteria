@@ -8,10 +8,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.model.Direccion
-import data.model.Sucursal
-import data.model.SucursalTestList
-import data.model.municipiosList
+import model.direccion.Direccion
+import model.sucursal.Sucursal
+import model.sucursal.SucursalTestList
+import model.direccion.municipiosList
 import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader

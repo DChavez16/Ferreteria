@@ -1,4 +1,4 @@
-package data.model
+package model.producto
 
 data class Producto(
     var id: Long?,

@@ -8,7 +8,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.model.*
+import model.direccion.Direccion
+import model.direccion.municipiosList
+import model.producto.Producto
+import model.producto.ProductoTestList
+import model.proveedor.Proveedor
+import model.proveedor.ProveedorTestList
 import ui.util.*
 import util.getCustomOutlinedTextFieldColor
 

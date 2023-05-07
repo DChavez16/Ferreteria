@@ -1,4 +1,7 @@
-package data.model
+package model.reporte
+
+import model.fechaVenta.FechaVenta
+import model.fechaVenta.FechaVentaTestList
 
 data class Reporte(
     var id: FechaVenta?,

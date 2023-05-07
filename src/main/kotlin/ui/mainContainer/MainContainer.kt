@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
-import controller.MainController
+import controller.mainContainer.MainController
 import ui.cliente.ClienteScreen
 import ui.empleado.EmpleadoScreen
 import ui.home.HomeScreen

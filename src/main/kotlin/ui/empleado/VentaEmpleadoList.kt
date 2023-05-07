@@ -8,8 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import data.model.Empleado
-import data.model.getDetalleVentasEmpleado
+import model.empleado.Empleado
+import model.empleado.getDetalleVentasEmpleado
 import ui.util.ScreenHeader
 import ui.util.VentaList
 

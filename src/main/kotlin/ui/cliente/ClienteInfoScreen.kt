@@ -9,8 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.model.Cliente
-import data.model.ClienteTestList
+import model.cliente.Cliente
+import model.cliente.ClienteTestList
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
 import util.getCustomCheckboxColor

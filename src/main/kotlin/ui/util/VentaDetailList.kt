@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import data.model.DetalleVentaProducto
+import model.detalleVentaProducto.DetalleVentaProducto
 import util.decimalFormat
 import util.getFechaString
 

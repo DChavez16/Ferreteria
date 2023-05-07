@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import data.model.Reporte
+import model.reporte.Reporte
 import util.decimalFormat
 import util.getFechaString
 
