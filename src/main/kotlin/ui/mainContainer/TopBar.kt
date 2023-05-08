@@ -14,22 +14,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import controller.mainContainer.MainController
 import kotlinx.coroutines.delay
-import java.util.*
 import kotlin.time.Duration.Companion.seconds
 
 
-private lateinit var cal: Calendar
+
 
 @Composable
-fun TopBar() {
-    var dateTime by remember { mutableStateOf(getDateTime()) }
-    val day by remember { mutableStateOf(getDay()) }
+fun TopBar(mainController: MainController) {
+    var dateTime by remember { mutableStateOf(mainController.getDateTime()) }
+    val day by remember { mutableStateOf(mainController.getDay()) }
 
     LaunchedEffect(Unit) {
         while (true) {
             delay(1.seconds)
-            dateTime = getDateTime()
+            dateTime = mainController.getDateTime()
         }
     }
 
@@ -70,40 +70,12 @@ fun TopBar() {
 
 
 /*
-Helper methods
-*/
-private fun getDateTime(): String {
-    cal = Calendar.getInstance()
-
-    val hour = cal.get(Calendar.HOUR_OF_DAY)
-    val min = with(cal.get(Calendar.MINUTE)) {
-        if (this < 10) "0$this" else this
-    }
-    val sec = with(cal.get(Calendar.SECOND)) {
-        if (this < 10) "0$this" else this
-    }
-
-    return "${hour}:${min}:${sec}"
-}
-
-private fun getDay(): String {
-    cal = Calendar.getInstance()
-
-    val day = cal.get(Calendar.DAY_OF_MONTH)
-    val month = cal.get(Calendar.MONTH) + 1
-    val year = cal.get(Calendar.YEAR)
-
-    return "${day}/${month}/${year}"
-}
-
-
-/*
 Top bar preview
 */
 @Preview
 @Composable
 fun TopBarPreview() {
     MaterialTheme {
-        TopBar()
+        TopBar(MainController())
     }
 }

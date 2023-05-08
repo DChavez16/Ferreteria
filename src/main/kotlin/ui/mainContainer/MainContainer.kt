@@ -16,9 +16,7 @@ import ui.proveedor.ProveedorScreen
 import ui.reporte.ReporteScreen
 import ui.sucursal.SucursalScreen
 import ui.venta.VentaScreen
-import util.NavigationOptions
 import util.NavigationOptionsCodes
-import util.UserType
 
 
 /**
@@ -28,26 +26,20 @@ import util.UserType
 @Composable
 fun MainContainer(closeProgram: () -> Unit) {
     val mainController = MainController()
-    // TODO Codeline for debug purposes
-    var userType by remember { mutableStateOf(UserType.ADMINISTRATOR) }
 
     // State variable that defines which screen is showing in the main container
     var currentMainContainerContent by remember { mutableStateOf(NavigationOptionsCodes.INICIO) }
 
     Column {
         // Draws the top bar of the program, it'll be static during all the program's lifecycle
-        TopBar()
+        TopBar(mainController)
         Row {
             // Draws the navigation sidebar of the program, it'll be static during all the program's lifecycle
             NavigationSideBar(
-                navigationOptionsList = NavigationOptions(userType).navigationList,
-                userType = userType,
+                mainController = mainController,
                 closeProgram = closeProgram,
                 selectedItem = currentMainContainerContent,
-                onNavigationOptionClicked = { currentMainContainerContent = it },
-                onUserInfoClicked = {
-                    userType = if (userType == UserType.CASHIER) UserType.ADMINISTRATOR else UserType.CASHIER
-                }
+                onNavigationOptionClicked = { currentMainContainerContent = it }
             )
             /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
                Uses a vertical slide in animation towards the top or bottom of the screen

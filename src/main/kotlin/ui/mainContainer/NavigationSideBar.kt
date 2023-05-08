@@ -14,6 +14,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import controller.mainContainer.MainController
 import util.NavigationOption
 import util.NavigationOptions
 import util.NavigationOptionsCodes
@@ -29,13 +31,13 @@ import util.UserType
 
 @Composable
 fun NavigationSideBar(
-    navigationOptionsList: List<NavigationOption>,
-    userType: UserType,
+    mainController: MainController,
     closeProgram: () -> Unit,
     selectedItem: NavigationOptionsCodes,
-    onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit,
-    onUserInfoClicked: () -> Unit
+    onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit
 ) {
+    val userType = mainController.userType.collectAsState()
+
     Surface(
         color = MaterialTheme.colors.secondaryVariant, elevation = 8.dp
     ) {
@@ -44,24 +46,24 @@ fun NavigationSideBar(
                 verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight().width(200.dp)
             ) {
                 LazyColumn(contentPadding = PaddingValues(0.dp)) {
-                    items(navigationOptionsList) { navigationOption ->
-                        Column {
-                            if (navigationOption.code == NavigationOptionsCodes.PRODUCTO) {
-                                Divider(
-                                    color = MaterialTheme.colors.secondary,
-                                    thickness = Dp.Hairline,
-                                    modifier = Modifier.padding(horizontal = 10.dp)
-                                )
-                            }
-                            NavigationOptionItem(
-                                navigationOption = navigationOption,
-                                isItemSelected = { selectedItem == it },
-                                onNavigationOptionClicked = onNavigationOptionClicked
+                    items(mainController.optionsList) { navigationOption ->
+                        if (navigationOption.code == NavigationOptionsCodes.PRODUCTO) {
+                            Divider(
+                                color = MaterialTheme.colors.secondary,
+                                thickness = Dp.Hairline,
+                                modifier = Modifier.padding(horizontal = 10.dp)
                             )
                         }
+                        NavigationOptionItem(
+                            navigationOption = navigationOption,
+                            isItemSelected = { selectedItem == it },
+                            onNavigationOptionClicked = onNavigationOptionClicked
+                        )
                     }
                 }
-                UserInfo(userType, closeProgram, onUserInfoClicked)
+                UserInfo(userType = userType.value,
+                    closeProgram = closeProgram,
+                    onUserInfoClicked = { mainController.changeUserType() })
             }
             Divider(color = Color.Gray, modifier = Modifier.fillMaxHeight().width(Dp.Hairline))
         }
@@ -77,44 +79,32 @@ private fun NavigationOptionItem(
     val isSelected = isItemSelected(navigationOption.code)
 
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-            .height(
-                if (isSelected) 60.dp
-                else 50.dp
+        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().height(
+            if (isSelected) 60.dp
+            else 50.dp
+        ).background(
+            if (isSelected) MaterialTheme.colors.secondary
+            else MaterialTheme.colors.secondaryVariant
+        ).clickable {
+            onNavigationOptionClicked(navigationOption.code)
+        }.animateContentSize(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessHigh
             )
-            .background(
-                if (isSelected) MaterialTheme.colors.secondary
-                else MaterialTheme.colors.secondaryVariant
-            )
-            .clickable {
-                onNavigationOptionClicked(navigationOption.code)
-            }
-            .animateContentSize(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessHigh
-                )
-            )
-            .padding(vertical = 10.dp)
-    )
-    {
+        ).padding(vertical = 10.dp)
+    ) {
         Image(
             painter = painterResource(navigationOption.imagePath),
             contentDescription = null,
             contentScale = ContentScale.FillHeight,
-            modifier = Modifier
-                .animateContentSize(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessHigh
-                    )
+            modifier = Modifier.animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessHigh
                 )
-                .padding(
-                    horizontal =
-                    if (isSelected) 10.dp
-                    else 15.dp
-                )
+            ).padding(
+                horizontal = if (isSelected) 10.dp
+                else 15.dp
+            )
         )
         Text(
             text = navigationOption.name, style = MaterialTheme.typography.h6
@@ -125,7 +115,9 @@ private fun NavigationOptionItem(
 @Composable
 private fun UserInfo(userType: UserType, closeProgram: () -> Unit, onUserInfoClicked: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Daniel Chavez", style = MaterialTheme.typography.body1, modifier = Modifier.clickable { onUserInfoClicked() })
+        Text(text = "Daniel Chavez",
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.clickable { onUserInfoClicked() })
         if (userType == UserType.ADMINISTRATOR) {
             Spacer(Modifier.height(4.dp))
             Text(text = "Administrador", style = MaterialTheme.typography.body1)
@@ -162,13 +154,9 @@ Navigation sidebar preview
 @Composable
 fun NavigationSideBarPreview() {
     MaterialTheme {
-        NavigationSideBar(
-            navigationOptionsList = NavigationOptions(UserType.ADMINISTRATOR).navigationList,
-            userType = UserType.CASHIER,
+        NavigationSideBar(mainController = MainController(),
             closeProgram = {},
             selectedItem = NavigationOptionsCodes.INICIO,
-            onNavigationOptionClicked = {},
-            onUserInfoClicked = {}
-        )
+            onNavigationOptionClicked = {})
     }
 }
