@@ -5,12 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import model.producto.Producto
+import controller.producto.ProductoController
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
 import util.decimalFormat
@@ -19,14 +20,12 @@ import util.getCustomOutlinedTextFieldColor
 @Composable
 fun ProductoInfoScreen(
     editProduct: Boolean,
+    productoController: ProductoController,
     onReturnButtonClick: () -> Unit,
     onMainButtonClick: () -> Unit,
-    producto: Producto? = null,
     onDeleteClick: () -> Unit = {}
 ) {
-    var currentProductoName by remember { mutableStateOf(producto?.nombre ?: "") }
-    var currentProductoDescription by remember { mutableStateOf(producto?.descripcion ?: "") }
-    var currentProductoSellPrice by remember { mutableStateOf(if (producto?.precioVenta == null) "" else producto.precioVenta.toString()) }
+    val productoState = productoController.productoState.collectAsState()
 
     Column(modifier = Modifier.fillMaxHeight()) {
         /*
@@ -52,8 +51,8 @@ fun ProductoInfoScreen(
                     Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
-                        value = currentProductoName,
-                        onValueChange = { currentProductoName = it },
+                        value = productoState.value.currentProduct.nombre,
+                        onValueChange = { productoController.updateProductName(it) },
                         modifier = Modifier.weight(2f)
                     )
                 }
@@ -65,8 +64,8 @@ fun ProductoInfoScreen(
                     Text(text = "Descripción:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
-                        value = currentProductoDescription,
-                        onValueChange = { currentProductoDescription = it },
+                        value = productoController.productoState.value.currentProduct.descripcion,
+                        onValueChange = { productoController.updateProductDescription(it) },
                         singleLine = false,
                         modifier = Modifier.weight(2f)
                     )
@@ -81,14 +80,9 @@ fun ProductoInfoScreen(
                     )
                     Spacer(Modifier.width(4.dp))
                     EditTextField(
-                        value = currentProductoSellPrice, onValueChange = {
-                            try {
-                                if (it.toDouble() <= 100000.0) {
-                                    currentProductoSellPrice = if (it == "") "" else it.toDouble().toString()
-                                }
-                            } catch (_: NumberFormatException) {
-                            }
-                        }, modifier = Modifier.weight(2f)
+                        value = productoState.value.currentProduct.precioVenta.toString(),
+                        onValueChange = { productoController.updateSellPrice(it) },
+                        modifier = Modifier.weight(2f)
                     )
                 }
                 Row(
@@ -101,12 +95,9 @@ fun ProductoInfoScreen(
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = decimalFormat(
-                            getPrecioSinIVA(
-                                if (currentProductoSellPrice == "") 0.0
-                                else currentProductoSellPrice.toDouble()
-                            )
-                        ), style = MaterialTheme.typography.h6, modifier = Modifier.weight(2f)
+                        text = decimalFormat(productoState.value.currentProduct.precioReal),
+                        style = MaterialTheme.typography.h6,
+                        modifier = Modifier.weight(2f)
                     )
                 }
             }
@@ -130,16 +121,8 @@ fun ProductoInfoScreen(
                 firstButtonText = "Modificar",
                 firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = {
-                    currentProductoName = ""
-                    currentProductoDescription = ""
-                    currentProductoSellPrice = ""
-                },
-                firstButtonEnabled = validateFields(
-                    currentProductoName,
-                    currentProductoDescription,
-                    if (currentProductoSellPrice == "") 0.0 else currentProductoSellPrice.toDouble()
-                ),
+                secondButtonAction = { productoController.clearProductFields() },
+                firstButtonEnabled = productoController.productoIsNotEmpty(),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -160,9 +143,3 @@ private fun EditTextField(
         modifier = modifier
     )
 }
-
-
-private fun validateFields(name: String, description: String, sellPrice: Double) =
-    name != "" && description != "" && sellPrice != 0.0
-
-private fun getPrecioSinIVA(precioConIVA: Double) = precioConIVA / 1.16

@@ -10,7 +10,7 @@ fun main() = application {
     Window(
         onCloseRequest = { exitApplication() },
         title = "Ferreteria",
-        state = WindowState(placement = WindowPlacement.Fullscreen),
+        state = WindowState(placement = WindowPlacement.Maximized),
         resizable = false
     ) {
         FerreteriaTheme {

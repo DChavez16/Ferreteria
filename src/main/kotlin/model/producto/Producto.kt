@@ -1,12 +1,12 @@
 package model.producto
 
 data class Producto(
-    var id: Long?,
-    var nombre: String,
-    var precioReal: Double,
-    var cantidadIVA: Double,
-    var precioVenta: Double,
-    var descripcion: String
+    var id: Long? = null,
+    var nombre: String = "",
+    var precioReal: Double = 0.0,
+    var cantidadIVA: Double = 0.0,
+    var precioVenta: Double = 0.0,
+    var descripcion: String = ""
 )
 
 

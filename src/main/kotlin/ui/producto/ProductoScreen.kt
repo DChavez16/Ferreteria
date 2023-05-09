@@ -4,14 +4,17 @@ import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
+import controller.producto.ProductoController
 import model.producto.Producto
-import model.producto.ProductoTestList
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ProductoScreen() {
+    val productoController = ProductoController()
+
     var currentScreen by remember { mutableStateOf(ProductoScreenCodes.LIST) }
-    var editableProduct by remember { mutableStateOf<Producto?>(null) }
+
+    val productoState = productoController.productoState.collectAsState()
 
     Surface(color = MaterialTheme.colors.background) {
         /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
@@ -26,28 +29,38 @@ fun ProductoScreen() {
         }) {
             when (it) {
                 ProductoScreenCodes.LIST -> {
-                    ProductoList(productoList = ProductoTestList, onAddProductoClicked = {
-                        editableProduct = null
+                    ProductoList(productoList = productoState.value.productsList, onAddProductoClicked = {
+                        productoController.changeCurrentProduct()
                         currentScreen = ProductoScreenCodes.INFO
                     }, onEditProductoClicked = { producto: Producto ->
-                        editableProduct = producto
+                        productoController.changeCurrentProduct(producto)
                         currentScreen = ProductoScreenCodes.INFO
                     })
                 }
 
                 ProductoScreenCodes.INFO -> {
-                    if (editableProduct != null) {
+                    if (productoState.value.currentProduct.id != null) {
                         // Draws the product info screen on edit mode
                         ProductoInfoScreen(editProduct = true,
+                            productoController = productoController,
                             onReturnButtonClick = { currentScreen = ProductoScreenCodes.LIST },
-                            onMainButtonClick = {},
-                            producto = editableProduct,
-                            onDeleteClick = {})
+                            onMainButtonClick = {
+                                productoController.updateProducto(productoState.value.currentProduct)
+                                currentScreen = ProductoScreenCodes.LIST
+                            },
+                            onDeleteClick = {
+                                productoController.deleteProduct(productoState.value.currentProduct)
+                                currentScreen = ProductoScreenCodes.LIST
+                            })
                     } else {
                         // Draws the product info scree on add mode
                         ProductoInfoScreen(editProduct = false,
+                            productoController = productoController,
                             onReturnButtonClick = { currentScreen = ProductoScreenCodes.LIST },
-                            onMainButtonClick = {})
+                            onMainButtonClick = {
+                                productoController.createProduct(productoState.value.currentProduct)
+                                currentScreen = ProductoScreenCodes.LIST
+                            })
                     }
                 }
             }
