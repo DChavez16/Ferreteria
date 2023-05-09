@@ -6,12 +6,14 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import model.detalleVentaProducto.DetalleVentaProductoTestList
+import controller.venta.VentaController
 import ui.util.VentaList
 
 @Composable
 fun VentaScreen() {
+    val ventaController = VentaController()
+
     Surface(color = MaterialTheme.colors.background) {
-        VentaList(DetalleVentaProductoTestList, modifier = Modifier.padding(32.dp))
+        VentaList(ventaController.salesList, modifier = Modifier.padding(32.dp))
     }
 }

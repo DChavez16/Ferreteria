@@ -5,14 +5,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.producto.Producto
+import model.producto.ProductoTestList
 import kotlin.random.Random
 
 class HomeController {
     private var _homeState = MutableStateFlow(HomeState())
     val homeState: StateFlow<HomeState> = _homeState.asStateFlow()
 
+    var productsList: List<Producto>
+
     init {
         resetState()
+        // TODO Change this temporal line when the database is implemented
+        productsList = ProductoTestList
     }
 
     // Methods

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import controller.home.HomeController
 import controller.home.SaleInfo
 import controller.home.SelectedProductos
-import model.producto.ProductoTestList
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import util.decimalFormat
@@ -40,7 +39,7 @@ fun HomeScreen() {
                 // Available products for sale
                 AvailableProductsList(
                     modifier = Modifier.weight(1f),
-                    productoList = ProductoTestList,
+                    productoList = homeController.productsList,
                     quantitySelectionEnabled = true,
                     onAddProductoClick = { producto, quantity ->
                         homeController.onAddProductoClick(producto, quantity)
