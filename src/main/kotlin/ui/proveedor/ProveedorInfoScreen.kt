@@ -4,26 +4,24 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import model.direccion.Direccion
+import controller.proveedor.ProveedorController
 import model.direccion.municipiosList
-import model.producto.Producto
 import model.producto.ProductoTestList
-import model.proveedor.Proveedor
-import model.proveedor.ProveedorTestList
 import ui.util.*
 import util.getCustomOutlinedTextFieldColor
 
 @Composable
 fun ProveedorInfoScreen(
     editable: Boolean,
+    proveedorController: ProveedorController,
     onReturnButtonClick: () -> Unit,
-    onMainButtonClick: (Proveedor) -> Unit,
-    onDeleteClick: () -> Unit = {},
-    selectedProveedor: Proveedor? = null
+    onMainButtonClick: () -> Unit,
+    onDeleteClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxHeight()) {
         // Screen header
@@ -33,7 +31,7 @@ fun ProveedorInfoScreen(
         )
         // Screen form
         ProveedorForm(
-            currentProveedor = selectedProveedor,
+            proveedorController = proveedorController,
             editable = editable,
             onMainButtonClick = onMainButtonClick,
             onDeleteClick = onDeleteClick,
@@ -44,18 +42,13 @@ fun ProveedorInfoScreen(
 
 @Composable
 private fun ProveedorForm(
-    currentProveedor: Proveedor?,
+    proveedorController: ProveedorController,
     editable: Boolean,
-    onMainButtonClick: (Proveedor) -> Unit,
+    onMainButtonClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier
 ) {
-    // Form variables
-    var proveedorNombre by remember { mutableStateOf(currentProveedor?.nombre ?: "") }
-    var proveedorCorreo by remember { mutableStateOf(currentProveedor?.contacto?.correo ?: "") }
-    var proveedorTelefono by remember { mutableStateOf(currentProveedor?.contacto?.telefono ?: "") }
-    var proveedorDireccion by remember { mutableStateOf(currentProveedor?.contacto?.direccion ?: emptyDireccion()) }
-    var proveedorProductos by remember { mutableStateOf(currentProveedor?.productos ?: emptyList()) }
+    val proveedorState = proveedorController.proveedorState.collectAsState()
 
     Column(modifier = modifier.fillMaxHeight()) {
         // Form body
@@ -64,20 +57,28 @@ private fun ProveedorForm(
             Column(modifier = Modifier.fillMaxHeight().weight(2f)) {
                 // Draws the editable form for suppliers
                 ProveedorFormContent(
-                    nombre = proveedorNombre,
-                    onNombreValueChange = { newNombre -> proveedorNombre = newNombre },
-                    correo = proveedorCorreo,
-                    onCorreoValueChange = { newCorreo -> proveedorCorreo = newCorreo },
-                    telefono = proveedorTelefono,
-                    onTelefonoValueChange = { newTelefono -> proveedorTelefono = newTelefono },
-                    direccion = proveedorDireccion,
-                    onDireccionValueChange = { newDireccion -> proveedorDireccion = newDireccion },
+                    nombre = proveedorState.value.currentProveedor.nombre,
+                    onNombreValueChange = { proveedorController.updateSupplierName(it) },
+                    correo = proveedorState.value.currentProveedor.contacto.correo,
+                    onCorreoValueChange = { proveedorController.updateSupplierMail(it) },
+                    telefono = proveedorState.value.currentProveedor.contacto.telefono,
+                    onTelefonoValueChange = { proveedorController.updateSupplierPhone(it) },
+                    municipio = proveedorState.value.currentProveedor.contacto.direccion.municipio,
+                    onMunicipioValueChange = { proveedorController.updateSupplierTown(it) },
+                    colonia = proveedorState.value.currentProveedor.contacto.direccion.colonia,
+                    onColoniaValueChange = { proveedorController.updateSupplierNeighborhood(it) },
+                    calle = proveedorState.value.currentProveedor.contacto.direccion.calle,
+                    onCalleValueChange = { proveedorController.updateSupplierStreet(it) },
+                    numero = proveedorState.value.currentProveedor.contacto.direccion.numero,
+                    onNumeroValueChange = { proveedorController.updateSupplierDirectionNumber(it) },
+                    codigoPostal = proveedorState.value.currentProveedor.contacto.direccion.codigoPostal,
+                    onCodigoPostalValueChange = { proveedorController.updateSupplierPostalCode(it) },
                     modifier = Modifier.weight(3f)
                 )
 
                 // Draws the list of products provided by the supplier
                 ProductosProveedorDetailsList(
-                    productosList = proveedorProductos, modifier = Modifier.weight(2f)
+                    productosList = proveedorState.value.currentProveedor.productos, modifier = Modifier.weight(2f)
                 )
             }
 
@@ -85,9 +86,7 @@ private fun ProveedorForm(
             AvailableProductsList(modifier = Modifier.weight(1f),
                 productoList = ProductoTestList,
                 quantitySelectionEnabled = false,
-                onAddProductoClick = { producto, _ ->
-                    proveedorProductos = proveedorProductos.addProducto(producto)
-                })
+                onAddProductoClick = { producto, _ -> proveedorController.addProductToPromotion(producto) })
         }
 
         // Bottom buttons to interact with the screen
@@ -103,18 +102,10 @@ private fun ProveedorForm(
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = if (editable) "Actualizar" else "Agregar",
-                firstButtonAction = { onMainButtonClick(ProveedorTestList[0]) },
+                firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = {
-                    proveedorNombre = ""
-                    proveedorCorreo = ""
-                    proveedorTelefono = ""
-                    proveedorDireccion = emptyDireccion()
-                    proveedorProductos = emptyList()
-                },
-                firstButtonEnabled = validateCorrectFields(
-                    proveedorNombre, proveedorCorreo, proveedorTelefono, proveedorDireccion
-                ),
+                secondButtonAction = { proveedorController.clearProveedor() },
+                firstButtonEnabled = proveedorController.proveedorIsNotEmpty(),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -129,8 +120,16 @@ private fun ProveedorFormContent(
     onCorreoValueChange: (String) -> Unit,
     telefono: String,
     onTelefonoValueChange: (String) -> Unit,
-    direccion: Direccion,
-    onDireccionValueChange: (Direccion) -> Unit,
+    municipio: String,
+    onMunicipioValueChange: (String) -> Unit,
+    colonia: String,
+    onColoniaValueChange: (String) -> Unit,
+    calle: String,
+    onCalleValueChange: (String) -> Unit,
+    numero: Int,
+    onNumeroValueChange: (String) -> Unit,
+    codigoPostal: String,
+    onCodigoPostalValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -213,9 +212,9 @@ private fun ProveedorFormContent(
                 ) {
                     Text(text = "Municipio:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     ExpandableDropDownMenu(
-                        value = direccion.municipio,
+                        value = municipio,
                         optionsList = municipiosList,
-                        onValueChange = { onDireccionValueChange(direccion.copy(municipio = it.toString())) },
+                        onValueChange = { onMunicipioValueChange(it.toString()) },
                         modifier = Modifier.weight(2f)
                     )
                 }
@@ -234,10 +233,10 @@ private fun ProveedorFormContent(
                 ) {
                     Text(text = "Colonia:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     OutlinedTextField(
-                        value = direccion.colonia,
+                        value = colonia,
                         textStyle = MaterialTheme.typography.h6,
                         colors = getCustomOutlinedTextFieldColor(),
-                        onValueChange = { onDireccionValueChange(direccion.copy(colonia = it)) },
+                        onValueChange = onColoniaValueChange,
                         singleLine = true,
                         modifier = Modifier.weight(2f)
                     )
@@ -252,10 +251,10 @@ private fun ProveedorFormContent(
                 ) {
                     Text(text = "Calle:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     OutlinedTextField(
-                        value = direccion.calle,
+                        value = calle,
                         textStyle = MaterialTheme.typography.h6,
                         colors = getCustomOutlinedTextFieldColor(),
-                        onValueChange = { onDireccionValueChange(direccion.copy(calle = it)) },
+                        onValueChange = onCalleValueChange,
                         singleLine = true,
                         modifier = Modifier.weight(2f)
                     )
@@ -275,15 +274,10 @@ private fun ProveedorFormContent(
                 ) {
                     Text(text = "Numero:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     OutlinedTextField(
-                        value = if (direccion.numero > 0) direccion.numero.toString() else "",
+                        value = if (numero > 0) numero.toString() else "",
                         textStyle = MaterialTheme.typography.h6,
                         colors = getCustomOutlinedTextFieldColor(),
-                        onValueChange = {
-                            try {
-                                onDireccionValueChange(direccion.copy(numero = it.toInt()))
-                            } catch (_: Exception) {
-                            }
-                        },
+                        onValueChange = onNumeroValueChange,
                         singleLine = true,
                         modifier = Modifier.weight(2f)
                     )
@@ -298,10 +292,10 @@ private fun ProveedorFormContent(
                 ) {
                     Text(text = "Codigo Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     OutlinedTextField(
-                        value = direccion.codigoPostal,
+                        value = codigoPostal,
                         textStyle = MaterialTheme.typography.h6,
                         colors = getCustomOutlinedTextFieldColor(),
-                        onValueChange = { onDireccionValueChange(direccion.copy(codigoPostal = it)) },
+                        onValueChange = onCodigoPostalValueChange,
                         singleLine = true,
                         modifier = Modifier.weight(2f)
                     )
@@ -310,27 +304,3 @@ private fun ProveedorFormContent(
         }
     }
 }
-
-
-/*
-Helper methods
-*/
-private fun validateCorrectFields(nombre: String, correo: String, telefono: String, direccion: Direccion) =
-    nombre.isNotEmpty() && correo.isNotEmpty() && telefono.isNotEmpty() && validateDireccion(direccion)
-
-private fun validateDireccion(direccion: Direccion) =
-    direccion.colonia.isEmpty() && direccion.calle.isNotEmpty() && direccion.numero > 0 && direccion.codigoPostal.isNotEmpty()
-
-private fun List<Producto>.addProducto(producto: Producto): List<Producto> {
-    val newList = this.toMutableList()
-
-    // Validate if is already in the list, if so, update the element content
-    if (!this.contains(producto)) {
-        newList.add(producto)
-    }
-
-    return newList
-}
-
-private fun emptyDireccion() = Direccion(null, "", "", "", 0, "")
-

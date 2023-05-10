@@ -4,10 +4,10 @@ import model.direccion.Direccion
 import model.direccion.DireccionTestList
 
 data class Contacto(
-    var id: Long?,
-    var correo: String,
-    var telefono: String,
-    var direccion: Direccion
+    var id: Long? = null,
+    var correo: String = "",
+    var telefono: String = "",
+    var direccion: Direccion = Direccion()
 )
 
 val ContactoTestList = listOf(

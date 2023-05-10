@@ -4,14 +4,16 @@ import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import model.proveedor.Proveedor
-import model.proveedor.ProveedorTestList
+import controller.proveedor.ProveedorController
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ProveedorScreen() {
+    val proveedorController = ProveedorController()
+
     var currentScreen by remember { mutableStateOf(ProveedorScreenCodes.LIST) }
-    var currentProveedor by remember { mutableStateOf<Proveedor?>(null) }
+
+    val proveedorState = proveedorController.proveedorState.collectAsState()
 
     Surface(color = MaterialTheme.colors.background) {
         /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
@@ -26,37 +28,46 @@ fun ProveedorScreen() {
         }) {
             when (it) {
                 ProveedorScreenCodes.LIST -> {
-                    ProveedorList(proveedorList = ProveedorTestList, onAddProveedorClick = {
+                    ProveedorList(proveedorList = proveedorState.value.proveedorList, onAddProveedorClick = {
                         currentScreen = ProveedorScreenCodes.INFO
-                        currentProveedor = null
+                        proveedorController.changeCurrentProveedor()
                     }, onEdirtProveedorClick = { selectedProveedor ->
                         currentScreen = ProveedorScreenCodes.INFO
-                        currentProveedor = selectedProveedor
+                        proveedorController.changeCurrentProveedor(selectedProveedor)
                     }, onProveedorElementClick = { selectedProveedor ->
                         currentScreen = ProveedorScreenCodes.PROVEEDOR_PRODUCTOS
-                        currentProveedor = selectedProveedor
+                        proveedorController.changeCurrentProveedor(selectedProveedor)
                     })
                 }
 
                 ProveedorScreenCodes.PROVEEDOR_PRODUCTOS -> {
-                    ProductosProveedorList(selectedProveedor = currentProveedor!!,
+                    ProductosProveedorList(selectedProveedor = proveedorState.value.currentProveedor,
                         onReturnButtonClick = { currentScreen = ProveedorScreenCodes.LIST })
                 }
 
                 ProveedorScreenCodes.INFO -> {
-                    if (currentProveedor != null) {
+                    if (proveedorState.value.currentProveedor.id != null) {
                         // Draws the proveedor info screen on edit mode
                         ProveedorInfoScreen(editable = true,
+                            proveedorController = proveedorController,
                             onReturnButtonClick = { currentScreen = ProveedorScreenCodes.LIST },
-                            onMainButtonClick = {},
-                            onDeleteClick = {},
-                            selectedProveedor = currentProveedor
-                        )
+                            onMainButtonClick = {
+                                proveedorController.updateProveedor(proveedorState.value.currentProveedor)
+                                currentScreen = ProveedorScreenCodes.LIST
+                            },
+                            onDeleteClick = {
+                                proveedorController.deleteProveedor(proveedorState.value.currentProveedor)
+                                currentScreen = ProveedorScreenCodes.LIST
+                            })
                     } else {
                         // Draws the proveedor info screen on add mode
                         ProveedorInfoScreen(editable = false,
+                            proveedorController = proveedorController,
                             onReturnButtonClick = { currentScreen = ProveedorScreenCodes.LIST },
-                            onMainButtonClick = {})
+                            onMainButtonClick = {
+                                proveedorController.createProveedor(proveedorState.value.currentProveedor)
+                                currentScreen = ProveedorScreenCodes.LIST
+                            })
                     }
                 }
             }

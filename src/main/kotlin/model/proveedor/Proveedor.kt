@@ -7,10 +7,10 @@ import model.producto.ProductoTestList
 import kotlin.random.Random
 
 data class Proveedor(
-    var id: Long?,
-    var nombre: String,
-    var contacto: Contacto,
-    var productos: List<Producto>
+    var id: Long? = null,
+    var nombre: String = "",
+    var contacto: Contacto = Contacto(),
+    var productos: List<Producto> = emptyList()
 )
 
 
