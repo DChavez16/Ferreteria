@@ -4,11 +4,11 @@ import model.producto.Producto
 import model.producto.ProductoTestList
 
 data class Promocion(
-    var id: Long?,
-    var description: String,
-    var descuento: Double,
-    var disponibilidad: Boolean,
-    var productos: List<Producto>
+    var id: Long? = null,
+    var description: String = "",
+    var descuento: Double = 0.0,
+    var disponibilidad: Boolean = false,
+    var productos: List<Producto> = emptyList()
 )
 
 

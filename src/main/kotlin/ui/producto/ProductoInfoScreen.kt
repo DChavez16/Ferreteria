@@ -121,7 +121,7 @@ fun ProductoInfoScreen(
                 firstButtonText = "Modificar",
                 firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = { productoController.clearProductFields() },
+                secondButtonAction = { productoController.clearProduct() },
                 firstButtonEnabled = productoController.productoIsNotEmpty(),
                 modifier = Modifier.weight(1f)
             )

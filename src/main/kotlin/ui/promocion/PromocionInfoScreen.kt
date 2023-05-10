@@ -5,14 +5,13 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import model.producto.Producto
-import model.producto.ProductoTestList
-import model.promocion.Promocion
+import controller.promocion.PromocionController
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import ui.util.ProductoPromocionDetailsList
@@ -23,9 +22,9 @@ import util.getCustomOutlinedTextFieldColor
 @Composable
 fun PromocionInfoScreen(
     editPromocion: Boolean,
+    promocionController: PromocionController,
     onReturnButtonClick: () -> Unit,
-    onMainButtonClick: (Promocion) -> Unit,
-    promocion: Promocion? = null,
+    onMainButtonClick: () -> Unit,
     onDeleteClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxHeight()) {
@@ -37,7 +36,7 @@ fun PromocionInfoScreen(
         // Draws a form that defines the values of the current promotion
         PromocionForm(
             editPromocion = editPromocion,
-            promocion = promocion,
+            promocionController = promocionController,
             onMainButtonClick = onMainButtonClick,
             onDeleteClick = onDeleteClick,
             modifier = Modifier.weight(1f)
@@ -48,56 +47,38 @@ fun PromocionInfoScreen(
 @Composable
 private fun PromocionForm(
     editPromocion: Boolean,
-    promocion: Promocion?,
-    onMainButtonClick: (Promocion) -> Unit,
+    promocionController: PromocionController,
+    onMainButtonClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var promocionDescription by remember { mutableStateOf(promocion?.description ?: "") }
-    var promocionDiscount by remember {
-        mutableStateOf(
-            if (promocion?.descuento != null) (promocion.descuento * 100).toInt().toString() else ""
-        )
-    }
-    var promocionAvailability by remember { mutableStateOf(promocion?.disponibilidad ?: false) }
-    var promocionProductos by remember { mutableStateOf(promocion?.productos ?: emptyList()) }
+    val promocionState = promocionController.promocionState.collectAsState()
 
     Column(modifier = modifier.fillMaxHeight()) {
         Row(modifier = Modifier.fillMaxWidth().weight(1f).padding(horizontal = 16.dp)) {
             Column(modifier = Modifier.fillMaxHeight().weight(2f)) {
                 // Draws the editable form for promotions
                 PromocionFormContent(modifier = Modifier.weight(3f),
-                    description = promocionDescription,
-                    onDescriptionValueChange = { newValue -> promocionDescription = newValue },
-                    descuento = promocionDiscount,
-                    onDescuentoValueChange = { newValue ->
-                        // Validate if the introduced discount is a valid Double type value
-                        try {
-                            if (newValue.toInt() <= 100.0 && newValue.toDouble() % 1 == 0.0) {
-                                promocionDiscount = newValue.toInt().toString()
-                            }
-                        } catch (_: NumberFormatException) {
-                            promocionDiscount = ""
-                        }
-                    },
-                    disponibilidad = promocionAvailability,
-                    onDisponibilidadValueChange = { newValue -> promocionAvailability = newValue })
+                    description = promocionState.value.currentPromocion.description,
+                    onDescriptionValueChange = { promocionController.updatePromotionDescription(it) },
+                    descuento = promocionState.value.currentPromocion.descuento.times(100).toInt().toString(),
+                    onDescuentoValueChange = { promocionController.updatePromotionDiscount(it) },
+                    disponibilidad = promocionState.value.currentPromocion.disponibilidad,
+                    onDisponibilidadValueChange = { promocionController.updatePromotionAvailability(it) })
 
                 // Draws the list of products included in the promotion
                 ProductoPromocionDetailsList(
-                    productsList = promocionProductos,
-                    currentPromotionDiscount = if (promocionDiscount == "") 0 else promocionDiscount.toInt(),
+                    productsList = promocionState.value.currentPromocion.productos,
+                    currentPromotionDiscount = promocionState.value.currentPromocion.descuento,
                     modifier = Modifier.weight(2f)
                 )
             }
 
             // List of available products to add to the promotion
             AvailableProductsList(modifier = Modifier.weight(1f),
-                productoList = ProductoTestList,
+                productoList = promocionState.value.productosList,
                 quantitySelectionEnabled = false,
-                onAddProductoClick = { producto, _ ->
-                    promocionProductos = promocionProductos.addProducto(producto)
-                })
+                onAddProductoClick = { producto, _ -> promocionController.addProductToPromotion(producto) })
         }
 
         // Bottom buttons to interact with the screen
@@ -113,27 +94,10 @@ private fun PromocionForm(
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = if (editPromocion) "Actualizar" else "Agregar",
-                firstButtonAction = {
-                    onMainButtonClick(
-                        Promocion(
-                            promocion?.id,
-                            promocionDescription,
-                            promocionDiscount.toDouble(),
-                            promocionAvailability,
-                            promocionProductos
-                        )
-                    )
-                },
+                firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = {
-                    promocionDescription = ""
-                    promocionDiscount = ""
-                    promocionAvailability = false
-                    promocionProductos = emptyList()
-                },
-                firstButtonEnabled = validateFields(
-                    promocionDescription, promocionDiscount
-                ),
+                secondButtonAction = { promocionController.clearPromocion() },
+                firstButtonEnabled = promocionController.promocionIsNotEmpty(),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -174,7 +138,7 @@ private fun PromocionFormContent(
             Text(text = "Descuento:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(2f)) {
                 OutlinedTextField(
-                    value = descuento,
+                    value = if(descuento == "0") "" else descuento,
                     onValueChange = onDescuentoValueChange,
                     textStyle = MaterialTheme.typography.h6.copy(textAlign = TextAlign.Center),
                     colors = getCustomOutlinedTextFieldColor(),
@@ -203,21 +167,4 @@ private fun PromocionFormContent(
             )
         }
     }
-}
-
-
-/*
-* Helper methods
-*/
-private fun validateFields(description: String, discount: String) = description != "" && discount != ""
-
-private fun List<Producto>.addProducto(producto: Producto): List<Producto> {
-    val newList = this.toMutableList()
-
-    // Validate if is already in the list, if so, update the element content
-    if (!this.contains(producto)) {
-        newList.add(producto)
-    }
-
-    return newList
 }

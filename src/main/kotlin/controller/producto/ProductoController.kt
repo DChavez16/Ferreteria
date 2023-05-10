@@ -30,7 +30,7 @@ class ProductoController {
      * Updates the current product
      * @param producto The current product selected to edit, can be null
      */
-    fun changeCurrentProduct(producto: Producto = Producto(null, "", 0.0, 0.0, 0.0, "")) {
+    fun changeCurrentProduct(producto: Producto = Producto()) {
         _productoState.update { currentState ->
             currentState.copy(currentProduct = producto)
         }
@@ -63,7 +63,7 @@ class ProductoController {
     /**
      * Clears the current product's content
      */
-    fun clearProductFields() {
+    fun clearProduct() {
         _productoState.update { currentState ->
             currentState.copy(
                 currentProduct = currentState.currentProduct.copy(

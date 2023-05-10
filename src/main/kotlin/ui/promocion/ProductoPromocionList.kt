@@ -24,7 +24,7 @@ fun ProductoPromocionList(promocion: Promocion, onReturnButtonClick: () -> Unit)
         // Draws the table of the products included in the product
         ProductoPromocionDetailsList(
             productsList = promocion.productos,
-            currentPromotionDiscount = (promocion.descuento * 100).toInt(),
+            currentPromotionDiscount = promocion.descuento,
             modifier = Modifier.weight(1f).padding(16.dp)
         )
     }

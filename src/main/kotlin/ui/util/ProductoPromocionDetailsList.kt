@@ -24,7 +24,7 @@ import util.decimalFormat
 
 @Composable
 fun ProductoPromocionDetailsList(
-    productsList: List<Producto>, currentPromotionDiscount: Int, modifier: Modifier = Modifier
+    productsList: List<Producto>, currentPromotionDiscount: Double, modifier: Modifier = Modifier
 ) {
     Surface(modifier = modifier) {
         Column(modifier = Modifier.fillMaxHeight().border(width = Dp.Hairline, color = Color.Gray)) {
@@ -81,7 +81,7 @@ private fun PromocionProductsListHeader() {
 }
 
 @Composable
-private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscount: Int) {
+private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscount: Double) {
     Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text(
             text = "${producto.id}",
@@ -102,7 +102,7 @@ private fun PromocionProductsListItem(producto: Producto, currentPromotionDiscou
             textAlign = TextAlign.Center
         )
         Text(
-            text = "$ ${decimalFormat(producto.precioVenta - (producto.precioVenta * (currentPromotionDiscount.toDouble() / 100)))}",
+            text = "$ ${decimalFormat(producto.precioVenta - (producto.precioVenta * currentPromotionDiscount))}",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center
