@@ -1,21 +1,19 @@
 package model.empleado
 
+import model.contacto.Contacto
+import model.contacto.ContactoTestList
 import model.sucursal.Sucursal
 import model.sucursal.SucursalTestList
 import model.venta.Venta
 import model.venta.VentaTestList
-import model.contacto.Contacto
-import model.contacto.ContactoTestList
-import model.detalleVentaProducto.DetalleVentaProducto
-import model.detalleVentaProducto.DetalleVentaProductoTestList
 import util.UserType
 
 data class Empleado(
-    var id: Long?,
-    var nombre: String,
-    var puesto: UserType,
-    var contacto: Contacto,
-    var sucursal: Sucursal,
+    var id: Long? = null,
+    var nombre: String = "",
+    var puesto: UserType = UserType.CASHIER,
+    var contacto: Contacto = Contacto(),
+    var sucursal: Sucursal = Sucursal(),
     val sueldo: Double = if (puesto == UserType.ADMINISTRATOR) 15000.0 else 5000.0
 )
 
@@ -48,16 +46,6 @@ fun getVentasEmpleado(id: Long?): List<Venta> {
 
     VentaTestList.forEach { venta ->
         if (venta.empleado.id == id) newList.add(venta)
-    }
-
-    return newList
-}
-
-fun getDetalleVentasEmpleado(id: Long?): List<DetalleVentaProducto> {
-    val newList = mutableListOf<DetalleVentaProducto>()
-
-    DetalleVentaProductoTestList.forEach { venta ->
-        if (venta.venta.empleado.id == id) newList.add(venta)
     }
 
     return newList

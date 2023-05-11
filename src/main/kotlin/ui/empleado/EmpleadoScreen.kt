@@ -4,14 +4,17 @@ import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import model.empleado.Empleado
+import controller.empleado.EmpleadoController
 import model.empleado.EmpleadoTestList
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun EmpleadoScreen() {
-    var currentEmpleado by remember { mutableStateOf<Empleado?>(null) }
+    val empleadoController = EmpleadoController()
+
     var currentScreen by remember { mutableStateOf(EmpleadoScreenCodes.LIST) }
+
+    val empleadoState = empleadoController.empleadoState.collectAsState()
 
     Surface(color = MaterialTheme.colors.background) {
         /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
@@ -27,39 +30,44 @@ fun EmpleadoScreen() {
             when (it) {
                 EmpleadoScreenCodes.LIST -> {
                     EmpleadoList(empleadoList = EmpleadoTestList, onAddEmpleadoClick = {
-                        currentEmpleado = null
+                        empleadoController.changeCurrentEmpleado()
                         currentScreen = EmpleadoScreenCodes.INFO
                     }, onEditEmpleadoClick = { empleado ->
-                        currentEmpleado = empleado
+                        empleadoController.changeCurrentEmpleado(empleado)
                         currentScreen = EmpleadoScreenCodes.INFO
                     }, onEmpleadoElementClick = { empleado ->
-                        currentEmpleado = empleado
+                        empleadoController.changeCurrentEmpleado(empleado)
                         currentScreen = EmpleadoScreenCodes.EMPLEADO_VENTAS
                     })
                 }
 
                 EmpleadoScreenCodes.EMPLEADO_VENTAS -> {
-                    VentaEmpleadoList(
-                        empleado = currentEmpleado!!,
+                    VentaEmpleadoList(empleado = empleadoState.value.currentEmpleado,
+                        detalleVentaEmpleadoList = empleadoState.value.detalleVentasEmpleado,
                         onReturnButtonClick = { currentScreen = EmpleadoScreenCodes.LIST })
                 }
 
                 EmpleadoScreenCodes.INFO -> {
-                    if (currentEmpleado != null) {
-                        EmpleadoInfoScreen(
-                            editable = true,
+                    if (empleadoState.value.currentEmpleado.id != null) {
+                        EmpleadoInfoScreen(editable = true,
+                            empleadoController = empleadoController,
                             onReturnButtonClick = { currentScreen = EmpleadoScreenCodes.LIST },
-                            onMainButtonClick = {},
-                            onDeleteButtonClick = {},
-                            selectedEmpleado = currentEmpleado
-                        )
-                    }
-                    else {
-                        EmpleadoInfoScreen(
-                            editable = false,
+                            onMainButtonClick = {
+                                empleadoController.updateEmpleado(empleadoState.value.currentEmpleado)
+                                currentScreen = EmpleadoScreenCodes.LIST
+                            },
+                            onDeleteButtonClick = {
+                                empleadoController.deleteEmpleado(empleadoState.value.currentEmpleado)
+                                currentScreen = EmpleadoScreenCodes.LIST
+                            })
+                    } else {
+                        EmpleadoInfoScreen(editable = false,
+                            empleadoController = empleadoController,
                             onReturnButtonClick = { currentScreen = EmpleadoScreenCodes.LIST },
-                            onMainButtonClick = {}
-                        )
+                            onMainButtonClick = {
+                                empleadoController.createEmpleado(empleadoState.value.currentEmpleado)
+                                currentScreen = EmpleadoScreenCodes.LIST
+                            })
                     }
                 }
             }

@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ExpandableDropDownMenu(
-    value: String, optionsList: List<String>, onValueChange: (Any) -> Unit, modifier: Modifier = Modifier
+    value: String, optionsList: List<String>, onValueChange: (String) -> Unit, modifier: Modifier = Modifier
 ) {
     var expandedDropDownMenu by remember { mutableStateOf(false) }
     val icon = painterResource("icons/${if (expandedDropDownMenu) "expand_less" else "expand_more"}.png")

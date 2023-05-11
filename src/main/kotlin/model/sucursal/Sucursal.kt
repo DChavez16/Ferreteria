@@ -2,13 +2,11 @@ package model.sucursal
 
 import model.contacto.Contacto
 import model.contacto.ContactoTestList
-import model.empleado.Empleado
-import model.empleado.EmpleadoTestList
 
 data class Sucursal(
-    var id: Long?,
-    var name: String,
-    val contacto: Contacto
+    var id: Long? = null,
+    var name: String = "",
+    val contacto: Contacto = Contacto()
 )
 
 
@@ -20,13 +18,3 @@ val SucursalTestList = listOf(
     Sucursal(5, "Guadalupe", ContactoTestList[9]),
     Sucursal(6, "San Pedro", ContactoTestList[10]),
 )
-
-fun getEmpleadosSucursal(id: Long): List<Empleado> {
-    val newList = mutableListOf<Empleado>()
-
-    EmpleadoTestList.forEach { empleado ->
-        if(empleado.sucursal.id == id) newList.add(empleado)
-    }
-
-    return newList
-}

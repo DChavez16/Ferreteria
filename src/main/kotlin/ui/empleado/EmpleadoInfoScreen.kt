@@ -5,13 +5,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import model.empleado.Empleado
-import model.empleado.EmpleadoTestList
-import model.sucursal.SucursalTestList
+import controller.empleado.EmpleadoController
+import model.sucursal.Sucursal
 import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader
@@ -22,10 +22,10 @@ import util.getCustomRadioButtonColor
 @Composable
 fun EmpleadoInfoScreen(
     editable: Boolean,
+    empleadoController: EmpleadoController,
     onReturnButtonClick: () -> Unit,
-    onMainButtonClick: (Empleado) -> Unit,
-    onDeleteButtonClick: () -> Unit = {},
-    selectedEmpleado: Empleado? = null
+    onMainButtonClick: () -> Unit,
+    onDeleteButtonClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxHeight()) {
         // Screen header
@@ -35,8 +35,8 @@ fun EmpleadoInfoScreen(
         )
         // Screen form
         EmpleadoForm(
-            currentEmpleado = selectedEmpleado,
             editable = editable,
+            empleadoController = empleadoController,
             onMainButtonClick = onMainButtonClick,
             onDeleteButtonClick = onDeleteButtonClick,
             modifier = Modifier.weight(1f)
@@ -46,18 +46,13 @@ fun EmpleadoInfoScreen(
 
 @Composable
 private fun EmpleadoForm(
-    currentEmpleado: Empleado?,
     editable: Boolean,
-    onMainButtonClick: (Empleado) -> Unit,
+    empleadoController: EmpleadoController,
+    onMainButtonClick: () -> Unit,
     onDeleteButtonClick: () -> Unit,
     modifier: Modifier
 ) {
-    // Form variables
-    var empleadoNombre by remember { mutableStateOf(currentEmpleado?.nombre ?: "") }
-    var empleadoCorreo by remember { mutableStateOf(currentEmpleado?.contacto?.correo ?: "") }
-    var empleadoTelefono by remember { mutableStateOf(currentEmpleado?.contacto?.telefono ?: "") }
-    var empleadoSucursal by remember { mutableStateOf(currentEmpleado?.sucursal?.name ?: "") }
-    var empleadoAdmin by remember { mutableStateOf(currentEmpleado?.puesto == UserType.ADMINISTRATOR) }
+    val empleadoState = empleadoController.empleadoState.collectAsState()
 
     Column(modifier = modifier.fillMaxHeight()) {
         // Form content
@@ -66,11 +61,17 @@ private fun EmpleadoForm(
             modifier = Modifier.weight(1f).padding(16.dp).fillMaxWidth()
         ) {
             EmpleadoFormContent(
-                nombre = empleadoNombre, onNombreValueChange = { empleadoNombre = it },
-                correo = empleadoCorreo, onCorreoValueChange = { empleadoCorreo = it },
-                telefono = empleadoTelefono, onTelefonoValueChange = { empleadoTelefono = it },
-                sucursal = empleadoSucursal, onSucursalValueChange = { empleadoSucursal = it },
-                isAdmin = empleadoAdmin, onIsAdminValueChange = { empleadoAdmin = it },
+                nombre = empleadoState.value.currentEmpleado.nombre,
+                onNombreValueChange = { empleadoController.updateEmployeeName(it) },
+                correo = empleadoState.value.currentEmpleado.contacto.correo,
+                onCorreoValueChange = { empleadoController.updateEmployeeEmail(it) },
+                telefono = empleadoState.value.currentEmpleado.contacto.telefono,
+                onTelefonoValueChange = { empleadoController.updateEmployeePhone(it) },
+                sucursal = empleadoState.value.currentEmpleado.sucursal.name,
+                sucursalList = empleadoController.sucursalNamePair,
+                onSucursalValueChange = { empleadoController.updateEmployeeBranch(it) },
+                isAdmin = empleadoState.value.currentEmpleado.puesto == UserType.ADMINISTRATOR,
+                onIsAdminValueChange = { empleadoController.updateEmployeePosition(it) },
                 modifier = Modifier.fillMaxWidth(0.8f)
             )
         }
@@ -88,21 +89,10 @@ private fun EmpleadoForm(
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = if (editable) "Actualizar" else "Agregar",
-                firstButtonAction = { onMainButtonClick(EmpleadoTestList[0]) },
+                firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = {
-                    empleadoNombre = ""
-                    empleadoCorreo = ""
-                    empleadoTelefono = ""
-                    empleadoSucursal = ""
-                    empleadoAdmin = false
-                },
-                firstButtonEnabled = validateCorrectFields(
-                    empleadoNombre,
-                    empleadoCorreo,
-                    empleadoTelefono,
-                    empleadoSucursal
-                ),
+                secondButtonAction = { empleadoController.clearEmpleado() },
+                firstButtonEnabled = empleadoController.empleadoIsNotEmpty(),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -118,13 +108,12 @@ private fun EmpleadoFormContent(
     telefono: String,
     onTelefonoValueChange: (String) -> Unit,
     sucursal: String,
+    sucursalList: MutableList<Pair<String, Sucursal>>,
     onSucursalValueChange: (String) -> Unit,
     isAdmin: Boolean,
     onIsAdminValueChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val sucursalOptions = getSucursalOptions()
-
     Column(verticalArrangement = Arrangement.Center, modifier = modifier.fillMaxHeight()) {
         // Nombre form field
         Row(
@@ -207,8 +196,8 @@ private fun EmpleadoFormContent(
                 Text(text = "Sucursal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 ExpandableDropDownMenu(
                     value = sucursal,
-                    optionsList = sucursalOptions,
-                    onValueChange = { onSucursalValueChange(it.toString()) },
+                    optionsList = sucursalList.map { it.first },
+                    onValueChange = { onSucursalValueChange(it) },
                     modifier = Modifier.weight(2f)
                 )
             }
@@ -252,21 +241,4 @@ private fun EmpleadoFormContent(
             }
         }
     }
-}
-
-
-/*
-Helper methods
-*/
-private fun validateCorrectFields(nombre: String, correo: String, telefono: String, sucursal: String) =
-    nombre.isNotEmpty() && correo.isNotEmpty() && telefono.isNotEmpty() && sucursal.isNotEmpty()
-
-private fun getSucursalOptions(): List<String> {
-    val newList = mutableListOf<String>()
-
-    SucursalTestList.forEach { sucursal ->
-        newList.add(sucursal.name)
-    }
-
-    return newList
 }
