@@ -4,14 +4,16 @@ import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import model.sucursal.Sucursal
-import model.sucursal.SucursalTestList
+import controller.sucursal.SucursalController
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SucursalScreen() {
-    var currentSucursal by remember { mutableStateOf<Sucursal?>(null) }
+    val sucursalController = SucursalController()
+
     var currentScreen by remember { mutableStateOf(SucursalScreenCodes.LIST) }
+
+    val sucursalState = sucursalController.sucursalState.collectAsState()
 
     Surface(color = MaterialTheme.colors.background) {
         /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
@@ -26,30 +28,36 @@ fun SucursalScreen() {
         }) {
             when (it) {
                 SucursalScreenCodes.LIST -> {
-                    SucursalList(sucursalList = SucursalTestList, onAddSucursalClick = {
-                        currentSucursal = null
+                    SucursalList(sucursalList = sucursalState.value.sucursalList, onAddSucursalClick = {
+                        sucursalController.changeCurrentSucursal()
                         currentScreen = SucursalScreenCodes.INFO
                     }, onEditSucursalClick = { sucursal ->
-                        currentSucursal = sucursal
+                        sucursalController.changeCurrentSucursal(sucursal)
                         currentScreen = SucursalScreenCodes.INFO
                     })
                 }
 
                 SucursalScreenCodes.INFO -> {
-                    if (currentSucursal != null) {
-                        SucursalInfoScreen(
-                            editable = true,
+                    if (sucursalState.value.currentSucursal.id != null) {
+                        SucursalInfoScreen(editable = true,
+                            sucursalController = sucursalController,
                             onReturnButtonClick = { currentScreen = SucursalScreenCodes.LIST },
-                            onMainButtonClick = {},
-                            onDeleteButtonClick = {},
-                            selectedSucursal = currentSucursal
-                        )
+                            onMainButtonClick = {
+                                sucursalController.updateSucursal(sucursalState.value.currentSucursal)
+                                currentScreen = SucursalScreenCodes.LIST
+                            },
+                            onDeleteButtonClick = {
+                                sucursalController.deleteSucursal(sucursalState.value.currentSucursal)
+                                currentScreen = SucursalScreenCodes.LIST
+                            })
                     } else {
-                        SucursalInfoScreen(
-                            editable = false,
+                        SucursalInfoScreen(editable = false,
+                            sucursalController = sucursalController,
                             onReturnButtonClick = { currentScreen = SucursalScreenCodes.LIST },
-                            onMainButtonClick = {}
-                        )
+                            onMainButtonClick = {
+                                sucursalController.createSucursal(sucursalState.value.currentSucursal)
+                                currentScreen = SucursalScreenCodes.LIST
+                            })
                     }
                 }
             }

@@ -67,11 +67,7 @@ class ProductoController {
         _productoState.update { currentState ->
             currentState.copy(
                 currentProduct = currentState.currentProduct.copy(
-                    nombre = "",
-                    precioReal = 0.0,
-                    cantidadIVA = 0.0,
-                    precioVenta = 0.0,
-                    descripcion = ""
+                    nombre = "", precioReal = 0.0, cantidadIVA = 0.0, precioVenta = 0.0, descripcion = ""
                 )
             )
         }
@@ -109,7 +105,7 @@ class ProductoController {
      */
     fun updateSellPrice(newSellPrice: String) {
         try {
-            if (newSellPrice.length <= 9  &&  newSellPrice.toDouble() in 0.0 .. 100000.0) {
+            if (newSellPrice.length <= 9 && newSellPrice.toDouble() in 0.0..100000.0) {
                 _productoState.update { currentState ->
                     currentState.copy(currentProduct = currentState.currentProduct.copy(precioVenta = newSellPrice.toDouble()))
                 }

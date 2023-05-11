@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import model.contacto.Contacto
 import model.detalleVentaProducto.DetalleVentaProducto
 import model.detalleVentaProducto.DetalleVentaProductoTestList
 import model.empleado.Empleado
@@ -116,7 +115,13 @@ class EmpleadoController {
         _empleadoState.update { currentState ->
             currentState.copy(
                 currentEmpleado = currentState.currentEmpleado.copy(
-                    nombre = "", puesto = UserType.CASHIER, contacto = Contacto(), sucursal = Sucursal()
+                    nombre = "",
+                    puesto = UserType.CASHIER,
+                    sucursal = Sucursal(),
+                    contacto = currentState.currentEmpleado.contacto.copy(
+                        correo = "",
+                        telefono = ""
+                    )
                 )
             )
         }

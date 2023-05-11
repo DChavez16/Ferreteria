@@ -4,13 +4,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import model.direccion.Direccion
-import model.sucursal.Sucursal
-import model.sucursal.SucursalTestList
+import controller.sucursal.SucursalController
 import model.direccion.municipiosList
 import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
@@ -20,10 +19,10 @@ import util.getCustomOutlinedTextFieldColor
 @Composable
 fun SucursalInfoScreen(
     editable: Boolean,
+    sucursalController: SucursalController,
     onReturnButtonClick: () -> Unit,
-    onMainButtonClick: (Sucursal) -> Unit,
-    onDeleteButtonClick: () -> Unit = {},
-    selectedSucursal: Sucursal? = null
+    onMainButtonClick: () -> Unit,
+    onDeleteButtonClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxHeight()) {
         // Screen header
@@ -34,7 +33,7 @@ fun SucursalInfoScreen(
 
         // Sucursal form
         SucursalForm(
-            currentSucursal = selectedSucursal,
+            sucursalController = sucursalController,
             editable = editable,
             onMainButtonClick = onMainButtonClick,
             onDeleteButtonClick = onDeleteButtonClick,
@@ -45,26 +44,31 @@ fun SucursalInfoScreen(
 
 @Composable
 private fun SucursalForm(
-    currentSucursal: Sucursal?,
+    sucursalController: SucursalController,
     editable: Boolean,
-    onMainButtonClick: (Sucursal) -> Unit,
+    onMainButtonClick: () -> Unit,
     onDeleteButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Form variables
-    var sucursalNombre by remember { mutableStateOf(currentSucursal?.name ?: "") }
-    var sucursalDireccion by remember { mutableStateOf(currentSucursal?.contacto?.direccion ?: emptyDireccion()) }
-    var sucursalTelefono by remember { mutableStateOf(currentSucursal?.contacto?.telefono ?: "") }
+    val sucursalState = sucursalController.sucursalState.collectAsState()
 
     Column(modifier = modifier.fillMaxHeight()) {
         // Form body
         SucursalFormContent(
-            nombre = sucursalNombre,
-            onNombreValueChange = { sucursalNombre = it },
-            direccion = sucursalDireccion,
-            onDireccionValueChange = { sucursalDireccion = it },
-            telefono = sucursalTelefono,
-            onTelefonoValueChange = { sucursalTelefono = it },
+            nombre = sucursalState.value.currentSucursal.name,
+            onNombreValueChange = { sucursalController.updateBranchName(it) },
+            telefono = sucursalState.value.currentSucursal.contacto.telefono,
+            onTelefonoValueChange = { sucursalController.updateBranchPhone(it) },
+            municipio = sucursalState.value.currentSucursal.contacto.direccion.municipio,
+            onMunicipioValueChange = { sucursalController.updateBranchTown(it) },
+            colonia = sucursalState.value.currentSucursal.contacto.direccion.colonia,
+            onColoniaValueChange = { sucursalController.updateBranchNeighborhood(it) },
+            calle = sucursalState.value.currentSucursal.contacto.direccion.calle,
+            onCalleValueChange = { sucursalController.updateBranchStreet(it) },
+            numero = sucursalState.value.currentSucursal.contacto.direccion.numero,
+            onNumeroValueChange = { sucursalController.updateBranchDirectionNumber(it) },
+            codigoPostal = sucursalState.value.currentSucursal.contacto.direccion.codigoPostal,
+            onCodigoPostalValueChange = { sucursalController.updateBranchPostalCode(it) },
             modifier = Modifier.weight(1f)
         )
 
@@ -81,16 +85,10 @@ private fun SucursalForm(
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = if (editable) "Actualizar" else "Agregar",
-                firstButtonAction = { onMainButtonClick(SucursalTestList[0]) },
+                firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = {
-                    sucursalNombre = ""
-                    sucursalDireccion = emptyDireccion()
-                    sucursalTelefono = ""
-                },
-                firstButtonEnabled = validateCorrectFields(
-                    sucursalNombre, sucursalDireccion, sucursalTelefono
-                ),
+                secondButtonAction = { sucursalController.clearSucursal() },
+                firstButtonEnabled = sucursalController.sucursalIsNotEmpty(),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -101,10 +99,18 @@ private fun SucursalForm(
 private fun SucursalFormContent(
     nombre: String,
     onNombreValueChange: (String) -> Unit,
-    direccion: Direccion,
-    onDireccionValueChange: (Direccion) -> Unit,
     telefono: String,
     onTelefonoValueChange: (String) -> Unit,
+    municipio: String,
+    onMunicipioValueChange: (String) -> Unit,
+    colonia: String,
+    onColoniaValueChange: (String) -> Unit,
+    calle: String,
+    onCalleValueChange: (String) -> Unit,
+    numero: Int,
+    onNumeroValueChange: (String) -> Unit,
+    codigoPostal: String,
+    onCodigoPostalValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(horizontalArrangement = Arrangement.Center, modifier = modifier.fillMaxWidth()) {
@@ -134,9 +140,9 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Municipio:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 ExpandableDropDownMenu(
-                    value = direccion.municipio,
+                    value = municipio,
                     optionsList = municipiosList,
-                    onValueChange = { onDireccionValueChange(direccion.copy(municipio = it.toString())) },
+                    onValueChange = { onMunicipioValueChange(it) },
                     modifier = Modifier.weight(2f)
                 )
             }
@@ -149,10 +155,10 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Colonia:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = direccion.colonia,
+                    value = colonia,
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
-                    onValueChange = { onDireccionValueChange(direccion.copy(colonia = it)) },
+                    onValueChange = onColoniaValueChange,
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -166,10 +172,10 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Calle:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = direccion.calle,
+                    value = calle,
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
-                    onValueChange = { onDireccionValueChange(direccion.copy(calle = it)) },
+                    onValueChange = onCalleValueChange,
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -183,15 +189,10 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Numero:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = if (direccion.numero > 0) direccion.numero.toString() else "",
+                    value = if (numero > 0) numero.toString() else "",
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
-                    onValueChange = {
-                        try {
-                            onDireccionValueChange(direccion.copy(numero = it.toInt()))
-                        } catch (_: Exception) {
-                        }
-                    },
+                    onValueChange = onNumeroValueChange,
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -205,10 +206,10 @@ private fun SucursalFormContent(
             ) {
                 Text(text = "Codigo Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = direccion.codigoPostal,
+                    value = codigoPostal,
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
-                    onValueChange = { onDireccionValueChange(direccion.copy(codigoPostal = it)) },
+                    onValueChange = onCodigoPostalValueChange,
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -232,15 +233,3 @@ private fun SucursalFormContent(
         }
     }
 }
-
-
-/*
-Helper methods
-*/
-private fun validateCorrectFields(nombre: String, direccion: Direccion, telefono: String) =
-    nombre.isNotEmpty() && direccion.municipio.isNotEmpty() && validateDireccion(direccion) && telefono.isNotEmpty()
-
-private fun validateDireccion(direccion: Direccion) =
-    direccion.colonia.isNotEmpty() && direccion.calle.isNotEmpty() && direccion.numero > 0 && direccion.codigoPostal.isNotEmpty()
-
-private fun emptyDireccion() = Direccion(null, "", "", "", 0, "")

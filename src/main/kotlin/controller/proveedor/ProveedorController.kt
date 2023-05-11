@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import model.contacto.Contacto
 import model.producto.Producto
 import model.producto.ProductoTestList
 import model.proveedor.Proveedor
@@ -90,7 +89,11 @@ class ProveedorController {
         _proveedorState.update { currentState ->
             currentState.copy(
                 currentProveedor = currentState.currentProveedor.copy(
-                    nombre = "", contacto = Contacto(), productos = emptyList()
+                    nombre = "", productos = emptyList(), contacto = currentState.currentProveedor.contacto.copy(
+                        correo = "", telefono = "", direccion = currentState.currentProveedor.contacto.direccion.copy(
+                            municipio = "", colonia = "", calle = "", numero = 0, codigoPostal = ""
+                        )
+                    )
                 )
             )
         }
