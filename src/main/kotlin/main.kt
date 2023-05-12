@@ -1,4 +1,5 @@
 
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
@@ -11,7 +12,8 @@ fun main() = application {
         onCloseRequest = { exitApplication() },
         title = "Ferreteria",
         state = WindowState(placement = WindowPlacement.Fullscreen),
-        resizable = false
+        resizable = false,
+        icon = painterResource("images/logo_icon.png")
     ) {
         FerreteriaTheme {
             MainContainer { exitApplication() }
