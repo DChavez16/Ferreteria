@@ -104,7 +104,7 @@ private fun VentaListContentItem(detalleVenta: DetalleVentaProducto, showEmplead
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center
         )
-        VentaProducts(detalleVenta = detalleVenta, modifier = Modifier.weight(3f))
+        VentaProducts(detalleVenta = detalleVenta, isClientPurchasesList = showEmpleado, modifier = Modifier.weight(3f))
         Text(
             text = getFechaString(detalleVenta.venta.fechaVenta),
             modifier = Modifier.weight(1f),
@@ -129,12 +129,15 @@ private fun VentaListContentItem(detalleVenta: DetalleVentaProducto, showEmplead
 }
 
 @Composable
-private fun VentaProducts(detalleVenta: DetalleVentaProducto, modifier: Modifier = Modifier) {
+private fun VentaProducts(
+    detalleVenta: DetalleVentaProducto, isClientPurchasesList: Boolean, modifier: Modifier = Modifier
+) {
     var expandedVentaProducts by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         // Header of the products included in the sale
         VentaProductsHeader(expandedVentaProducts = expandedVentaProducts,
+            isClientPurchasesList = isClientPurchasesList,
             productosListSize = detalleVenta.productos.size,
             onExpandButtonClick = { expandedVentaProducts = it })
         if (expandedVentaProducts) {
@@ -168,7 +171,10 @@ private fun VentaProducts(detalleVenta: DetalleVentaProducto, modifier: Modifier
 
 @Composable
 private fun VentaProductsHeader(
-    expandedVentaProducts: Boolean, productosListSize: Int, onExpandButtonClick: (Boolean) -> Unit
+    expandedVentaProducts: Boolean,
+    isClientPurchasesList: Boolean,
+    productosListSize: Int,
+    onExpandButtonClick: (Boolean) -> Unit
 ) {
     val icon = painterResource("icons/${if (expandedVentaProducts) "expand_less" else "expand_more"}.png")
 
@@ -196,7 +202,7 @@ private fun VentaProductsHeader(
                 )
             } else {
                 Text(
-                    text = "$productosListSize producto(s) vendido(s)",
+                    text = "$productosListSize producto(s) ${if (isClientPurchasesList) "comprado" else "vendido"}(s)",
                     style = MaterialTheme.typography.h6,
                     textAlign = TextAlign.Left,
                     modifier = Modifier.weight(1f)
@@ -204,9 +210,8 @@ private fun VentaProductsHeader(
             }
 
             // Expanded element indicator icon
-            Box(
-                contentAlignment = Alignment.Center, modifier = Modifier.size(30.dp).clickable { onExpandButtonClick(!expandedVentaProducts) }
-            ) {
+            Box(contentAlignment = Alignment.Center,
+                modifier = Modifier.size(30.dp).clickable { onExpandButtonClick(!expandedVentaProducts) }) {
                 Icon(
                     painter = icon, contentDescription = null
                 )

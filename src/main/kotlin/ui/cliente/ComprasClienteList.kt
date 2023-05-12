@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import model.cliente.Cliente
-import model.detalleVentaProducto.getClientsPurchases
 import ui.util.ScreenHeader
 import ui.util.VentaList
 
@@ -30,7 +29,7 @@ fun VentaClienteList(
 
         // Draws the table of the products included in the product
         VentaList(
-            ventasList = getClientsPurchases(selectedCliente.id ?: 0),
+            ventasList = selectedCliente.listaCompras,
             showEmpleado = true,
             modifier = Modifier.weight(1f).padding(16.dp)
         )

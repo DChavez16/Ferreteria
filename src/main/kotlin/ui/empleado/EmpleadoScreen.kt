@@ -43,7 +43,6 @@ fun EmpleadoScreen() {
 
                 EmpleadoScreenCodes.EMPLEADO_VENTAS -> {
                     VentaEmpleadoList(empleado = empleadoState.value.currentEmpleado,
-                        detalleVentaEmpleadoList = empleadoState.value.detalleVentasEmpleado,
                         onReturnButtonClick = { currentScreen = EmpleadoScreenCodes.LIST })
                 }
 

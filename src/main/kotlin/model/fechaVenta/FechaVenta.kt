@@ -1,10 +1,10 @@
 package model.fechaVenta
 
 data class FechaVenta(
-    var id: Long?,
-    var dia: Int,
-    var mes: Int,
-    var anio: Int
+    var id: Long? = null,
+    var dia: Int = 0,
+    var mes: Int = 0,
+    var anio: Int = 0
 )
 
 var FechaVentaTestList = listOf(

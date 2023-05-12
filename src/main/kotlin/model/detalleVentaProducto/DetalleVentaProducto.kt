@@ -9,7 +9,7 @@ import model.venta.VentaTestList
 import kotlin.random.Random
 
 data class DetalleVentaProducto(
-    var venta: Venta, var productos: List<ProductoVenta>, var reporte: Reporte
+    var venta: Venta = Venta(), var productos: List<ProductoVenta> = emptyList(), var reporte: Reporte = Reporte()
 )
 
 
@@ -62,21 +62,10 @@ private fun getProductsList(): List<ProductoVenta> {
     (1..Random.nextInt(1, 10)).forEach { _ ->
         productoList.add(
             ProductoVenta(
-                producto = ProductoTestList[Random.nextInt(0, 29)],
-                cantidad = (1..10).random()
+                producto = ProductoTestList[Random.nextInt(0, 29)], cantidad = (1..10).random()
             )
         )
     }
 
     return productoList
-}
-
-fun getClientsPurchases(idCliente: Long): List<DetalleVentaProducto> {
-    val newList = mutableListOf<DetalleVentaProducto>()
-
-    DetalleVentaProductoTestList.forEach { detalleVentaProducto ->
-        if (detalleVentaProducto.venta.cliente.id == idCliente) newList.add(detalleVentaProducto)
-    }
-
-    return newList
 }

@@ -8,15 +8,15 @@ import model.fechaVenta.FechaVenta
 import model.fechaVenta.FechaVentaTestList
 
 data class Venta(
-    var id: Long,
-    var impRealVenta: Double,
-    var ivaVenta: Double,
-    var impIvaVenta: Double,
-    var desVenta: Double,
-    var netoVenta: Double,
-    var fechaVenta: FechaVenta,
-    var cliente: Cliente,
-    var empleado: Empleado
+    var id: Long? = null,
+    var impRealVenta: Double = 0.0,
+    var ivaVenta: Double = 0.0,
+    var impIvaVenta: Double = 0.0,
+    var desVenta: Double = 0.0,
+    var netoVenta: Double = 0.0,
+    var fechaVenta: FechaVenta = FechaVenta(),
+    var cliente: Cliente = Cliente(),
+    var empleado: Empleado = Empleado()
 )
 
 

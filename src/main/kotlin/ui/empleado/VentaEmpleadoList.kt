@@ -8,13 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import model.detalleVentaProducto.DetalleVentaProducto
 import model.empleado.Empleado
 import ui.util.ScreenHeader
 import ui.util.VentaList
 
 @Composable
-fun VentaEmpleadoList(empleado: Empleado, detalleVentaEmpleadoList: List<DetalleVentaProducto>, onReturnButtonClick: () -> Unit) {
+fun VentaEmpleadoList(empleado: Empleado, onReturnButtonClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         // Screen Header
         ScreenHeader(headerTitle = "Ventas del empleado", onReturnButtonClick = onReturnButtonClick)
@@ -24,7 +23,7 @@ fun VentaEmpleadoList(empleado: Empleado, detalleVentaEmpleadoList: List<Detalle
 
         // Ventas empleado list
         VentaList(
-            ventasList = detalleVentaEmpleadoList,
+            ventasList = empleado.listaVentas,
             showEmpleado = false,
             modifier = Modifier.weight(1f).padding(16.dp)
         )

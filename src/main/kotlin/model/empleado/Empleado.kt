@@ -2,10 +2,9 @@ package model.empleado
 
 import model.contacto.Contacto
 import model.contacto.ContactoTestList
+import model.detalleVentaProducto.DetalleVentaProducto
 import model.sucursal.Sucursal
 import model.sucursal.SucursalTestList
-import model.venta.Venta
-import model.venta.VentaTestList
 import util.UserType
 
 data class Empleado(
@@ -14,6 +13,8 @@ data class Empleado(
     var puesto: UserType = UserType.CASHIER,
     var contacto: Contacto = Contacto(),
     var sucursal: Sucursal = Sucursal(),
+    var cantidadVentas: Int = 0,
+    var listaVentas: List<DetalleVentaProducto> = emptyList(),
     val sueldo: Double = if (puesto == UserType.ADMINISTRATOR) 15000.0 else 5000.0
 )
 
@@ -40,13 +41,3 @@ val EmpleadoTestList = listOf(
     Empleado(19, "Empleado 19", UserType.CASHIER, ContactoTestList[18], SucursalTestList[4]),
     Empleado(20, "Empleado 20", UserType.CASHIER, ContactoTestList[19], SucursalTestList[4])
 )
-
-fun getVentasEmpleado(id: Long?): List<Venta> {
-    val newList = mutableListOf<Venta>()
-
-    VentaTestList.forEach { venta ->
-        if (venta.empleado.id == id) newList.add(venta)
-    }
-
-    return newList
-}

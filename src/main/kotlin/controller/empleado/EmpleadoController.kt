@@ -35,6 +35,28 @@ class EmpleadoController {
     }
 
     /**
+     * Retrieves a list of employee's sells from the database
+     */
+    private fun getVentasEmpleado(id: Long?) {
+        val newList = mutableListOf<DetalleVentaProducto>()
+
+        // TODO Change this temporal line when the database is implemented
+        id?.let {
+            DetalleVentaProductoTestList.forEach { venta ->
+                if (venta.venta.empleado.id == id) newList.add(venta)
+            }
+        }
+
+        _empleadoState.update { currentState ->
+            currentState.copy(
+                currentEmpleado = currentState.currentEmpleado.copy(
+                    listaVentas = newList.toList()
+                )
+            )
+        }
+    }
+
+    /**
      * Retrieves a list of branches from the database
      */
     private fun getSucursalList() {
@@ -47,23 +69,6 @@ class EmpleadoController {
     }
 
     /**
-     * Retrieves a list of the employee's sales from the database
-     */
-    private fun getDetalleVentasEmpleado(id: Long?) {
-        val newList = mutableListOf<DetalleVentaProducto>()
-
-        id?.let {
-            DetalleVentaProductoTestList.forEach { venta ->
-                if (venta.venta.empleado.id == id) newList.add(venta)
-            }
-        }
-
-        _empleadoState.update { currentState ->
-            currentState.copy(detalleVentasEmpleado = newList.toList())
-        }
-    }
-
-    /**
      * Updates the current employee
      * @param empleado The current employee selected to edit, can be empty
      */
@@ -72,7 +77,7 @@ class EmpleadoController {
             currentState.copy(currentEmpleado = empleado)
         }
 
-        getDetalleVentasEmpleado(_empleadoState.value.currentEmpleado.id)
+        getVentasEmpleado(_empleadoState.value.currentEmpleado.id)
     }
 
     /**
@@ -119,8 +124,7 @@ class EmpleadoController {
                     puesto = UserType.CASHIER,
                     sucursal = Sucursal(),
                     contacto = currentState.currentEmpleado.contacto.copy(
-                        correo = "",
-                        telefono = ""
+                        correo = "", telefono = ""
                     )
                 )
             )
@@ -196,7 +200,6 @@ class EmpleadoController {
 
 data class EmpleadoState(
     var currentEmpleado: Empleado = Empleado(),
-    var detalleVentasEmpleado: List<DetalleVentaProducto> = emptyList(),
     var empleadoList: List<Empleado> = emptyList(),
     var sucursalList: List<Sucursal> = emptyList()
 )

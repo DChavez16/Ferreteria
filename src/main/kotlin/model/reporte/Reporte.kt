@@ -4,10 +4,10 @@ import model.fechaVenta.FechaVenta
 import model.fechaVenta.FechaVentaTestList
 
 data class Reporte(
-    var id: FechaVenta?,
-    var ventas: Int,
-    var ventasPromocion: Int,
-    var ingresos: Double
+    var id: FechaVenta? = null,
+    var ventas: Int = 0,
+    var ventasPromocion: Int = 0,
+    var ingresos: Double = 0.0
 )
 
 val ReporteTestList = listOf(

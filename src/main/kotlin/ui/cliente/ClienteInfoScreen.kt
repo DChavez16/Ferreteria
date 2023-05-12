@@ -5,12 +5,12 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import model.cliente.Cliente
-import model.cliente.ClienteTestList
+import controller.cliente.ClienteController
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
 import util.getCustomCheckboxColor
@@ -19,10 +19,10 @@ import util.getCustomOutlinedTextFieldColor
 @Composable
 fun ClienteInfoScreen(
     editable: Boolean,
+    clienteController: ClienteController,
     onReturnButtonClick: () -> Unit,
-    onMainButtonClick: (Cliente) -> Unit,
-    onDeleteButtonClick: () -> Unit = {},
-    selectedCliente: Cliente? = null
+    onMainButtonClick: () -> Unit,
+    onDeleteButtonClick: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxHeight()) {
         // Screen header
@@ -32,7 +32,7 @@ fun ClienteInfoScreen(
         )
         // Screen form
         ClienteForm(
-            currentCliente = selectedCliente,
+            clienteController = clienteController,
             editable = editable,
             onMainButtonClick = onMainButtonClick,
             onDeleteButtonClick = onDeleteButtonClick
@@ -42,26 +42,26 @@ fun ClienteInfoScreen(
 
 @Composable
 private fun ClienteForm(
-    currentCliente: Cliente?,
+    clienteController: ClienteController,
     editable: Boolean,
-    onMainButtonClick: (Cliente) -> Unit,
+    onMainButtonClick: () -> Unit,
     onDeleteButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Form variables
-    var clienteNombre by remember { mutableStateOf(currentCliente?.nombre ?: "") }
-    var clienteCorreo by remember { mutableStateOf(currentCliente?.contacto?.correo ?: "") }
-    var clienteTelefono by remember { mutableStateOf(currentCliente?.contacto?.telefono ?: "") }
-    var clienteSuscripcion by remember { mutableStateOf(currentCliente?.suscrito ?: false) }
+    val clienteState = clienteController.clienteState.collectAsState()
 
     Column(modifier = modifier.fillMaxHeight()) {
         // Form content
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.weight(1f).padding(16.dp).fillMaxWidth()) {
             ClienteFormContent(
-                nombre = clienteNombre, onNombreValueChange = { clienteNombre = it },
-                correo = clienteCorreo, onCorreoValueChange = { clienteCorreo = it },
-                telefono = clienteTelefono, onTelefonoValueChange = { clienteTelefono = it },
-                sucripcion = clienteSuscripcion, onSuscripcionValueChange = { clienteSuscripcion = it },
+                nombre = clienteState.value.currentCliente.nombre,
+                onNombreValueChange = { clienteController.updateClientName(it) },
+                correo = clienteState.value.currentCliente.contacto.correo,
+                onCorreoValueChange = { clienteController.updateClientEmail(it) },
+                telefono = clienteState.value.currentCliente.contacto.telefono,
+                onTelefonoValueChange = { clienteController.updateClientPhone(it) },
+                sucripcion = clienteState.value.currentCliente.suscrito,
+                onSuscripcionValueChange = { clienteController.updateClientSuscription(it) },
                 modifier = Modifier.fillMaxWidth(0.4f)
             )
         }
@@ -79,17 +79,10 @@ private fun ClienteForm(
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = if (editable) "Actualizar" else "Agregar",
-                firstButtonAction = { onMainButtonClick(ClienteTestList[0]) },
+                firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
-                secondButtonAction = {
-                    clienteNombre = ""
-                    clienteCorreo = ""
-                    clienteTelefono = ""
-                    clienteSuscripcion = false
-                },
-                firstButtonEnabled = validateCorrectFields(
-                    clienteNombre, clienteCorreo, clienteTelefono
-                ),
+                secondButtonAction = { clienteController.clearCliente() },
+                firstButtonEnabled = clienteController.clienteIsNotEmpty(),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -178,10 +171,3 @@ private fun ClienteFormContent(
         }
     }
 }
-
-
-/*
-Helper methods
-*/
-private fun validateCorrectFields(nombre: String, correo: String, telefono: String) =
-    nombre.isNotEmpty() && correo.isNotEmpty() && telefono.isNotEmpty()

@@ -19,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import model.empleado.Empleado
-import model.empleado.getVentasEmpleado
 import ui.util.BottomButtons
 import util.decimalFormat
 
@@ -149,7 +148,7 @@ private fun EmpleadoListItem(
             textAlign = TextAlign.Center
         )
         Text(
-            text = "${getVentasEmpleado(empleado.id).size}",
+            text = "${empleado.cantidadVentas}",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center

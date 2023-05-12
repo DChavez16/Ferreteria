@@ -138,7 +138,7 @@ private fun ClienteListItem(
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = "${cliente.compras}",
+            text = "${cliente.cantidadCompras}",
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center

@@ -4,14 +4,16 @@ import androidx.compose.animation.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import model.cliente.Cliente
-import model.cliente.ClienteTestList
+import controller.cliente.ClienteController
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ClienteScreen() {
-    var currentCliente by remember { mutableStateOf<Cliente?>(null) }
+    val clienteController = ClienteController()
+
     var currentScreen by remember { mutableStateOf(ClienteScreenCodes.LIST) }
+
+    val clienteState = clienteController.clienteState.collectAsState()
 
     Surface(color = MaterialTheme.colors.background) {
         /* Draws the corresponding screen depending on the current navigation option selected at the sidebar
@@ -26,42 +28,45 @@ fun ClienteScreen() {
         }) {
             when (it) {
                 ClienteScreenCodes.LIST -> {
-                    ClienteList(clienteList = ClienteTestList, onAddClienteClick = {
-                        currentCliente = null
+                    ClienteList(clienteList = clienteState.value.clienteList, onAddClienteClick = {
+                        clienteController.changeCurrentCliente()
                         currentScreen = ClienteScreenCodes.INFO
                     }, onEditClienteClick = { cliente ->
-                        currentCliente = cliente
+                        clienteController.changeCurrentCliente(cliente)
                         currentScreen = ClienteScreenCodes.INFO
                     }, onClienteElementClick = { cliente ->
-                        currentCliente = cliente
+                        clienteController.changeCurrentCliente(cliente)
                         currentScreen = ClienteScreenCodes.CLIENTE_COMPRAS
                     })
                 }
 
                 ClienteScreenCodes.CLIENTE_COMPRAS -> {
-                    VentaClienteList(
-                        selectedCliente = currentCliente!!,
-                        onReturnButtonClick = {
-                            currentScreen = ClienteScreenCodes.LIST
-                        }
-                    )
+                    VentaClienteList(selectedCliente = clienteState.value.currentCliente, onReturnButtonClick = {
+                        currentScreen = ClienteScreenCodes.LIST
+                    })
                 }
 
                 ClienteScreenCodes.INFO -> {
-                    if (currentCliente != null) {
-                        ClienteInfoScreen(
-                            editable = true,
+                    if (clienteState.value.currentCliente.id != null) {
+                        ClienteInfoScreen(editable = true,
+                            clienteController = clienteController,
                             onReturnButtonClick = { currentScreen = ClienteScreenCodes.LIST },
-                            onMainButtonClick = {},
-                            onDeleteButtonClick = {},
-                            selectedCliente = currentCliente
-                        )
+                            onMainButtonClick = {
+                                clienteController.updateCliente(clienteState.value.currentCliente)
+                                currentScreen = ClienteScreenCodes.LIST
+                            },
+                            onDeleteButtonClick = {
+                                clienteController.deleteCliente(clienteState.value.currentCliente)
+                                currentScreen = ClienteScreenCodes.LIST
+                            })
                     } else {
-                        ClienteInfoScreen(
-                            editable = false,
+                        ClienteInfoScreen(editable = false,
+                            clienteController = clienteController,
                             onReturnButtonClick = { currentScreen = ClienteScreenCodes.LIST },
-                            onMainButtonClick = {}
-                        )
+                            onMainButtonClick = {
+                                clienteController.createCliente(clienteState.value.currentCliente)
+                                currentScreen = ClienteScreenCodes.LIST
+                            })
                     }
                 }
             }
