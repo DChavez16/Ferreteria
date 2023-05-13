@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import controller.producto.ProductoController
 import ui.util.BottomButtons
+import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader
 import util.decimalFormat
 import util.getCustomOutlinedTextFieldColor
@@ -43,6 +44,7 @@ fun ProductoInfoScreen(
                 modifier = Modifier.weight(2f).padding(16.dp)
             )
             Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(3f).padding(16.dp)) {
+                // Name form field
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -56,6 +58,8 @@ fun ProductoInfoScreen(
                         modifier = Modifier.weight(2f)
                     )
                 }
+
+                // Description form field
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -70,6 +74,8 @@ fun ProductoInfoScreen(
                         modifier = Modifier.weight(2f)
                     )
                 }
+
+                // Sell price form field
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -85,6 +91,8 @@ fun ProductoInfoScreen(
                         modifier = Modifier.weight(2f)
                     )
                 }
+
+                // Price without IVA field
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
@@ -97,6 +105,21 @@ fun ProductoInfoScreen(
                     Text(
                         text = decimalFormat(productoState.value.currentProduct.precioReal),
                         style = MaterialTheme.typography.h6,
+                        modifier = Modifier.weight(2f)
+                    )
+                }
+
+                // Branch form field
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth()
+                ) {
+                    Text(text = "Sucursal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    ExpandableDropDownMenu(
+                        value = productoState.value.currentProduct.proveedor.nombre,
+                        optionsList = productoController.proveedorNamePair.map { it.first },
+                        onValueChange = { productoController.updateEmployeeBranch(it) },
                         modifier = Modifier.weight(2f)
                     )
                 }

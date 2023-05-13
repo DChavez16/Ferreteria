@@ -6,13 +6,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.producto.Producto
 import model.producto.ProductoTestList
+import model.proveedor.Proveedor
+import model.proveedor.ProveedorTestList
 
 class ProductoController {
     private var _productoState = MutableStateFlow(ProductoState())
     val productoState: StateFlow<ProductoState> = _productoState.asStateFlow()
 
+    val proveedorNamePair: MutableList<Pair<String, Proveedor>> = mutableListOf()
+
     init {
         getProductsList()
+        getProveedorList()
     }
 
     /*
@@ -24,6 +29,18 @@ class ProductoController {
     private fun getProductsList() {
         // TODO Change this temporal line when the database is implemented
         _productoState.value.productsList = ProductoTestList
+    }
+
+    /**
+     * Retrieves a list of suppliers from the database
+     */
+    private fun getProveedorList() {
+        // TODO Change this temporal line when the database is implemented
+        _productoState.value.proveedorList = ProveedorTestList
+
+        _productoState.value.proveedorList.forEach { proveedor ->
+            proveedorNamePair.add(Pair(proveedor.nombre, proveedor))
+        }
     }
 
     /**
@@ -67,7 +84,12 @@ class ProductoController {
         _productoState.update { currentState ->
             currentState.copy(
                 currentProduct = currentState.currentProduct.copy(
-                    nombre = "", precioReal = 0.0, cantidadIVA = 0.0, precioVenta = 0.0, descripcion = ""
+                    nombre = "",
+                    precioReal = 0.0,
+                    cantidadIVA = 0.0,
+                    precioVenta = 0.0,
+                    descripcion = "",
+                    proveedor = Proveedor()
                 )
             )
         }
@@ -137,6 +159,19 @@ class ProductoController {
             currentState.copy(currentProduct = currentState.currentProduct.copy(cantidadIVA = newIVAIncrease))
         }
     }
+
+    /**
+     * Updates the supplier of the product
+     * @param newSupplierString New supplier of the producto
+     */
+    fun updateEmployeeBranch(newSupplierString: String) {
+        val proveedor = proveedorNamePair.find { it.first == newSupplierString }?.second ?: Proveedor()
+
+        // TODO Complete code
+        _productoState.update { currentState ->
+            currentState.copy(currentProduct = currentState.currentProduct.copy(proveedor = proveedor))
+        }
+    }
 }
 
 
@@ -144,5 +179,7 @@ class ProductoController {
 * Controller data class
 */
 data class ProductoState(
-    var currentProduct: Producto = Producto(), var productsList: List<Producto> = emptyList()
+    var currentProduct: Producto = Producto(),
+    var productsList: List<Producto> = emptyList(),
+    var proveedorList: List<Proveedor> = emptyList()
 )
