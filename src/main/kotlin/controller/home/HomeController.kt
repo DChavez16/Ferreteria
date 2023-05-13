@@ -5,7 +5,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import model.cliente.Cliente
+import model.cliente.ClienteTestList
 import model.producto.Producto
+import model.producto.ProductoTestList
 import kotlin.random.Random
 
 class HomeController {
@@ -14,7 +17,10 @@ class HomeController {
 
     var productsList: MutableList<Producto> = mutableListOf()
 
+    val clienteNamePair: MutableList<Pair<String, Cliente>> = mutableListOf()
+
     init {
+        getClientList()
         resetState()
         // TODO Change this temporal line when the database is implemented
         val statement = Database.connection.createStatement()
@@ -31,6 +37,20 @@ class HomeController {
             productTemp.proveedor.id = productsListQuery.getInt("idProveedor").toLong()
 
             productsList.add(productTemp)
+        }
+
+        productsList = ProductoTestList.toMutableList()
+    }
+
+    /**
+     * Retrieves a list of clients from the database
+     */
+    private fun getClientList() {
+        // TODO Change this temporal line when the database is implemented
+        _homeState.value.clientList = ClienteTestList
+
+        _homeState.value.clientList.forEach { cliente ->
+            clienteNamePair.add(Pair(cliente.nombre, cliente))
         }
     }
 
@@ -60,6 +80,14 @@ class HomeController {
         _homeState.value.saleInfo.update(selectedProductos)
     }
 
+    fun updateCurrentCliente(newClienteString: String) {
+        val cliente = clienteNamePair.find { it.first == newClienteString }?.second ?: Cliente()
+
+        _homeState.update { currentState ->
+            currentState.copy(currentCliente = cliente)
+        }
+    }
+
     /**
      * Validates if the list of selected products is not empty
      */
@@ -72,7 +100,9 @@ class HomeController {
 */
 data class HomeState(
     var selectedProductos: List<SelectedProductos> = emptyList(),
-    var saleInfo: SaleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0)
+    var saleInfo: SaleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0),
+    var clientList: List<Cliente> = emptyList(),
+    var currentCliente: Cliente = Cliente()
 )
 
 data class SelectedProductos(

@@ -20,6 +20,7 @@ import controller.home.SaleInfo
 import controller.home.SelectedProductos
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
+import ui.util.ExpandableDropDownMenu
 import util.decimalFormat
 
 
@@ -36,15 +37,26 @@ fun HomeScreen() {
                 SelectedProductsList(Modifier.weight(2f), homeState.value.selectedProductos, homeState.value.saleInfo)
                 Spacer(Modifier.width(16.dp))
 
-                // Available products for sale
-                AvailableProductsList(
-                    modifier = Modifier.weight(1f),
-                    productoList = homeController.productsList,
-                    quantitySelectionEnabled = true,
-                    onAddProductoClick = { producto, quantity ->
-                        homeController.onAddProductoClick(producto, quantity)
+                Column(modifier = Modifier.weight(1f)) {
+                    // Available products for sale
+                    AvailableProductsList(
+                        modifier = Modifier.weight(1f),
+                        productoList = homeController.productsList,
+                        quantitySelectionEnabled = true,
+                        onAddProductoClick = { producto, quantity ->
+                            homeController.onAddProductoClick(producto, quantity)
+                        }
+                    )
+                    // Current client
+                    Column {
+                        Text(text = "Cliente:", style = MaterialTheme.typography.h6)
+                        ExpandableDropDownMenu(
+                            value = homeState.value.currentCliente.nombre,
+                            optionsList = homeController.clienteNamePair.map { it.first },
+                            onValueChange = { homeController.updateCurrentCliente(it) }
+                        )
                     }
-                )
+                }
             }
 
             // Bottom buttons to interact with the program
