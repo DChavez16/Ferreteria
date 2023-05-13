@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.detalleVentaProducto.DetalleVentaProducto
-import model.detalleVentaProducto.DetalleVentaProductoTestList
 import model.empleado.Empleado
 import model.empleado.EmpleadoTestList
 import model.sucursal.Sucursal
@@ -41,11 +40,11 @@ class EmpleadoController {
         val newList = mutableListOf<DetalleVentaProducto>()
 
         // TODO Change this temporal line when the database is implemented
-        id?.let {
-            DetalleVentaProductoTestList.forEach { venta ->
-                if (venta.venta.empleado.id == id) newList.add(venta)
-            }
-        }
+//        id?.let {
+//            DetalleVentaProductoTestList.forEach { venta ->
+//                if (venta.venta.empleado.id == id) newList.add(venta)
+//            }
+//        }
 
         _empleadoState.update { currentState ->
             currentState.copy(

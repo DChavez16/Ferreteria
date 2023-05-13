@@ -95,7 +95,7 @@ private fun ReporteListItem(
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)
     ) {
         Text(
-            text = getFechaString(reporte.id!!),
+            text = getFechaString(reporte.fechaVenta!!),
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center

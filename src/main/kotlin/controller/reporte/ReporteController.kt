@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import model.reporte.Reporte
-import model.reporte.ReporteTestList
 
 class ReporteController {
     private var _reporteState = MutableStateFlow(ReporteState())
@@ -16,7 +15,7 @@ class ReporteController {
 
     private fun getProveedorList() {
         // TODO Change this temporal line when the database is implemented
-        _reporteState.value.reporteList = ReporteTestList
+//        _reporteState.value.reporteList = ReporteTestList
     }
 }
 
