@@ -5,11 +5,16 @@ import model.contacto.ContactoTestList
 import model.detalleVentaProducto.DetalleVentaProducto
 
 data class Cliente(
+    // Primary key
     var id: Long? = null,
+
+    // Atributes
     var nombre: String = "",
     var suscrito: Boolean = false,
-    var contacto: Contacto = Contacto(),
+    var contacto: Contacto = Contacto(),    // Foreign key
     var cantidadCompras: Int = 0,
+
+    // List of contents filled post retrieving
     var listaCompras: List<DetalleVentaProducto> = emptyList()
 )
 

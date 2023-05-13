@@ -8,12 +8,17 @@ import model.fechaVenta.FechaVenta
 import model.fechaVenta.FechaVentaTestList
 
 data class Venta(
+    // Primary key
     var id: Long? = null,
+
+    // Atributes
     var impRealVenta: Double = 0.0,
     var ivaVenta: Double = 0.0,
     var impIvaVenta: Double = 0.0,
     var desVenta: Double = 0.0,
     var netoVenta: Double = 0.0,
+
+    // Foreign key
     var fechaVenta: FechaVenta = FechaVenta(),
     var cliente: Cliente = Cliente(),
     var empleado: Empleado = Empleado()

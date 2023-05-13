@@ -1,12 +1,17 @@
 package model.direccion
 
 data class Direccion(
+    // Priomary key
     var id: Long? = null,
+
+    // Atributes
     var municipio: String = "",
     var colonia: String = "",
     var calle: String = "",
     var numero: Int = 0,
     var codigoPostal: String = "",
+
+    // Helper variable
     val formato: String = "$municipio, $colonia, $calle, $numero, $codigoPostal"
 )
 

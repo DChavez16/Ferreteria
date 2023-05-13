@@ -4,8 +4,13 @@ import model.contacto.Contacto
 import model.contacto.ContactoTestList
 
 data class Sucursal(
+    // Primary key
     var id: Long? = null,
+
+    // Atributes
     var name: String = "",
+
+    // Foreign key
     val contacto: Contacto = Contacto()
 )
 
