@@ -109,13 +109,13 @@ fun ProductoInfoScreen(
                     )
                 }
 
-                // Branch form field
+                // Supplier form field
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth()
                 ) {
-                    Text(text = "Sucursal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                    Text(text = "Proveedor:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                     ExpandableDropDownMenu(
                         value = productoState.value.currentProduct.proveedor.nombre,
                         optionsList = productoController.proveedorNamePair.map { it.first },

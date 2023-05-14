@@ -4,8 +4,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import model.producto.Producto
-import model.producto.ProductoTestList
 import model.proveedor.Proveedor
 import model.proveedor.ProveedorTestList
 
@@ -15,7 +13,6 @@ class ProveedorController {
 
     init {
         getProveedorList()
-        getProductoList()
     }
 
     /*
@@ -27,14 +24,6 @@ class ProveedorController {
     private fun getProveedorList() {
         // TODO Change this temporal line when the database is implemented
         _proveedorState.value.proveedorList = ProveedorTestList
-    }
-
-    /**
-     * Retrieves a list of products from the database
-     */
-    private fun getProductoList() {
-        // TODO Change this temporal line when the database is implemented
-        _proveedorState.value.productosList = ProductoTestList
     }
 
     /**
@@ -75,7 +64,7 @@ class ProveedorController {
      * Validates if the current supplier's content is not empty
      */
     fun proveedorIsNotEmpty() = with(_proveedorState.value.currentProveedor) {
-        this.nombre.isNotEmpty() && this.productos.isNotEmpty() && with(this.contacto) {
+        this.nombre.isNotEmpty() && with(this.contacto) {
             this.correo.isNotEmpty() && this.telefono.isNotEmpty() && with(this.direccion) {
                 this.municipio.isNotEmpty() && this.colonia.isNotEmpty() && this.calle.isNotEmpty() && this.numero > 0 && this.codigoPostal.isNotEmpty()
             }
@@ -89,7 +78,7 @@ class ProveedorController {
         _proveedorState.update { currentState ->
             currentState.copy(
                 currentProveedor = currentState.currentProveedor.copy(
-                    nombre = "", productos = emptyList(), contacto = currentState.currentProveedor.contacto.copy(
+                    nombre = "", contacto = currentState.currentProveedor.contacto.copy(
                         correo = "", telefono = "", direccion = currentState.currentProveedor.contacto.direccion.copy(
                             municipio = "", colonia = "", calle = "", numero = 0, codigoPostal = ""
                         )
@@ -222,39 +211,10 @@ class ProveedorController {
             )
         }
     }
-
-    /**
-     * Add a product to the list of products provided by the supplier
-     * @param producto Product to be added to the list
-     */
-    fun addProductToPromotion(producto: Producto) {
-        _proveedorState.update { currentState ->
-            currentState.copy(
-                currentProveedor = currentState.currentProveedor.copy(
-                    productos = currentState.currentProveedor.productos.addProducto(producto)
-                )
-            )
-        }
-    }
 }
 
 
 data class ProveedorState(
     var currentProveedor: Proveedor = Proveedor(),
-    var proveedorList: List<Proveedor> = emptyList(),
-    var productosList: List<Producto> = emptyList()
+    var proveedorList: List<Proveedor> = emptyList()
 )
-
-/*
-* Helper methods
-*/
-private fun List<Producto>.addProducto(producto: Producto): List<Producto> {
-    val newList = this.toMutableList()
-
-    // Validate if is already in the list, if so, update the element content
-    if (!this.contains(producto)) {
-        newList.add(producto)
-    }
-
-    return newList.toList()
-}
