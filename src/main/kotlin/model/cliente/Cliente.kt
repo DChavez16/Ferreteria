@@ -14,9 +14,7 @@ data class Cliente(
     var id: Int? = null,
 
     // Atributes
-    var nombre: String = "",
-    var suscrito: Boolean = false,
-    var contacto: Contacto = Contacto(),    // Foreign key
+    var nombre: String = "", var suscrito: Boolean = false, var contacto: Contacto = Contacto(),    // Foreign key
     var cantidadCompras: Int = 0,
 
     // List of contents filled post retrieving
@@ -36,12 +34,12 @@ object ClienteDatabase {
 
         val query = statement.executeQuery("select * from vista_Cliente")
 
-        while(query.next()) {
+        while (query.next()) {
             currentCliente = Cliente()
 
             currentCliente.id = query.getInt("idCliente")
             currentCliente.nombre = query.getString("nombre")
-            currentCliente.suscrito = when(query.getByte("suscrito")) {
+            currentCliente.suscrito = when (query.getByte("suscrito")) {
                 0.toByte() -> false
                 else -> true
             }
@@ -62,7 +60,8 @@ object ClienteDatabase {
      * @param cliente Cliente to be added to the database
      */
     fun insertCliente(cliente: Cliente): Boolean {
-        val resultado = statement.executeUpdate("execute insertClient '${cliente.nombre}', ${cliente.suscrito.toByte()}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'")
+        val resultado =
+            statement.executeUpdate("execute insertClient '${cliente.nombre}', ${cliente.suscrito.toByte()}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'")
 
         return resultado > 0
     }
@@ -73,7 +72,9 @@ object ClienteDatabase {
      * @param cliente Cliente entry to be updated at the database
      */
     fun updateCliente(cliente: Cliente): Boolean {
-        val resultado = statement.executeUpdate("execute updateClient ${cliente.id}, '${cliente.nombre}', ${cliente.suscrito.toByte()}, ${cliente.contacto.id}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'")
+        val resultado = statement.executeUpdate(
+            "execute updateClient " + "${cliente.id}, " + "'${cliente.nombre}', " + "${cliente.suscrito.toByte()}, " + "${cliente.contacto.id}, " + "'${cliente.contacto.correo}', " + "'${cliente.contacto.telefono}'"
+        )
 
         return resultado > 0
     }
@@ -101,7 +102,7 @@ object ClienteDatabase {
 
         val query = statement.executeQuery("execute comprasCliente $idCliente")
 
-        while(query.next()) {
+        while (query.next()) {
             currentVenta = Venta()
 
             currentVenta.id = query.getInt("idVenta")
@@ -111,7 +112,8 @@ object ClienteDatabase {
             currentVenta.desVenta = query.getDouble("descuento")
             currentVenta.netoVenta = query.getDouble("importeNeto")
 
-            newProductosList = DetalleVentaProductoDatabase.getProductosPorCompraPorCliente(currentVenta.id!!, idCliente)
+            newProductosList =
+                DetalleVentaProductoDatabase.getProductosPorCompraPorCliente(currentVenta.id!!, idCliente)
 
             newList.add(DetalleVentaProducto(venta = currentVenta, productos = newProductosList))
         }

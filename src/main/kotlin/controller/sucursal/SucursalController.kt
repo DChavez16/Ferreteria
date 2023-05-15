@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.sucursal.Sucursal
+import model.sucursal.SucursalDatabase
 
 class SucursalController {
     private var _sucursalState = MutableStateFlow(SucursalState())
@@ -21,7 +22,7 @@ class SucursalController {
      * Retrieves a list of branches from the database
      */
     private fun getSucursalList() {
-        // TODO Change this temporal line when the database is implemented
+        _sucursalState.value.sucursalList = SucursalDatabase.getSucursalList()
     }
 
     /**
@@ -39,7 +40,7 @@ class SucursalController {
      * @param sucursal Branch to be deleted from the database
      */
     fun createSucursal(sucursal: Sucursal) {
-        // TODO Implement this method when the database is implemented
+        if(SucursalDatabase.insertSucursal(sucursal)) getSucursalList()
     }
 
     /**
@@ -47,7 +48,7 @@ class SucursalController {
      * @param sucursal Branch to be edited in the database
      */
     fun updateSucursal(sucursal: Sucursal) {
-        // TODO Implement this method when the database is implemented
+        if(SucursalDatabase.updateSucursal(sucursal)) getSucursalList()
     }
 
     /**
@@ -55,7 +56,7 @@ class SucursalController {
      * @param sucursal Branch to be deleted from the database
      */
     fun deleteSucursal(sucursal: Sucursal) {
-        // TODO Implement this method when the database is implemented
+        if(SucursalDatabase.deleteSucursal(sucursal)) getSucursalList()
     }
 
     /**

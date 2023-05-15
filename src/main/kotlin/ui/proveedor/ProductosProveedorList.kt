@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import model.direccion.getFormat
 import model.proveedor.Proveedor
 import ui.util.ProductosProveedorDetailsList
 import ui.util.ScreenHeader
@@ -106,7 +107,7 @@ private fun ProveedorDetails(proveedor: Proveedor, modifier: Modifier = Modifier
                 Text(text = "Dirección: ", style = MaterialTheme.typography.h5)
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    text = proveedor.contacto.direccion.formato,
+                    text = proveedor.contacto.direccion.getFormat(),
                     style = MaterialTheme.typography.h6,
                     textDecoration = TextDecoration.Underline
                 )

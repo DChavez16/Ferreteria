@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import model.direccion.getFormat
 import model.sucursal.Sucursal
 import ui.util.BottomButtons
 
@@ -124,7 +125,7 @@ private fun SucursalListItem(
             textAlign = TextAlign.Start
         )
         Text(
-            text = sucursal.contacto.direccion.formato,
+            text = sucursal.contacto.direccion.getFormat(),
             modifier = Modifier.weight(2.5f),
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Center

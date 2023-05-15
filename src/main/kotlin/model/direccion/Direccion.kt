@@ -2,18 +2,18 @@ package model.direccion
 
 data class Direccion(
     // Priomary key
-    var id: Long? = null,
+    var id: Int? = null,
 
     // Atributes
     var municipio: String = "",
     var colonia: String = "",
     var calle: String = "",
     var numero: Int = 0,
-    var codigoPostal: String = "",
-
-    // Helper variable
-    val formato: String = "$municipio, $colonia, $calle, $numero, $codigoPostal"
+    var codigoPostal: String = ""
 )
+
+// Direccion extension functions
+fun Direccion.getFormat(): String = "${this.municipio}, ${this.colonia}, ${this.calle}, ${this.numero}, ${this.codigoPostal}"
 
 val municipiosList = listOf(
     "Abasolo",
