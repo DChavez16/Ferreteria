@@ -1,14 +1,11 @@
 package controller.home
 
-import Database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.cliente.Cliente
-import model.cliente.ClienteTestList
 import model.producto.Producto
-import model.producto.ProductoTestList
 import kotlin.random.Random
 
 class HomeController {
@@ -22,24 +19,6 @@ class HomeController {
     init {
         getClientList()
         resetState()
-        // TODO Change this temporal line when the database is implemented
-        val statement = Database.connection.createStatement()
-        val productsListQuery = statement.executeQuery("SELECT * FROM Producto")
-        val productTemp = Producto()
-
-        while (productsListQuery.next()) {
-            productTemp.id = productsListQuery.getInt("idProducto").toLong()
-            productTemp.nombre = productsListQuery.getString("nomProducto")
-            productTemp.precioReal = productsListQuery.getDouble("preRealProducto")
-            productTemp.cantidadIVA = productsListQuery.getDouble("cantIVAProducto")
-            productTemp.precioVenta = productsListQuery.getDouble("preVenProducto")
-            productTemp.descripcion = productsListQuery.getString("desProducto")
-            productTemp.proveedor.id = productsListQuery.getInt("idProveedor").toLong()
-
-            productsList.add(productTemp)
-        }
-
-        productsList = ProductoTestList.toMutableList()
     }
 
     /**
@@ -47,7 +26,6 @@ class HomeController {
      */
     private fun getClientList() {
         // TODO Change this temporal line when the database is implemented
-        _homeState.value.clientList = ClienteTestList
 
         _homeState.value.clientList.forEach { cliente ->
             clienteNamePair.add(Pair(cliente.nombre, cliente))

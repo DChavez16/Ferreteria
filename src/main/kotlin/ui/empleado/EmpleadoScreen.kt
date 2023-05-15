@@ -5,7 +5,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import controller.empleado.EmpleadoController
-import model.empleado.EmpleadoTestList
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -29,7 +28,7 @@ fun EmpleadoScreen() {
         }) {
             when (it) {
                 EmpleadoScreenCodes.LIST -> {
-                    EmpleadoList(empleadoList = EmpleadoTestList, onAddEmpleadoClick = {
+                    EmpleadoList(empleadoList = empleadoState.value.empleadoList, onAddEmpleadoClick = {
                         empleadoController.changeCurrentEmpleado()
                         currentScreen = EmpleadoScreenCodes.INFO
                     }, onEditEmpleadoClick = { empleado ->

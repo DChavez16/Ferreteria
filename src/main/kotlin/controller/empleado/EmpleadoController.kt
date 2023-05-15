@@ -6,9 +6,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.detalleVentaProducto.DetalleVentaProducto
 import model.empleado.Empleado
-import model.empleado.EmpleadoTestList
 import model.sucursal.Sucursal
-import model.sucursal.SucursalTestList
 import util.UserType
 
 class EmpleadoController {
@@ -30,7 +28,6 @@ class EmpleadoController {
      */
     private fun getEmpleadoList() {
         // TODO Change this temporal line when the database is implemented
-        _empleadoState.value.empleadoList = EmpleadoTestList
     }
 
     /**
@@ -60,7 +57,6 @@ class EmpleadoController {
      */
     private fun getSucursalList() {
         // TODO Change this temporal line when the database is implemented
-        _empleadoState.value.sucursalList = SucursalTestList
 
         _empleadoState.value.sucursalList.forEach { sucursal ->
             sucursalNamePair.add(Pair(sucursal.name, sucursal))

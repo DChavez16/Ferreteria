@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.proveedor.Proveedor
-import model.proveedor.ProveedorTestList
 
 class ProveedorController {
     private var _proveedorState = MutableStateFlow(ProveedorState())
@@ -23,7 +22,6 @@ class ProveedorController {
      */
     private fun getProveedorList() {
         // TODO Change this temporal line when the database is implemented
-        _proveedorState.value.proveedorList = ProveedorTestList
     }
 
     /**

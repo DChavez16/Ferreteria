@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.sucursal.Sucursal
-import model.sucursal.SucursalTestList
 
 class SucursalController {
     private var _sucursalState = MutableStateFlow(SucursalState())
@@ -23,7 +22,6 @@ class SucursalController {
      */
     private fun getSucursalList() {
         // TODO Change this temporal line when the database is implemented
-        _sucursalState.value.sucursalList = SucursalTestList
     }
 
     /**

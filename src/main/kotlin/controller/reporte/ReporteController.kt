@@ -15,7 +15,6 @@ class ReporteController {
 
     private fun getProveedorList() {
         // TODO Change this temporal line when the database is implemented
-//        _reporteState.value.reporteList = ReporteTestList
     }
 }
 

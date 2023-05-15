@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.producto.Producto
-import model.producto.ProductoTestList
 import model.proveedor.Proveedor
-import model.proveedor.ProveedorTestList
 
 class ProductoController {
     private var _productoState = MutableStateFlow(ProductoState())
@@ -28,7 +26,6 @@ class ProductoController {
      */
     private fun getProductsList() {
         // TODO Change this temporal line when the database is implemented
-        _productoState.value.productsList = ProductoTestList
     }
 
     /**
@@ -36,7 +33,6 @@ class ProductoController {
      */
     private fun getProveedorList() {
         // TODO Change this temporal line when the database is implemented
-        _productoState.value.proveedorList = ProveedorTestList
 
         _productoState.value.proveedorList.forEach { proveedor ->
             proveedorNamePair.add(Pair(proveedor.nombre, proveedor))

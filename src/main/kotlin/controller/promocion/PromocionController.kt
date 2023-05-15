@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.producto.Producto
-import model.producto.ProductoTestList
 import model.promocion.Promocion
-import model.promocion.PromocionTestList
 
 class PromocionController {
     private var _promocionState = MutableStateFlow(PromocionState())
@@ -26,7 +24,6 @@ class PromocionController {
      */
     private fun getPromocionList() {
         // TODO Change this temporal line when the database is implemented
-        _promocionState.value.promocionList = PromocionTestList
     }
 
     /**
@@ -34,7 +31,6 @@ class PromocionController {
      */
     private fun getProductoList() {
         // TODO Change this temporal line when the database is implemented
-        _promocionState.value.productosList = ProductoTestList
     }
 
     /**
