@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.detalleVentaProducto.DetalleVentaProducto
 import model.empleado.Empleado
+import model.empleado.EmpleadoDatabase
 import model.sucursal.Sucursal
+import model.sucursal.SucursalDatabase
 import util.UserType
 
 class EmpleadoController {
@@ -27,26 +29,23 @@ class EmpleadoController {
      * Retrieves a list of employees from the database
      */
     private fun getEmpleadoList() {
-        // TODO Change this temporal line when the database is implemented
+        _empleadoState.value.empleadoList = EmpleadoDatabase.getEmpleadoList()
     }
 
     /**
      * Retrieves a list of employee's sells from the database
      */
-    private fun getVentasEmpleado(id: Long?) {
-        val newList = mutableListOf<DetalleVentaProducto>()
+    private fun getVentasEmpleado(id: Int?) {
+        var newList: List<DetalleVentaProducto> = emptyList()
 
-        // TODO Change this temporal line when the database is implemented
-//        id?.let {
-//            DetalleVentaProductoTestList.forEach { venta ->
-//                if (venta.venta.empleado.id == id) newList.add(venta)
-//            }
-//        }
+        id?.let {
+            newList = EmpleadoDatabase.getVentasEmpleado(id)
+        }
 
         _empleadoState.update { currentState ->
             currentState.copy(
                 currentEmpleado = currentState.currentEmpleado.copy(
-                    listaVentas = newList.toList()
+                    listaVentas = newList
                 )
             )
         }
@@ -56,7 +55,7 @@ class EmpleadoController {
      * Retrieves a list of branches from the database
      */
     private fun getSucursalList() {
-        // TODO Change this temporal line when the database is implemented
+        _empleadoState.value.sucursalList = SucursalDatabase.getSucursalList()
 
         _empleadoState.value.sucursalList.forEach { sucursal ->
             sucursalNamePair.add(Pair(sucursal.name, sucursal))
@@ -80,7 +79,7 @@ class EmpleadoController {
      * @param empleado Employee to be deleted from the database
      */
     fun createEmpleado(empleado: Empleado) {
-        // TODO Implement this method when the database is implemented
+        if(EmpleadoDatabase.insertEmpleado(empleado)) getEmpleadoList()
     }
 
     /**
@@ -88,7 +87,7 @@ class EmpleadoController {
      * @param empleado Empleado to be edited in the database
      */
     fun updateEmpleado(empleado: Empleado) {
-        // TODO Implement this method when the database is implemented
+        if(EmpleadoDatabase.updateEmpleado(empleado)) getEmpleadoList()
     }
 
     /**
@@ -96,7 +95,7 @@ class EmpleadoController {
      * @param empleado Employee to be deleted from the database
      */
     fun deleteEmpleado(empleado: Empleado) {
-        // TODO Implement this method when the database is implemented
+        if(EmpleadoDatabase.deleteEmpleado(empleado)) getEmpleadoList()
     }
 
     /**

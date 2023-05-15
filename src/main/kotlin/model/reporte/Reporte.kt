@@ -1,5 +1,6 @@
 package model.reporte
 
+import Database
 import model.fechaVenta.FechaVenta
 
 data class Reporte(
@@ -14,3 +15,11 @@ data class Reporte(
     // Foreign key
     var fechaVenta: FechaVenta? = null,
 )
+
+
+
+object ReporteDatabase {
+    private val statement = Database.connection.createStatement()
+
+
+}

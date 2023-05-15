@@ -39,7 +39,7 @@ class ClienteController {
         _clienteState.update { currentState ->
             currentState.copy(
                 currentCliente = currentState.currentCliente.copy(
-                    listaCompras = newList.toList()
+                    listaCompras = newList
                 )
             )
         }

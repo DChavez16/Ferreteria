@@ -111,6 +111,7 @@ object ClienteDatabase {
             currentVenta.impIvaVenta = query.getDouble("importeConIVA")
             currentVenta.desVenta = query.getDouble("descuento")
             currentVenta.netoVenta = query.getDouble("importeNeto")
+            currentVenta.empleado.nombre = query.getString("nombreEmpleado")
 
             newProductosList =
                 DetalleVentaProductoDatabase.getProductosPorCompraPorCliente(currentVenta.id!!, idCliente)
