@@ -6,7 +6,7 @@ import model.fechaVenta.FechaVenta
 
 data class Venta(
     // Primary key
-    var id: Long? = null,
+    var id: Int? = null,
 
     // Atributes
     var impRealVenta: Double = 0.0,

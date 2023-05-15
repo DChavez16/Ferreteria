@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.cliente.Cliente
+import model.cliente.ClienteDatabase
 import model.detalleVentaProducto.DetalleVentaProducto
 
 class ClienteController {
@@ -22,16 +23,18 @@ class ClienteController {
      * Retrieves a list of clients from the database
      */
     private fun getClienteList() {
-        // TODO Change this temporal line when the database is implemented
+        _clienteState.value.clienteList = ClienteDatabase.getClienteList()
     }
 
     /**
      * Retrieves a list of the client's purchases from the database
      */
-    private fun getComprasCliente(id: Long?) {
-        val newList = mutableListOf<DetalleVentaProducto>()
+    private fun getComprasCliente(id: Int?) {
+        var newList: List<DetalleVentaProducto> = emptyList()
 
-        // TODO Change this temporal line when the database is implemented
+        id?.let {
+            newList = ClienteDatabase.getComprasCliente(id)
+        }
 
         _clienteState.update { currentState ->
             currentState.copy(
@@ -59,7 +62,7 @@ class ClienteController {
      * @param cliente Client to be deleted from the database
      */
     fun createCliente(cliente: Cliente) {
-        // TODO Implement this method when the database is implemented
+        if(ClienteDatabase.insertCliente(cliente)) getClienteList()
     }
 
     /**
@@ -67,7 +70,7 @@ class ClienteController {
      * @param cliente Client to be edited in the database
      */
     fun updateCliente(cliente: Cliente) {
-        // TODO Implement this method when the database is implemented
+        if(ClienteDatabase.updateCliente(cliente)) getClienteList()
     }
 
     /**
@@ -75,7 +78,7 @@ class ClienteController {
      * @param cliente Client to be deleted from the database
      */
     fun deleteCliente(cliente: Cliente) {
-        // TODO Implement this method when the database is implemented
+        if(ClienteDatabase.deleteCliente(cliente)) getClienteList()
     }
 
     /**

@@ -5,10 +5,10 @@ import model.promocion.Promocion
 
 data class ProductoVenta(
     // Primary key
-    var id: Long? = null,
+    var id: Int? = null,
 
     // Atributes
-    var cantidad: Int,
+    var cantidad: Int = 0,
 
     // Foreign key
     var producto: Producto = Producto(),

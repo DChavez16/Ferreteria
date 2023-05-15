@@ -4,7 +4,7 @@ import model.direccion.Direccion
 
 data class Contacto(
     // Primary key
-    var id: Long? = null,
+    var id: Int? = null,
 
     // Atributes
     var correo: String = "",

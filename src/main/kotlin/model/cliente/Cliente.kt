@@ -3,11 +3,15 @@ package model.cliente
 import Database
 import model.contacto.Contacto
 import model.detalleVentaProducto.DetalleVentaProducto
+import model.detalleVentaProducto.DetalleVentaProductoDatabase
+import model.productoVenta.ProductoVenta
+import model.venta.Venta
+import util.toByte
 import java.sql.Statement
 
 data class Cliente(
     // Primary key
-    var id: Long? = null,
+    var id: Int? = null,
 
     // Atributes
     var nombre: String = "",
@@ -23,21 +27,26 @@ data class Cliente(
 object ClienteDatabase {
     private var statement: Statement = Database.connection.createStatement()
 
-    fun getClientList(): List<Cliente> {
+    /**
+     * Collects all the clients stored in the database
+     */
+    fun getClienteList(): List<Cliente> {
         val newList = mutableListOf<Cliente>()
-        val currentCliente = Cliente()
+        var currentCliente: Cliente
 
         val query = statement.executeQuery("select * from vista_Cliente")
 
         while(query.next()) {
-            currentCliente.id = query.getInt("idCliente").toLong()
+            currentCliente = Cliente()
+
+            currentCliente.id = query.getInt("idCliente")
             currentCliente.nombre = query.getString("nombre")
-            currentCliente.suscrito = when(query.getByte("suscripcion")) {
+            currentCliente.suscrito = when(query.getByte("suscrito")) {
                 0.toByte() -> false
                 else -> true
             }
             currentCliente.cantidadCompras = query.getInt("compras")
-            currentCliente.contacto.id = query.getInt("idContacto").toLong()
+            currentCliente.contacto.id = query.getInt("idContacto")
             currentCliente.contacto.correo = query.getString("correo")
             currentCliente.contacto.telefono = query.getString("telefono")
 
@@ -46,22 +55,67 @@ object ClienteDatabase {
 
         return newList.toList()
     }
+
+
+    /**
+     * Inserts the client's data in the database
+     * @param cliente Cliente to be added to the database
+     */
+    fun insertCliente(cliente: Cliente): Boolean {
+        val resultado = statement.executeUpdate("execute insertClient '${cliente.nombre}', ${cliente.suscrito.toByte()}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'")
+
+        return resultado > 0
+    }
+
+
+    /**
+     * Updates the indicated client's entry in the database
+     * @param cliente Cliente entry to be updated at the database
+     */
+    fun updateCliente(cliente: Cliente): Boolean {
+        val resultado = statement.executeUpdate("execute updateClient ${cliente.id}, '${cliente.nombre}', ${cliente.suscrito.toByte()}, ${cliente.contacto.id}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'")
+
+        return resultado > 0
+    }
+
+
+    /**
+     * Deletes the indicated client's entry in the database
+     * @param cliente Cliente to be deleted from the database
+     */
+    fun deleteCliente(cliente: Cliente): Boolean {
+        val resultado = statement.executeUpdate("execute deleteClient ${cliente.id}, ${cliente.contacto.id}")
+
+        return resultado > 0
+    }
+
+
+    /**
+     * Collects all purchases of the client's from the database
+     * @param idCliente ID of the Cliente which purchases are going to be retrieved
+     */
+    fun getComprasCliente(idCliente: Int): List<DetalleVentaProducto> {
+        val newList = mutableListOf<DetalleVentaProducto>()
+        var newProductosList: List<ProductoVenta>
+        var currentVenta: Venta
+
+        val query = statement.executeQuery("execute comprasCliente $idCliente")
+
+        while(query.next()) {
+            currentVenta = Venta()
+
+            currentVenta.id = query.getInt("idVenta")
+            currentVenta.impRealVenta = query.getDouble("importeReal")
+            currentVenta.ivaVenta = query.getDouble("ivaVenta")
+            currentVenta.impIvaVenta = query.getDouble("importeConIVA")
+            currentVenta.desVenta = query.getDouble("descuento")
+            currentVenta.netoVenta = query.getDouble("importeNeto")
+
+            newProductosList = DetalleVentaProductoDatabase.getProductosPorCompraPorCliente(currentVenta.id!!, idCliente)
+
+            newList.add(DetalleVentaProducto(venta = currentVenta, productos = newProductosList))
+        }
+
+        return newList.toList()
+    }
 }
-
-
-//// TODO Change this temporal line when the database is implemented
-//val statement = Database.connection.createStatement()
-//val productsListQuery = statement.executeQuery("SELECT * FROM Producto")
-//val productTemp = Producto()
-//
-//while (productsListQuery.next()) {
-//    productTemp.id = productsListQuery.getInt("idProducto").toLong()
-//    productTemp.nombre = productsListQuery.getString("nomProducto")
-//    productTemp.precioReal = productsListQuery.getDouble("preRealProducto")
-//    productTemp.cantidadIVA = productsListQuery.getDouble("cantIVAProducto")
-//    productTemp.precioVenta = productsListQuery.getDouble("preVenProducto")
-//    productTemp.descripcion = productsListQuery.getString("desProducto")
-//    productTemp.proveedor.id = productsListQuery.getInt("idProveedor").toLong()
-//
-//    productsList.add(productTemp)
-//}
