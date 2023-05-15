@@ -4,7 +4,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import model.producto.Producto
 import model.proveedor.Proveedor
+import model.proveedor.ProveedorDatabase
 
 class ProveedorController {
     private var _proveedorState = MutableStateFlow(ProveedorState())
@@ -21,7 +23,27 @@ class ProveedorController {
      * Retrieves a list of suppliers from the database
      */
     private fun getProveedorList() {
-        // TODO Change this temporal line when the database is implemented
+        _proveedorState.value.proveedorList = ProveedorDatabase.getProveedorList()
+    }
+
+    /**
+     * Retrieves a list of products provided by the supplir from the database
+     * @param id ID of the Proveedor which products are going to be retrieved
+     */
+    private fun getProductosProveedor(id: Int?) {
+        var newList: List<Producto> = emptyList()
+
+        id?.let {
+            newList = ProveedorDatabase.getProductosProveedor(id)
+        }
+
+        _proveedorState.update { currentState ->
+            currentState.copy(
+                currentProveedor = currentState.currentProveedor.copy(
+                    productos = newList
+                )
+            )
+        }
     }
 
     /**
@@ -32,6 +54,8 @@ class ProveedorController {
         _proveedorState.update { currentState ->
             currentState.copy(currentProveedor = proveedor)
         }
+
+        getProductosProveedor(_proveedorState.value.currentProveedor.id)
     }
 
     /**
@@ -39,7 +63,7 @@ class ProveedorController {
      * @param proveedor Supplier to be deleted from the database
      */
     fun createProveedor(proveedor: Proveedor) {
-        // TODO Implement this method when the database is implemented
+        if(ProveedorDatabase.insertProveedor(proveedor)) getProveedorList()
     }
 
     /**
@@ -47,7 +71,7 @@ class ProveedorController {
      * @param proveedor Supplier to be edited in the database
      */
     fun updateProveedor(proveedor: Proveedor) {
-        // TODO Implement this method when the database is implemented
+        if(ProveedorDatabase.updateProveedor(proveedor)) getProveedorList()
     }
 
     /**
@@ -55,7 +79,7 @@ class ProveedorController {
      * @param proveedor Supplier to be deleted from the database
      */
     fun deleteProveedor(proveedor: Proveedor) {
-        // TODO Implement this method when the database is implemented
+        if(ProveedorDatabase.deleteProveedor(proveedor)) getProveedorList()
     }
 
     /**
