@@ -2,6 +2,7 @@ package model.producto
 
 import Database
 import model.promocion.Promocion
+import model.promocion.PromocionDatabase
 import model.proveedor.Proveedor
 import java.sql.Statement
 
@@ -48,12 +49,12 @@ object ProductoDatabase {
     /**
      * Collects all the products stored in the database
      */
-    fun getProductList(): List<Producto> {
+    fun getProductList(promocionFilter: Boolean = false): List<Producto> {
         val newList = mutableListOf<Producto>()
         var currentProducto: Producto
 
         val query = statement.executeQuery(
-            "select * from vista_Producto"
+            "select * from vista_Producto${if(promocionFilter) " where idPromocion is null" else ""}"
         )
 
         while (query.next()) {
@@ -67,6 +68,11 @@ object ProductoDatabase {
             currentProducto.descripcion = query.getString("descripcion")
             currentProducto.proveedor.id = query.getInt("idProveedor")
             currentProducto.proveedor.nombre = query.getString("nombreProveedor")
+            currentProducto.proveedor.id = query.getInt("idProveedor")
+
+            currentProducto.proveedor.id?.let {
+                currentProducto.promocion = PromocionDatabase.getPromocion(it)
+            }
 
             newList.add(currentProducto)
         }

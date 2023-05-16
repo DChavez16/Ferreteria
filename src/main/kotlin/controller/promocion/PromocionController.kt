@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.producto.Producto
+import model.producto.ProductoDatabase
 import model.promocion.Promocion
 import model.promocion.PromocionDatabase
 
@@ -51,7 +52,7 @@ class PromocionController {
      * Retrieves a list of products from the database
      */
     private fun getProductoList() {
-        // TODO Change this temporal line when the database is implemented
+        _promocionState.value.productosList = ProductoDatabase.getProductList(promocionFilter = true)
     }
 
     /**

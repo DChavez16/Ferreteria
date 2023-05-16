@@ -85,7 +85,7 @@ object PromocionDatabase {
         }
 
         promocion.productos.forEach { producto ->
-            insertDetalleProductoPromocion(promocion.id!!, producto.id!!)
+            addPromotionToProduct(promocion.id!!, producto.id!!)
         }
 
         return resultado > 0
@@ -102,7 +102,7 @@ object PromocionDatabase {
         )
 
         promocion.productos.forEach { producto ->
-            insertDetalleProductoPromocion(promocion.id!!, producto.id!!)
+            addPromotionToProduct(promocion.id!!, producto.id!!)
         }
 
         return resultado > 0
@@ -135,12 +135,12 @@ object PromocionDatabase {
         while (query.next()) {
             currentProducto = Producto()
 
-            currentProducto.id = query.getInt("idVenta")
-            currentProducto.nombre = query.getString("nombre")
-            currentProducto.precioReal = query.getDouble("precioReal")
-            currentProducto.cantidadIVA = query.getDouble("cantidadIVA")
-            currentProducto.precioVenta = query.getDouble("precioVenta")
-            currentProducto.descripcion = query.getString("descripcion")
+            currentProducto.id = query.getInt("idProducto")
+            currentProducto.nombre = query.getString("nomProducto")
+            currentProducto.precioReal = query.getDouble("preRealProducto")
+            currentProducto.cantidadIVA = query.getDouble("cantIVAProducto")
+            currentProducto.precioVenta = query.getDouble("preVenProducto")
+            currentProducto.descripcion = query.getString("desProducto")
 
             newList.add(currentProducto)
         }
@@ -154,10 +154,10 @@ object PromocionDatabase {
      * @param idPromocion ID of the Promocion to be added to the database
      * @param idProducto ID of the Producto to be added to the database
      */
-    private fun insertDetalleProductoPromocion(idPromocion: Int, idProducto: Int): Boolean {
+    private fun addPromotionToProduct(idPromocion: Int, idProducto: Int): Boolean {
         val resultado =
             statement.executeUpdate(
-                "execute createDetalleProductoPromocion $idProducto, $idPromocion"
+                "execute addPromocionAProducto $idPromocion, $idProducto"
             )
 
         return resultado > 0
