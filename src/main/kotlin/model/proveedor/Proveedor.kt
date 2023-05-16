@@ -101,11 +101,11 @@ object ProveedorDatabase {
             currentProducto = Producto()
 
             currentProducto.id = query.getInt("idProducto")
-            currentProducto.nombre = query.getString("nombre")
-            currentProducto.precioReal = query.getDouble("precioReal")
-            currentProducto.cantidadIVA = query.getDouble("cantidadIVA")
-            currentProducto.precioVenta = query.getDouble("precioVenta")
-            currentProducto.nombre = query.getString("descripcion")
+            currentProducto.nombre = query.getString("nomProducto")
+            currentProducto.precioReal = query.getDouble("preRealProducto")
+            currentProducto.cantidadIVA = query.getDouble("cantIVAProducto")
+            currentProducto.precioVenta = query.getDouble("preVenProducto")
+            currentProducto.descripcion = query.getString("desProducto")
 
             newList.add(currentProducto)
         }
