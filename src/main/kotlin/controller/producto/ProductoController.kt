@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.producto.Producto
+import model.producto.ProductoDatabase
 import model.proveedor.Proveedor
+import model.proveedor.ProveedorDatabase
 
 class ProductoController {
     private var _productoState = MutableStateFlow(ProductoState())
@@ -25,14 +27,14 @@ class ProductoController {
      * Retrieves a list of products from the database
      */
     private fun getProductsList() {
-        // TODO Change this temporal line when the database is implemented
+        _productoState.value.productsList = ProductoDatabase.getProductList()
     }
 
     /**
      * Retrieves a list of suppliers from the database
      */
     private fun getProveedorList() {
-        // TODO Change this temporal line when the database is implemented
+        _productoState.value.proveedorList = ProveedorDatabase.getProveedorList()
 
         _productoState.value.proveedorList.forEach { proveedor ->
             proveedorNamePair.add(Pair(proveedor.nombre, proveedor))
@@ -54,7 +56,7 @@ class ProductoController {
      * @param producto Product to be deleted from the database
      */
     fun createProduct(producto: Producto) {
-        // TODO Implement this method when the database is implemented
+        if(ProductoDatabase.insertProducto(producto)) getProductsList()
     }
 
     /**
@@ -62,7 +64,7 @@ class ProductoController {
      * @param producto Producto to be edited in the database
      */
     fun updateProducto(producto: Producto) {
-        // TODO Implement this method when the database is implemented
+        if(ProductoDatabase.updateProducto(producto)) getProductsList()
     }
 
     /**
@@ -70,7 +72,7 @@ class ProductoController {
      * @param producto Product to be deleted from the database
      */
     fun deleteProduct(producto: Producto) {
-        // TODO Implement this method when the database is implemented
+        if(ProductoDatabase.deleteProducto(producto)) getProductsList()
     }
 
     /**
@@ -95,7 +97,7 @@ class ProductoController {
      * Validates if the current product's content is not empty
      */
     fun productoIsNotEmpty() = with(_productoState.value.currentProduct) {
-        this.nombre.isNotEmpty() && this.precioVenta > 0.0 && this.descripcion.isNotEmpty()
+        this.nombre.isNotEmpty() && this.precioVenta > 0.0 && this.descripcion.isNotEmpty() && this.proveedor.id != null
     }
 
     /**
