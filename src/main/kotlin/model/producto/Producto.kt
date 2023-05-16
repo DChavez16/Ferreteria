@@ -19,7 +19,7 @@ data class Producto(
 
     // Foreign key
     var proveedor: Proveedor = Proveedor(),
-    var promocion: Promocion = Promocion()
+    var promocion: Promocion? = null
 )
 
 
@@ -68,10 +68,8 @@ object ProductoDatabase {
             currentProducto.descripcion = query.getString("descripcion")
             currentProducto.proveedor.id = query.getInt("idProveedor")
             currentProducto.proveedor.nombre = query.getString("nombreProveedor")
-            currentProducto.proveedor.id = query.getInt("idProveedor")
-
-            currentProducto.proveedor.id?.let {
-                currentProducto.promocion = PromocionDatabase.getPromocion(it)
+            query.getInt("idPromocion").let {
+                currentProducto.promocion = if(it > 0) PromocionDatabase.getPromocion(it) else null
             }
 
             newList.add(currentProducto)

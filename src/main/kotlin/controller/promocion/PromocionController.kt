@@ -65,6 +65,7 @@ class PromocionController {
         }
 
         getProductosPromocion(_promocionState.value.currentPromocion.id)
+        getProductoList()
     }
 
     /**
@@ -72,7 +73,7 @@ class PromocionController {
      * @param promocion Promocion to be deleted from the database
      */
     fun createPromocion(promocion: Promocion) {
-        if(PromocionDatabase.insertPromocion(promocion)) getPromocionList()
+        if (PromocionDatabase.insertPromocion(promocion)) getPromocionList()
     }
 
     /**
@@ -80,7 +81,7 @@ class PromocionController {
      * @param promocion Promocion to be edited in the database
      */
     fun updatePromocion(promocion: Promocion) {
-        if(PromocionDatabase.updatePromocion(promocion)) getPromocionList()
+        if (PromocionDatabase.updatePromocion(promocion)) getPromocionList()
     }
 
     /**
@@ -88,7 +89,7 @@ class PromocionController {
      * @param promocion Promocion to be deleted from the database
      */
     fun deletePromocion(promocion: Promocion) {
-        if(PromocionDatabase.deletePromocion(promocion)) getPromocionList()
+        if (PromocionDatabase.deletePromocion(promocion)) getPromocionList()
     }
 
     /**
@@ -136,11 +137,11 @@ class PromocionController {
             newDiscount = if (newDiscountString == "") 0.0
             else newDiscountString.toDouble()
 
-            if(newDiscount in 0.0..100.0) {
+            if (newDiscount in 0.0..100.0) {
                 _promocionState.update { currentState ->
                     currentState.copy(
                         currentPromocion = currentState.currentPromocion.copy(
-                            descuento = newDiscount/100
+                            descuento = newDiscount / 100
                         )
                     )
                 }
@@ -176,6 +177,10 @@ class PromocionController {
             )
         }
     }
+
+    // TODO Add a function to delete a product from the list
+    // TODO Retrieve Products list at promotion insert, update and delete
+    // TODO Use filter function to filter products with promotions at the products selection list
 }
 
 data class PromocionState(

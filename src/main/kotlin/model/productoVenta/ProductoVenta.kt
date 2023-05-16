@@ -13,10 +13,9 @@ data class ProductoVenta(
     // Foreign key
     var producto: Producto = Producto(),
     // Atributes
-    var subtotal: Double = producto.precioReal * cantidad,
-    var cantidadIVA: Double = producto.cantidadIVA * cantidad,
+    var subtotal: Double = producto.precioReal * cantidad, var cantidadIVA: Double = producto.cantidadIVA * cantidad,
 
-    var promocion: Promocion? = Promocion(),
+    var promocion: Promocion? = producto.promocion,
     // Atributes
-    var precioVenta: Double = (subtotal + cantidadIVA) * if(promocion?.disponibilidad == true) promocion.descuento else 1.0,
+    var precioVenta: Double = (subtotal + cantidadIVA) * (if (promocion?.disponibilidad == true) 1.0 - promocion.descuento else 1.0)
 )

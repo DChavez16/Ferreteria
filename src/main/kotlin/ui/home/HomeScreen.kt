@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import controller.home.HomeController
 import controller.home.SaleInfo
-import controller.home.SelectedProductos
+import model.productoVenta.ProductoVenta
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
@@ -39,22 +39,18 @@ fun HomeScreen() {
 
                 Column(modifier = Modifier.weight(1f)) {
                     // Available products for sale
-                    AvailableProductsList(
-                        modifier = Modifier.weight(1f),
+                    AvailableProductsList(modifier = Modifier.weight(1f),
                         productoList = homeController.productsList,
                         quantitySelectionEnabled = true,
                         onAddProductoClick = { producto, quantity ->
                             homeController.onAddProductoClick(producto, quantity)
-                        }
-                    )
+                        })
                     // Current client
                     Column {
                         Text(text = "Cliente:", style = MaterialTheme.typography.h6)
-                        ExpandableDropDownMenu(
-                            value = homeState.value.currentCliente.nombre,
+                        ExpandableDropDownMenu(value = homeState.value.currentCliente.nombre,
                             optionsList = homeController.clienteNamePair.map { it.first },
-                            onValueChange = { homeController.updateCurrentCliente(it) }
-                        )
+                            onValueChange = { homeController.updateCurrentCliente(it) })
                     }
                 }
             }
@@ -63,7 +59,7 @@ fun HomeScreen() {
             BottomButtons(
                 twoButtons = true,
                 firstButtonText = "Aceptar",
-                firstButtonAction = {},
+                firstButtonAction = { homeController.makeSale() },
                 secondButtonText = "Limpiar campos",
                 secondButtonAction = { homeController.resetState() },
                 firstButtonEnabled = homeController.selectedProductsListIsNotEmpty()
@@ -74,7 +70,7 @@ fun HomeScreen() {
 
 @Composable
 private fun SelectedProductsList(
-    modifier: Modifier = Modifier, selectedProductos: List<SelectedProductos>, saleInfo: SaleInfo
+    modifier: Modifier = Modifier, selectedProductos: List<ProductoVenta>, saleInfo: SaleInfo
 ) {
     Column(modifier = modifier.fillMaxHeight()) {
         // Selected products list header
@@ -116,11 +112,7 @@ private fun SelectedProductListHeader() {
 }
 
 @Composable
-private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
-    val precioVenta = with(selectedProducto) {
-        (producto.precioVenta * cantidad) - (producto.precioVenta * cantidad * descuento)
-    }
-
+private fun SelectedProductListContent(selectedProducto: ProductoVenta) {
     Column(modifier = Modifier.padding(bottom = 4.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(
@@ -136,19 +128,21 @@ private fun SelectedProductListContent(selectedProducto: SelectedProductos) {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = decimalFormat(precioVenta),
+                text = decimalFormat(selectedProducto.precioVenta),
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center
             )
         }
-        if (selectedProducto.descuento > 0.0) {
-            Text(
-                text = "Descuento aplicado (${(selectedProducto.descuento * 100).toInt()} %)",
-                color = Color.Red,
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(start = 4.dp)
-            )
+        selectedProducto.promocion?.let {
+            if (it.disponibilidad) {
+                Text(
+                    text = "${it.description} (${(it.descuento * 100).toInt()} %)",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
         }
     }
 }
