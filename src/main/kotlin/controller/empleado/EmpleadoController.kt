@@ -34,7 +34,7 @@ class EmpleadoController {
 
     /**
      * Retrieves a list of employee's sells from the database
-     * @paramid ID of the Empleado which sells are going to be retrieved
+     * @param id ID of the Empleado which sells are going to be retrieved
      */
     private fun getVentasEmpleado(id: Int?) {
         var newList: List<DetalleVentaProducto> = emptyList()

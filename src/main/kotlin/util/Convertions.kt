@@ -11,6 +11,16 @@ fun Boolean.toByte(): Byte {
 }
 
 /**
+ * Converts a byte value to a boolean type
+ */
+fun Byte.toBoolean(): Boolean {
+    return when(this) {
+        0.toByte() -> false
+        else -> true
+    }
+}
+
+/**
  * Converts a UserType value to a byte type
  */
 fun UserType.toByte(): Byte {

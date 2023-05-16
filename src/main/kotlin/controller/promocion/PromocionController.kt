@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.producto.Producto
 import model.promocion.Promocion
+import model.promocion.PromocionDatabase
 
 class PromocionController {
     private var _promocionState = MutableStateFlow(PromocionState())
@@ -23,7 +24,27 @@ class PromocionController {
      * Retrieves a list of promotions from the database
      */
     private fun getPromocionList() {
-        // TODO Change this temporal line when the database is implemented
+        _promocionState.value.promocionList = PromocionDatabase.getPromocionList()
+    }
+
+    /**
+     * Retrieves the products of the promotion from the database
+     * @param id ID of the Promotion which products are going to be retrieved
+     */
+    private fun getProductosPromocion(id: Int?) {
+        var newList: List<Producto> = emptyList()
+
+        id?.let {
+            newList = PromocionDatabase.getProductosPromocion(id)
+        }
+
+        _promocionState.update { currentState ->
+            currentState.copy(
+                currentPromocion = currentState.currentPromocion.copy(
+                    productos = newList
+                )
+            )
+        }
     }
 
     /**
@@ -41,6 +62,8 @@ class PromocionController {
         _promocionState.update { currentState ->
             currentState.copy(currentPromocion = promocion)
         }
+
+        getProductosPromocion(_promocionState.value.currentPromocion.id)
     }
 
     /**
@@ -48,7 +71,7 @@ class PromocionController {
      * @param promocion Promocion to be deleted from the database
      */
     fun createPromocion(promocion: Promocion) {
-        // TODO Implement this method when the database is implemented
+        if(PromocionDatabase.insertPromocion(promocion)) getPromocionList()
     }
 
     /**
@@ -56,7 +79,7 @@ class PromocionController {
      * @param promocion Promocion to be edited in the database
      */
     fun updatePromocion(promocion: Promocion) {
-        // TODO Implement this method when the database is implemented
+        if(PromocionDatabase.updatePromocion(promocion)) getPromocionList()
     }
 
     /**
@@ -64,7 +87,7 @@ class PromocionController {
      * @param promocion Promocion to be deleted from the database
      */
     fun deletePromocion(promocion: Promocion) {
-        // TODO Implement this method when the database is implemented
+        if(PromocionDatabase.deletePromocion(promocion)) getPromocionList()
     }
 
     /**
