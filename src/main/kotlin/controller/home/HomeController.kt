@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.cliente.Cliente
 import model.cliente.ClienteDatabase
+import model.cliente.getFullName
 import model.producto.Producto
 import model.producto.ProductoDatabase
 import model.productoVenta.ProductoVenta
@@ -31,7 +32,7 @@ class HomeController {
         _homeState.value.clientList = ClienteDatabase.getClienteList()
 
         _homeState.value.clientList.forEach { cliente ->
-            clienteNamePair.add(Pair(cliente.nombre, cliente))
+            clienteNamePair.add(Pair(cliente.getFullName(), cliente))
         }
     }
 

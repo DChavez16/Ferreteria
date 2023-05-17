@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import model.empleado.Empleado
+import model.empleado.getFullName
 import ui.util.ScreenHeader
 import ui.util.VentaList
 
@@ -58,7 +59,7 @@ private fun EmpleadoDetails(empleado: Empleado, modifier: Modifier = Modifier) {
             Text(text = "Nombre: ", style = MaterialTheme.typography.h5)
             Spacer(Modifier.width(4.dp))
             Text(
-                text = empleado.nombre,
+                text = empleado.getFullName(),
                 style = MaterialTheme.typography.h6,
                 textDecoration = TextDecoration.Underline
             )

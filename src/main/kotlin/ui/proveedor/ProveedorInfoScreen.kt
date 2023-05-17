@@ -15,6 +15,9 @@ import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader
 import util.getCustomOutlinedTextFieldColor
+import util.isValidEmail
+import util.isValidPhoneNumber
+import util.isValidPostalCode
 
 @Composable
 fun ProveedorInfoScreen(
@@ -74,6 +77,7 @@ private fun ProveedorForm(
                             textStyle = MaterialTheme.typography.h6,
                             colors = getCustomOutlinedTextFieldColor(),
                             onValueChange = { proveedorController.updateSupplierName(it) },
+                            isError = proveedorState.value.currentProveedor.nombre.isEmpty(),
                             singleLine = true,
                             modifier = Modifier.weight(2f)
                         )
@@ -93,6 +97,7 @@ private fun ProveedorForm(
                             textStyle = MaterialTheme.typography.h6,
                             colors = getCustomOutlinedTextFieldColor(),
                             onValueChange = { proveedorController.updateSupplierMail(it) },
+                            isError = !proveedorState.value.currentProveedor.contacto.correo.isValidEmail(),
                             singleLine = true,
                             modifier = Modifier.weight(2f)
                         )
@@ -117,6 +122,7 @@ private fun ProveedorForm(
                             textStyle = MaterialTheme.typography.h6,
                             colors = getCustomOutlinedTextFieldColor(),
                             onValueChange = { proveedorController.updateSupplierPhone(it) },
+                            isError = !proveedorState.value.currentProveedor.contacto.telefono.isValidPhoneNumber(),
                             singleLine = true,
                             modifier = Modifier.weight(2f)
                         )
@@ -156,6 +162,7 @@ private fun ProveedorForm(
                             textStyle = MaterialTheme.typography.h6,
                             colors = getCustomOutlinedTextFieldColor(),
                             onValueChange = { proveedorController.updateSupplierNeighborhood(it) },
+                            isError = proveedorState.value.currentProveedor.contacto.direccion.colonia.isEmpty(),
                             singleLine = true,
                             modifier = Modifier.weight(2f)
                         )
@@ -174,6 +181,7 @@ private fun ProveedorForm(
                             textStyle = MaterialTheme.typography.h6,
                             colors = getCustomOutlinedTextFieldColor(),
                             onValueChange = { proveedorController.updateSupplierStreet(it) },
+                            isError = proveedorState.value.currentProveedor.contacto.direccion.calle.isEmpty(),
                             singleLine = true,
                             modifier = Modifier.weight(2f)
                         )
@@ -197,6 +205,7 @@ private fun ProveedorForm(
                             textStyle = MaterialTheme.typography.h6,
                             colors = getCustomOutlinedTextFieldColor(),
                             onValueChange = { proveedorController.updateSupplierDirectionNumber(it) },
+                            isError = proveedorState.value.currentProveedor.contacto.direccion.numero <= 0,
                             singleLine = true,
                             modifier = Modifier.weight(2f)
                         )
@@ -217,6 +226,7 @@ private fun ProveedorForm(
                             textStyle = MaterialTheme.typography.h6,
                             colors = getCustomOutlinedTextFieldColor(),
                             onValueChange = { proveedorController.updateSupplierPostalCode(it) },
+                            isError = !proveedorState.value.currentProveedor.contacto.direccion.codigoPostal.isValidPostalCode(),
                             singleLine = true,
                             modifier = Modifier.weight(2f)
                         )

@@ -10,6 +10,9 @@ import model.empleado.EmpleadoDatabase
 import model.sucursal.Sucursal
 import model.sucursal.SucursalDatabase
 import util.UserType
+import util.isValidEmail
+import util.isValidPersonName
+import util.isValidPhoneNumber
 
 class EmpleadoController {
     private var _empleadoState = MutableStateFlow(EmpleadoState())
@@ -80,7 +83,7 @@ class EmpleadoController {
      * @param empleado Employee to be deleted from the database
      */
     fun createEmpleado(empleado: Empleado) {
-        if(EmpleadoDatabase.insertEmpleado(empleado)) getEmpleadoList()
+        if (EmpleadoDatabase.insertEmpleado(empleado)) getEmpleadoList()
     }
 
     /**
@@ -88,7 +91,7 @@ class EmpleadoController {
      * @param empleado Empleado to be edited in the database
      */
     fun updateEmpleado(empleado: Empleado) {
-        if(EmpleadoDatabase.updateEmpleado(empleado)) getEmpleadoList()
+        if (EmpleadoDatabase.updateEmpleado(empleado)) getEmpleadoList()
     }
 
     /**
@@ -96,15 +99,17 @@ class EmpleadoController {
      * @param empleado Employee to be deleted from the database
      */
     fun deleteEmpleado(empleado: Empleado) {
-        if(EmpleadoDatabase.deleteEmpleado(empleado)) getEmpleadoList()
+        if (EmpleadoDatabase.deleteEmpleado(empleado)) getEmpleadoList()
     }
 
     /**
      * Validates if the current employee's content is not empty
      */
     fun empleadoIsNotEmpty() = with(_empleadoState.value.currentEmpleado) {
-        this.nombre.isNotEmpty() && this.sucursal.id != null && with(this.contacto) {
-            this.correo.isNotEmpty() && this.telefono.isNotEmpty()
+        this.primerNombre.isValidPersonName() && this.segundoNombre.isValidPersonName() && this.apellido.isValidPersonName() && this.sucursal.id != null && with(
+            this.contacto
+        ) {
+            this.correo.isValidEmail() && this.telefono.isValidPhoneNumber()
         }
     }
 
@@ -115,7 +120,9 @@ class EmpleadoController {
         _empleadoState.update { currentState ->
             currentState.copy(
                 currentEmpleado = currentState.currentEmpleado.copy(
-                    nombre = "",
+                    primerNombre = "",
+                    segundoNombre = "",
+                    apellido = "",
                     puesto = UserType.CASHIER,
                     sucursal = Sucursal(),
                     contacto = currentState.currentEmpleado.contacto.copy(
@@ -127,12 +134,44 @@ class EmpleadoController {
     }
 
     /**
-     * Updates the name of the employee
-     * @param newName New name of the employee
+     * Updates the first name of the client
+     * @param newName New name of the client
      */
-    fun updateEmployeeName(newName: String) {
+    fun updateClientFirstName(newName: String) {
         _empleadoState.update { currentState ->
-            currentState.copy(currentEmpleado = currentState.currentEmpleado.copy(nombre = newName))
+            currentState.copy(
+                currentEmpleado = currentState.currentEmpleado.copy(
+                    primerNombre = newName
+                )
+            )
+        }
+    }
+
+    /**
+     * Updates the first name of the client
+     * @param newName New name of the client
+     */
+    fun updateClientSecondName(newName: String) {
+        _empleadoState.update { currentState ->
+            currentState.copy(
+                currentEmpleado = currentState.currentEmpleado.copy(
+                    segundoNombre = newName
+                )
+            )
+        }
+    }
+
+    /**
+     * Updates the first name of the client
+     * @param newName New name of the client
+     */
+    fun updateClientLastName(newName: String) {
+        _empleadoState.update { currentState ->
+            currentState.copy(
+                currentEmpleado = currentState.currentEmpleado.copy(
+                    apellido = newName
+                )
+            )
         }
     }
 

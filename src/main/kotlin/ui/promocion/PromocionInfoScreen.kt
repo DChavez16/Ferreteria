@@ -126,6 +126,7 @@ private fun PromocionFormContent(
                 textStyle = MaterialTheme.typography.h6,
                 colors = getCustomOutlinedTextFieldColor(),
                 onValueChange = onDescriptionValueChange,
+                isError = description.isEmpty(),
                 singleLine = true,
                 modifier = Modifier.weight(2f)
             )
@@ -142,6 +143,7 @@ private fun PromocionFormContent(
                     onValueChange = onDescuentoValueChange,
                     textStyle = MaterialTheme.typography.h6.copy(textAlign = TextAlign.Center),
                     colors = getCustomOutlinedTextFieldColor(),
+                    isError = descuento == "0",
                     singleLine = true,
                     modifier = Modifier.weight(8f)
                 )

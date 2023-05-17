@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import controller.home.HomeController
 import controller.home.SaleInfo
+import model.cliente.getFullName
 import model.productoVenta.ProductoVenta
 import ui.util.AvailableProductsList
 import ui.util.BottomButtons
@@ -48,7 +49,7 @@ fun HomeScreen() {
                     // Current client
                     Column {
                         Text(text = "Cliente:", style = MaterialTheme.typography.h6)
-                        ExpandableDropDownMenu(value = homeState.value.currentCliente.nombre,
+                        ExpandableDropDownMenu(value = homeState.value.currentCliente.getFullName(),
                             optionsList = homeController.clienteNamePair.map { it.first },
                             onValueChange = { homeController.updateCurrentCliente(it) })
                     }

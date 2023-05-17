@@ -161,6 +161,7 @@ private fun EditTextField(
         onValueChange = onValueChange,
         textStyle = MaterialTheme.typography.h6,
         colors = getCustomOutlinedTextFieldColor(),
+        isError = value.isEmpty(),
         maxLines = 5,
         singleLine = singleLine,
         modifier = modifier

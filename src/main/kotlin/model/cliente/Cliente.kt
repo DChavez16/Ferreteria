@@ -14,12 +14,18 @@ data class Cliente(
     var id: Int? = null,
 
     // Atributes
-    var nombre: String = "", var suscrito: Boolean = false, var contacto: Contacto = Contacto(),    // Foreign key
+    var primerNombre: String = "",
+    var segundoNombre: String = "",
+    var apellido: String = "",
+    var suscrito: Boolean = false, var contacto: Contacto = Contacto(),    // Foreign key
     var cantidadCompras: Int = 0,
 
     // List of contents filled post retrieving
     var listaCompras: List<DetalleVentaProducto> = emptyList()
 )
+
+// Extension functions
+fun Cliente.getFullName() = "${this.primerNombre} ${this.segundoNombre} ${this.apellido}"
 
 
 object ClienteDatabase {
@@ -38,7 +44,9 @@ object ClienteDatabase {
             currentCliente = Cliente()
 
             currentCliente.id = query.getInt("idCliente")
-            currentCliente.nombre = query.getString("nombre")
+            currentCliente.primerNombre = query.getString("priNomCliente")
+            currentCliente.segundoNombre = query.getString("segNomCliente")
+            currentCliente.apellido = query.getString("apeCliente")
             currentCliente.suscrito = when (query.getByte("suscrito")) {
                 0.toByte() -> false
                 else -> true
@@ -61,7 +69,7 @@ object ClienteDatabase {
      */
     fun insertCliente(cliente: Cliente): Boolean {
         val resultado =
-            statement.executeUpdate("execute insertClient '${cliente.nombre}', ${cliente.suscrito.toByte()}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'")
+            statement.executeUpdate("execute insertClient '${cliente.primerNombre}', '${cliente.segundoNombre}', '${cliente.apellido}', ${cliente.suscrito.toByte()}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'")
 
         return resultado > 0
     }
@@ -73,7 +81,7 @@ object ClienteDatabase {
      */
     fun updateCliente(cliente: Cliente): Boolean {
         val resultado = statement.executeUpdate(
-            "execute updateClient " + "${cliente.id}, " + "'${cliente.nombre}', " + "${cliente.suscrito.toByte()}, " + "${cliente.contacto.id}, " + "'${cliente.contacto.correo}', " + "'${cliente.contacto.telefono}'"
+            "execute updateClient " + "${cliente.id}, '${cliente.primerNombre}', '${cliente.segundoNombre}', '${cliente.apellido}', ${cliente.suscrito.toByte()}, ${cliente.contacto.id}, '${cliente.contacto.correo}', '${cliente.contacto.telefono}'"
         )
 
         return resultado > 0
@@ -111,7 +119,9 @@ object ClienteDatabase {
             currentVenta.impIvaVenta = query.getDouble("importeConIVA")
             currentVenta.desVenta = query.getDouble("descuento")
             currentVenta.netoVenta = query.getDouble("importeNeto")
-            currentVenta.empleado.nombre = query.getString("nombreEmpleado")
+            currentVenta.empleado.primerNombre = query.getString("priNomEmpleado")
+            currentVenta.empleado.segundoNombre = query.getString("segNomEmpleado")
+            currentVenta.empleado.apellido = query.getString("apeEmpleado")
 
             newProductosList =
                 DetalleVentaProductoDatabase.getProductosPorCompraPorCliente(currentVenta.id!!, idCliente)

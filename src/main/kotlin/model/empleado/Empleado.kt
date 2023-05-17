@@ -17,7 +17,9 @@ data class Empleado(
     var id: Int? = null,
 
     // Attributes
-    var nombre: String = "",
+    var primerNombre: String = "",
+    var segundoNombre: String = "",
+    var apellido: String = "",
     var puesto: UserType = UserType.CASHIER,
     var cantidadVentas: Int = 0,
 
@@ -31,6 +33,8 @@ data class Empleado(
 
 // Empleado extension functions
 fun Empleado.getSueldo() = if (this.puesto == UserType.ADMINISTRATOR) 15000.0 else 5000.0
+
+fun Empleado.getFullName() = "${this.primerNombre} ${this.segundoNombre} ${this.apellido}"
 
 
 
@@ -50,7 +54,9 @@ object EmpleadoDatabase {
             currentEmpleado = Empleado()
 
             currentEmpleado.id = query.getInt("idEmpleado")
-            currentEmpleado.nombre = query.getString("nombre")
+            currentEmpleado.primerNombre = query.getString("priNomEmpleado")
+            currentEmpleado.segundoNombre = query.getString("segNomEmpleado")
+            currentEmpleado.apellido = query.getString("apeEmpleado")
             currentEmpleado.puesto = query.getByte("puesto").toUserType()
             currentEmpleado.cantidadVentas = query.getInt("ventas")
             currentEmpleado.contacto.id = query.getInt("idContacto")
@@ -73,7 +79,7 @@ object EmpleadoDatabase {
     fun insertEmpleado(empleado: Empleado): Boolean {
         val resultado =
             statement.executeUpdate(
-                "execute insertEmpleado '${empleado.nombre}', ${empleado.puesto.toByte()}, '${empleado.contacto.correo}', '${empleado.contacto.telefono}', ${empleado.sucursal.id}"
+                "execute insertEmpleado '${empleado.primerNombre}', '${empleado.segundoNombre}', '${empleado.apellido}', ${empleado.puesto.toByte()}, '${empleado.contacto.correo}', '${empleado.contacto.telefono}', ${empleado.sucursal.id}"
             )
 
         return resultado > 0
@@ -86,7 +92,7 @@ object EmpleadoDatabase {
      */
     fun updateEmpleado(empleado: Empleado): Boolean {
         val resultado = statement.executeUpdate(
-            "execute updateEmpleado ${empleado.id}, '${empleado.nombre}', ${empleado.puesto.toByte()}, ${empleado.contacto.id}, '${empleado.contacto.correo}', '${empleado.contacto.telefono}', ${empleado.sucursal.id}"
+            "execute updateEmpleado ${empleado.id}, '${empleado.primerNombre}', '${empleado.segundoNombre}', '${empleado.apellido}', ${empleado.puesto.toByte()}, ${empleado.contacto.id}, '${empleado.contacto.correo}', '${empleado.contacto.telefono}', ${empleado.sucursal.id}"
         )
 
         return resultado > 0

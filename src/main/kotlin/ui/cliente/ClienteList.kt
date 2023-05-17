@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import model.cliente.Cliente
+import model.cliente.getFullName
 import ui.util.BottomButtons
 
 @Composable
@@ -126,7 +127,7 @@ private fun ClienteListItem(
             textAlign = TextAlign.Center
         )
         Text(
-            text = cliente.nombre,
+            text = cliente.getFullName(),
             modifier = Modifier.weight(2.5f),
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Left

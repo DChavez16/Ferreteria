@@ -15,6 +15,8 @@ import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader
 import util.getCustomOutlinedTextFieldColor
+import util.isValidPhoneNumber
+import util.isValidPostalCode
 
 @Composable
 fun SucursalInfoScreen(
@@ -127,6 +129,7 @@ private fun SucursalFormContent(
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
                     onValueChange = onNombreValueChange,
+                    isError = nombre.isEmpty(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -159,6 +162,7 @@ private fun SucursalFormContent(
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
                     onValueChange = onColoniaValueChange,
+                    isError = colonia.isEmpty(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -176,6 +180,7 @@ private fun SucursalFormContent(
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
                     onValueChange = onCalleValueChange,
+                    isError = calle.isEmpty(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -193,6 +198,7 @@ private fun SucursalFormContent(
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
                     onValueChange = onNumeroValueChange,
+                    isError = numero <= 0,
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -210,6 +216,7 @@ private fun SucursalFormContent(
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
                     onValueChange = onCodigoPostalValueChange,
+                    isError = !codigoPostal.isValidPostalCode(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -226,6 +233,7 @@ private fun SucursalFormContent(
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
                     onValueChange = onTelefonoValueChange,
+                    isError = !telefono.isValidPhoneNumber(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )

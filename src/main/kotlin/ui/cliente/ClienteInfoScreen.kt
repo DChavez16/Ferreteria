@@ -13,8 +13,7 @@ import androidx.compose.ui.unit.dp
 import controller.cliente.ClienteController
 import ui.util.BottomButtons
 import ui.util.ScreenHeader
-import util.getCustomCheckboxColor
-import util.getCustomOutlinedTextFieldColor
+import util.*
 
 @Composable
 fun ClienteInfoScreen(
@@ -54,8 +53,12 @@ private fun ClienteForm(
         // Form content
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.weight(1f).padding(16.dp).fillMaxWidth()) {
             ClienteFormContent(
-                nombre = clienteState.value.currentCliente.nombre,
-                onNombreValueChange = { clienteController.updateClientName(it) },
+                primerNombre = clienteState.value.currentCliente.primerNombre,
+                onPrimerNombreValueChange = { clienteController.updateClientFirstName(it) },
+                segundoNombre = clienteState.value.currentCliente.segundoNombre,
+                onSegundoNombreValueChange = { clienteController.updateClientSecondName(it) },
+                apellido = clienteState.value.currentCliente.apellido,
+                onApellidoValueChange = { clienteController.updateClientLastName(it) },
                 correo = clienteState.value.currentCliente.contacto.correo,
                 onCorreoValueChange = { clienteController.updateClientEmail(it) },
                 telefono = clienteState.value.currentCliente.contacto.telefono,
@@ -91,8 +94,12 @@ private fun ClienteForm(
 
 @Composable
 private fun ClienteFormContent(
-    nombre: String,
-    onNombreValueChange: (String) -> Unit,
+    primerNombre: String,
+    onPrimerNombreValueChange: (String) -> Unit,
+    segundoNombre: String,
+    onSegundoNombreValueChange: (String) -> Unit,
+    apellido: String,
+    onApellidoValueChange: (String) -> Unit,
     correo: String,
     onCorreoValueChange: (String) -> Unit,
     telefono: String,
@@ -102,18 +109,55 @@ private fun ClienteFormContent(
     modifier: Modifier
 ) {
     Column(verticalArrangement = Arrangement.Center, modifier = modifier.fillMaxHeight()) {
-        // Nombre form field
+        // Primer nombre form field
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
-            Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            Text(text = "Primer nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
             OutlinedTextField(
-                value = nombre,
-                onValueChange = onNombreValueChange,
+                value = primerNombre,
+                onValueChange = onPrimerNombreValueChange,
                 textStyle = MaterialTheme.typography.h6,
                 colors = getCustomOutlinedTextFieldColor(),
+                isError = !primerNombre.isValidPersonName(),
+                singleLine = true,
+                modifier = Modifier.weight(2f)
+            )
+        }
+
+        // Segundo nombre form field
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        ) {
+            Text(text = "Segundo nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            OutlinedTextField(
+                value = segundoNombre,
+                onValueChange = onSegundoNombreValueChange,
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
+                isError = !segundoNombre.isValidPersonName(),
+                singleLine = true,
+                modifier = Modifier.weight(2f)
+            )
+        }
+
+        // Apellido form field
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        ) {
+            Text(text = "Apellido(s):", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+            OutlinedTextField(
+                value = apellido,
+                onValueChange = onApellidoValueChange,
+                textStyle = MaterialTheme.typography.h6,
+                colors = getCustomOutlinedTextFieldColor(),
+                isError = !apellido.isValidPersonName(),
                 singleLine = true,
                 modifier = Modifier.weight(2f)
             )
@@ -132,6 +176,7 @@ private fun ClienteFormContent(
                 placeholder = { Text("example@email.com") },
                 textStyle = MaterialTheme.typography.h6,
                 colors = getCustomOutlinedTextFieldColor(),
+                isError = !correo.isValidEmail(),
                 singleLine = true,
                 modifier = Modifier.weight(2f)
             )
@@ -150,6 +195,7 @@ private fun ClienteFormContent(
                 placeholder = { Text("00 0000 0000") },
                 textStyle = MaterialTheme.typography.h6,
                 colors = getCustomOutlinedTextFieldColor(),
+                isError = !telefono.isValidPhoneNumber(),
                 singleLine = true,
                 modifier = Modifier.weight(2f)
             )

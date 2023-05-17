@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import model.cliente.Cliente
+import model.cliente.getFullName
 import ui.util.ScreenHeader
 import ui.util.VentaList
 
@@ -67,7 +68,7 @@ private fun ClienteDetails(
             Text(text = "Nombre: ", style = MaterialTheme.typography.h5)
             Spacer(Modifier.width(4.dp))
             Text(
-                text = cliente.nombre,
+                text = cliente.getFullName(),
                 style = MaterialTheme.typography.h6,
                 textDecoration = TextDecoration.Underline
             )

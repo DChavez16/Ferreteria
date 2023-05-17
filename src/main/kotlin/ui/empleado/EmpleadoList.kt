@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import model.empleado.Empleado
+import model.empleado.getFullName
 import model.empleado.getSueldo
 import ui.util.BottomButtons
 import util.decimalFormat
@@ -137,7 +138,7 @@ private fun EmpleadoListItem(
             textAlign = TextAlign.Center
         )
         Text(
-            text = empleado.nombre,
+            text = empleado.getFullName(),
             modifier = Modifier.weight(2f),
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Start

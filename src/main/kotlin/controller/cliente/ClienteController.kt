@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.update
 import model.cliente.Cliente
 import model.cliente.ClienteDatabase
 import model.detalleVentaProducto.DetalleVentaProducto
+import util.isValidEmail
+import util.isValidPersonName
+import util.isValidPhoneNumber
 
 class ClienteController {
     private var _clienteState = MutableStateFlow(ClienteState())
@@ -62,7 +65,7 @@ class ClienteController {
      * @param cliente Client to be deleted from the database
      */
     fun createCliente(cliente: Cliente) {
-        if(ClienteDatabase.insertCliente(cliente)) getClienteList()
+        if (ClienteDatabase.insertCliente(cliente)) getClienteList()
     }
 
     /**
@@ -70,7 +73,7 @@ class ClienteController {
      * @param cliente Client to be edited in the database
      */
     fun updateCliente(cliente: Cliente) {
-        if(ClienteDatabase.updateCliente(cliente)) getClienteList()
+        if (ClienteDatabase.updateCliente(cliente)) getClienteList()
     }
 
     /**
@@ -78,15 +81,17 @@ class ClienteController {
      * @param cliente Client to be deleted from the database
      */
     fun deleteCliente(cliente: Cliente) {
-        if(ClienteDatabase.deleteCliente(cliente)) getClienteList()
+        if (ClienteDatabase.deleteCliente(cliente)) getClienteList()
     }
 
     /**
      * Validates if the current client's content is not empty
      */
     fun clienteIsNotEmpty() = with(_clienteState.value.currentCliente) {
-        this.nombre.isNotEmpty() && with(this.contacto) {
-            this.correo.isNotEmpty() && this.telefono.isNotEmpty()
+        this.primerNombre.isValidPersonName() && this.segundoNombre.isValidPersonName() && this.apellido.isValidPersonName() && with(
+            this.contacto
+        ) {
+            this.correo.isValidEmail() && this.telefono.isValidPhoneNumber()
         }
     }
 
@@ -97,11 +102,12 @@ class ClienteController {
         _clienteState.update { currentState ->
             currentState.copy(
                 currentCliente = currentState.currentCliente.copy(
-                    nombre = "",
+                    primerNombre = "",
+                    segundoNombre = "",
+                    apellido = "",
                     suscrito = false,
                     contacto = currentState.currentCliente.contacto.copy(
-                        correo = "",
-                        telefono = ""
+                        correo = "", telefono = ""
                     )
                 )
             )
@@ -109,12 +115,44 @@ class ClienteController {
     }
 
     /**
-     * Updates the name of the client
+     * Updates the first name of the client
      * @param newName New name of the client
      */
-    fun updateClientName(newName: String) {
+    fun updateClientFirstName(newName: String) {
         _clienteState.update { currentState ->
-            currentState.copy(currentCliente = currentState.currentCliente.copy(nombre = newName))
+            currentState.copy(
+                currentCliente = currentState.currentCliente.copy(
+                    primerNombre = newName
+                )
+            )
+        }
+    }
+
+    /**
+     * Updates the first name of the client
+     * @param newName New name of the client
+     */
+    fun updateClientSecondName(newName: String) {
+        _clienteState.update { currentState ->
+            currentState.copy(
+                currentCliente = currentState.currentCliente.copy(
+                    segundoNombre = newName
+                )
+            )
+        }
+    }
+
+    /**
+     * Updates the first name of the client
+     * @param newName New name of the client
+     */
+    fun updateClientLastName(newName: String) {
+        _clienteState.update { currentState ->
+            currentState.copy(
+                currentCliente = currentState.currentCliente.copy(
+                    apellido = newName
+                )
+            )
         }
     }
 
@@ -134,9 +172,11 @@ class ClienteController {
      */
     fun updateClientEmail(newEmail: String) {
         _clienteState.update { currentState ->
-            currentState.copy(currentCliente = currentState.currentCliente.copy(
-                contacto = currentState.currentCliente.contacto.copy(correo = newEmail)
-            ))
+            currentState.copy(
+                currentCliente = currentState.currentCliente.copy(
+                    contacto = currentState.currentCliente.contacto.copy(correo = newEmail)
+                )
+            )
         }
     }
 
@@ -146,15 +186,16 @@ class ClienteController {
      */
     fun updateClientPhone(newPhone: String) {
         _clienteState.update { currentState ->
-            currentState.copy(currentCliente = currentState.currentCliente.copy(
-                contacto = currentState.currentCliente.contacto.copy(telefono = newPhone)
-            ))
+            currentState.copy(
+                currentCliente = currentState.currentCliente.copy(
+                    contacto = currentState.currentCliente.contacto.copy(telefono = newPhone)
+                )
+            )
         }
     }
 }
 
 
 data class ClienteState(
-    var currentCliente: Cliente = Cliente(),
-    var clienteList: List<Cliente> = emptyList()
+    var currentCliente: Cliente = Cliente(), var clienteList: List<Cliente> = emptyList()
 )

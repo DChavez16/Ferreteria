@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import model.sucursal.Sucursal
 import model.sucursal.SucursalDatabase
+import util.isValidPostalCode
 
 class SucursalController {
     private var _sucursalState = MutableStateFlow(SucursalState())
@@ -40,7 +41,7 @@ class SucursalController {
      * @param sucursal Branch to be deleted from the database
      */
     fun createSucursal(sucursal: Sucursal) {
-        if(SucursalDatabase.insertSucursal(sucursal)) getSucursalList()
+        if (SucursalDatabase.insertSucursal(sucursal)) getSucursalList()
     }
 
     /**
@@ -48,7 +49,7 @@ class SucursalController {
      * @param sucursal Branch to be edited in the database
      */
     fun updateSucursal(sucursal: Sucursal) {
-        if(SucursalDatabase.updateSucursal(sucursal)) getSucursalList()
+        if (SucursalDatabase.updateSucursal(sucursal)) getSucursalList()
     }
 
     /**
@@ -56,7 +57,7 @@ class SucursalController {
      * @param sucursal Branch to be deleted from the database
      */
     fun deleteSucursal(sucursal: Sucursal) {
-        if(SucursalDatabase.deleteSucursal(sucursal)) getSucursalList()
+        if (SucursalDatabase.deleteSucursal(sucursal)) getSucursalList()
     }
 
     /**
@@ -65,7 +66,7 @@ class SucursalController {
     fun sucursalIsNotEmpty() = with(_sucursalState.value.currentSucursal) {
         this.name.isNotEmpty() && with(this.contacto) {
             this.telefono.isNotEmpty() && with(this.direccion) {
-                this.municipio.isNotEmpty() && this.colonia.isNotEmpty() && this.calle.isNotEmpty() && this.numero > 0 && this.codigoPostal.isNotEmpty()
+                this.municipio.isNotEmpty() && this.colonia.isNotEmpty() && this.calle.isNotEmpty() && this.numero > 0 && this.codigoPostal.isValidPostalCode()
             }
         }
     }

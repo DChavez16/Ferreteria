@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.update
 import model.producto.Producto
 import model.proveedor.Proveedor
 import model.proveedor.ProveedorDatabase
+import util.isValidEmail
+import util.isValidPhoneNumber
+import util.isValidPostalCode
 
 class ProveedorController {
     private var _proveedorState = MutableStateFlow(ProveedorState())
@@ -63,7 +66,7 @@ class ProveedorController {
      * @param proveedor Supplier to be deleted from the database
      */
     fun createProveedor(proveedor: Proveedor) {
-        if(ProveedorDatabase.insertProveedor(proveedor)) getProveedorList()
+        if (ProveedorDatabase.insertProveedor(proveedor)) getProveedorList()
     }
 
     /**
@@ -71,7 +74,7 @@ class ProveedorController {
      * @param proveedor Supplier to be edited in the database
      */
     fun updateProveedor(proveedor: Proveedor) {
-        if(ProveedorDatabase.updateProveedor(proveedor)) getProveedorList()
+        if (ProveedorDatabase.updateProveedor(proveedor)) getProveedorList()
     }
 
     /**
@@ -79,7 +82,7 @@ class ProveedorController {
      * @param proveedor Supplier to be deleted from the database
      */
     fun deleteProveedor(proveedor: Proveedor) {
-        if(ProveedorDatabase.deleteProveedor(proveedor)) getProveedorList()
+        if (ProveedorDatabase.deleteProveedor(proveedor)) getProveedorList()
     }
 
     /**
@@ -87,8 +90,8 @@ class ProveedorController {
      */
     fun proveedorIsNotEmpty() = with(_proveedorState.value.currentProveedor) {
         this.nombre.isNotEmpty() && with(this.contacto) {
-            this.correo.isNotEmpty() && this.telefono.isNotEmpty() && with(this.direccion) {
-                this.municipio.isNotEmpty() && this.colonia.isNotEmpty() && this.calle.isNotEmpty() && this.numero > 0 && this.codigoPostal.isNotEmpty()
+            this.correo.isValidEmail() && this.telefono.isValidPhoneNumber() && with(this.direccion) {
+                this.municipio.isNotEmpty() && this.colonia.isNotEmpty() && this.calle.isNotEmpty() && this.numero > 0 && this.codigoPostal.isValidPostalCode()
             }
         }
     }
@@ -237,6 +240,5 @@ class ProveedorController {
 
 
 data class ProveedorState(
-    var currentProveedor: Proveedor = Proveedor(),
-    var proveedorList: List<Proveedor> = emptyList()
+    var currentProveedor: Proveedor = Proveedor(), var proveedorList: List<Proveedor> = emptyList()
 )

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import model.detalleVentaProducto.DetalleVentaProducto
+import model.empleado.getFullName
 import util.decimalFormat
 import util.getFechaString
 
@@ -113,7 +114,7 @@ private fun VentaListContentItem(detalleVenta: DetalleVentaProducto, showEmplead
         )
         if (showEmpleado) {
             Text(
-                text = detalleVenta.venta.empleado.nombre,
+                text = detalleVenta.venta.empleado.getFullName(),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center

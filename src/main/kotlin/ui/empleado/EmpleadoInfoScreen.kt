@@ -15,9 +15,7 @@ import model.sucursal.Sucursal
 import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
 import ui.util.ScreenHeader
-import util.UserType
-import util.getCustomOutlinedTextFieldColor
-import util.getCustomRadioButtonColor
+import util.*
 
 @Composable
 fun EmpleadoInfoScreen(
@@ -57,12 +55,15 @@ private fun EmpleadoForm(
     Column(modifier = modifier.fillMaxHeight()) {
         // Form content
         Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.weight(1f).padding(16.dp).fillMaxWidth()
+            horizontalArrangement = Arrangement.Center, modifier = Modifier.weight(1f).padding(16.dp).fillMaxWidth()
         ) {
             EmpleadoFormContent(
-                nombre = empleadoState.value.currentEmpleado.nombre,
-                onNombreValueChange = { empleadoController.updateEmployeeName(it) },
+                primerNombre = empleadoState.value.currentEmpleado.primerNombre,
+                onPrimerNombreValueChange = { empleadoController.updateClientFirstName(it) },
+                segundoNombre = empleadoState.value.currentEmpleado.segundoNombre,
+                onSegundoNombreValueChange = { empleadoController.updateClientSecondName(it) },
+                apellido = empleadoState.value.currentEmpleado.apellido,
+                onApellidoValueChange = { empleadoController.updateClientLastName(it) },
                 correo = empleadoState.value.currentEmpleado.contacto.correo,
                 onCorreoValueChange = { empleadoController.updateEmployeeEmail(it) },
                 telefono = empleadoState.value.currentEmpleado.contacto.telefono,
@@ -101,8 +102,12 @@ private fun EmpleadoForm(
 
 @Composable
 private fun EmpleadoFormContent(
-    nombre: String,
-    onNombreValueChange: (String) -> Unit,
+    primerNombre: String,
+    onPrimerNombreValueChange: (String) -> Unit,
+    segundoNombre: String,
+    onSegundoNombreValueChange: (String) -> Unit,
+    apellido: String,
+    onApellidoValueChange: (String) -> Unit,
     correo: String,
     onCorreoValueChange: (String) -> Unit,
     telefono: String,
@@ -115,22 +120,70 @@ private fun EmpleadoFormContent(
     modifier: Modifier = Modifier
 ) {
     Column(verticalArrangement = Arrangement.Center, modifier = modifier.fillMaxHeight()) {
-        // Nombre form field
+        // Primer nombre form field
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = "Nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Primer nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
-                    value = nombre,
-                    onValueChange = onNombreValueChange,
+                    value = primerNombre,
+                    onValueChange = onPrimerNombreValueChange,
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
+                    isError = !primerNombre.isValidPersonName(),
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
+                )
+            }
+            Spacer(Modifier.padding(horizontal = 32.dp))
+            Spacer(Modifier.weight(1f))
+        }
+
+        // Segundo nombre form field
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "Segundo nombre:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                OutlinedTextField(
+                    value = segundoNombre,
+                    onValueChange = onSegundoNombreValueChange,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    isError = !segundoNombre.isValidPersonName(),
+                    singleLine = true,
+                    modifier = Modifier.weight(2f)
+                )
+            }
+            Spacer(Modifier.padding(horizontal = 32.dp))
+            Spacer(Modifier.weight(1f))
+        }
+
+        // Apellido form field
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "Apellido(s):", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                OutlinedTextField(
+                    value = apellido,
+                    onValueChange = onApellidoValueChange,
+                    textStyle = MaterialTheme.typography.h6,
+                    colors = getCustomOutlinedTextFieldColor(),
+                    isError = !apellido.isValidPersonName(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -141,8 +194,7 @@ private fun EmpleadoFormContent(
 
         // Row of Correo and Telefono form field
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
             // Correo form field
             Row(
@@ -157,6 +209,7 @@ private fun EmpleadoFormContent(
                     placeholder = { Text("example@email.com") },
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
+                    isError = !correo.isValidEmail(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -176,6 +229,7 @@ private fun EmpleadoFormContent(
                     placeholder = { Text("00 0000 0000") },
                     textStyle = MaterialTheme.typography.h6,
                     colors = getCustomOutlinedTextFieldColor(),
+                    isError = !telefono.isValidPhoneNumber(),
                     singleLine = true,
                     modifier = Modifier.weight(2f)
                 )
@@ -184,8 +238,7 @@ private fun EmpleadoFormContent(
 
         // Row of Sucursal and Puesto form field
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
             // Sucursal form field
             Row(
@@ -205,8 +258,7 @@ private fun EmpleadoFormContent(
 
             // Column of Puesto form field
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.weight(1f)
+                horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.weight(1f)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f).height(55.dp)) {
                     Text(text = "Puesto:", style = MaterialTheme.typography.h6)
@@ -216,8 +268,7 @@ private fun EmpleadoFormContent(
                     modifier = Modifier.weight(2f)
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
                             selected = !isAdmin,
@@ -227,8 +278,7 @@ private fun EmpleadoFormContent(
                         Text("Cajero", style = MaterialTheme.typography.h6)
                     }
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
                             selected = isAdmin,
