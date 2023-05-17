@@ -191,7 +191,7 @@ private fun ProveedorForm(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "Numero:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                        Text(text = "Número:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                         OutlinedTextField(
                             value = with(proveedorState.value.currentProveedor.contacto.direccion.numero) { if (this > 0) this.toString() else "" },
                             textStyle = MaterialTheme.typography.h6,
@@ -210,7 +210,7 @@ private fun ProveedorForm(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
-                            text = "Codigo Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f)
+                            text = "Código Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f)
                         )
                         OutlinedTextField(
                             value = proveedorState.value.currentProveedor.contacto.direccion.codigoPostal,

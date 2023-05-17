@@ -187,7 +187,7 @@ private fun SucursalFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(bottom = 8.dp)
             ) {
-                Text(text = "Numero:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Número:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = if (numero > 0) numero.toString() else "",
                     textStyle = MaterialTheme.typography.h6,
@@ -204,7 +204,7 @@ private fun SucursalFormContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(bottom = 8.dp)
             ) {
-                Text(text = "Codigo Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
+                Text(text = "Código Postal:", style = MaterialTheme.typography.h6, modifier = Modifier.weight(1f))
                 OutlinedTextField(
                     value = codigoPostal,
                     textStyle = MaterialTheme.typography.h6,
