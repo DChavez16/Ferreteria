@@ -32,7 +32,9 @@ object DetalleVentaProductoDatabase {
                     ),
                     subtotal = getDouble("subtotal"),
                     cantidadIVA = getDouble("precioIVA"),
-                    descripcionPromocion = getString("descripcionPromocion"),
+                    descripcionPromocion = getString("descripcionPromocion").let {
+                        if (it == "null") null else it
+                    },
                     precioVenta = getDouble("importe")
                 )
             }
@@ -65,7 +67,9 @@ object DetalleVentaProductoDatabase {
                     ),
                     subtotal = getDouble("subtotal"),
                     cantidadIVA = getDouble("precioIVA"),
-                    descripcionPromocion = getString("descripcionPromocion"),
+                    descripcionPromocion = getString("descripcionPromocion").let {
+                        if (it == "null") null else it
+                    },
                     precioVenta = getDouble("importe")
                 )
             }
@@ -98,7 +102,9 @@ object DetalleVentaProductoDatabase {
                     ),
                     subtotal = getDouble("subtotal"),
                     cantidadIVA = getDouble("precioIVA"),
-                    descripcionPromocion = getString("descripcionPromocion"),
+                    descripcionPromocion = getString("descripcionPromocion").let {
+                        if (it == "null") null else it
+                    },
                     precioVenta = getDouble("importe")
                 )
             }

@@ -144,13 +144,21 @@ private fun VentaProducts(
         if (expandedVentaProducts) {
             Divider(color = Color.White, thickness = Dp.Hairline)
             for (index in 0 until detalleVenta.productos.size) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = detalleVenta.productos[index].producto.nombre,
-                        style = MaterialTheme.typography.body1,
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier.padding(vertical = 4.dp).weight(2f)
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.padding(vertical = 4.dp).weight(2f)) {
+                        Text(
+                            text = detalleVenta.productos[index].producto.nombre,
+                            style = MaterialTheme.typography.body1,
+                            textAlign = TextAlign.Left
+                        )
+                        if(detalleVenta.productos[index].descripcionPromocion != null) {
+                            Text(
+                                text = detalleVenta.productos[index].descripcionPromocion!!,
+                                color = Color.Red,
+                                style = MaterialTheme.typography.body1
+                            )
+                        }
+                    }
                     Text(
                         text = "${detalleVenta.productos[index].cantidad}",
                         style = MaterialTheme.typography.body1,
