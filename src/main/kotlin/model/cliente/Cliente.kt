@@ -44,9 +44,9 @@ object ClienteDatabase {
             currentCliente = Cliente()
 
             currentCliente.id = query.getInt("idCliente")
-            currentCliente.primerNombre = query.getString("priNomCliente")
-            currentCliente.segundoNombre = query.getString("segNomCliente")
-            currentCliente.apellido = query.getString("apeCliente")
+            currentCliente.primerNombre = query.getString("primerNombre")
+            currentCliente.segundoNombre = query.getString("segundoNombre")
+            currentCliente.apellido = query.getString("apellido")
             currentCliente.suscrito = when (query.getByte("suscrito")) {
                 0.toByte() -> false
                 else -> true

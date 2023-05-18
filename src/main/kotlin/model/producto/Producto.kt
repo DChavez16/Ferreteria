@@ -39,7 +39,7 @@ object ProductoDatabase {
             producto.nombre = query.getString("nombre")
             producto.precioReal = query.getDouble("precioReal")
             producto.cantidadIVA = query.getDouble("cantidadIVA")
-            producto.precioVenta = query.getDouble("precionVenta")
+            producto.precioVenta = query.getDouble("precioVenta")
             producto.descripcion = query.getString("descripcion")
         }
 

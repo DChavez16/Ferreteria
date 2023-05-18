@@ -7,9 +7,16 @@ import kotlinx.coroutines.flow.update
 import model.cliente.Cliente
 import model.cliente.ClienteDatabase
 import model.cliente.getFullName
+import model.empleado.EmpleadoDatabase
+import model.fechaVenta.FechaVentaDatabase
 import model.producto.Producto
 import model.producto.ProductoDatabase
 import model.productoVenta.ProductoVenta
+import model.productoVenta.ProductoVentaDatabase
+import model.reporte.Reporte
+import model.reporte.ReporteDatabase
+import model.venta.Venta
+import model.venta.VentaDatabase
 
 class HomeController {
     private var _homeState = MutableStateFlow(HomeState())
@@ -73,7 +80,42 @@ class HomeController {
     }
 
     fun makeSale() {
+        val empleado = EmpleadoDatabase.getEmpleadoList()[0]
 
+        // Obtiene la FechaVenta
+        val fechaVenta = FechaVentaDatabase.getFechaVenta()
+
+        // Crear venta
+        val idVenta = VentaDatabase.makeVenta(
+            Venta(
+                fechaVenta = fechaVenta,
+                cliente = _homeState.value.currentCliente,
+                empleado = empleado,
+            )
+        )
+
+        var idProductoVenta = 0
+        // Llenar la venta de la informacion de los productos vendidos (Crear los correspondientes ProductoVenta)
+        _homeState.value.selectedProductos.forEach { productoVenta ->
+            // Inserta ProductoVenta en la base de datos y obtiene su id
+            idProductoVenta = ProductoVentaDatabase.createProductoVenta(productoVenta)
+
+            // Actualizar los datos de la venta
+            VentaDatabase.updateVenta(idVenta, productoVenta)
+
+            // Crea un registro para la tabla DetalleProductoVenta
+            VentaDatabase.createDetalleProductoVenta(idProductoVenta, idVenta)
+        }
+
+        // Actualiza el reporte diario
+        if (ReporteDatabase.updateReporte(
+                Reporte(
+                    ventasPromocion = _homeState.value.selectedProductos.count { it.promocion?.disponibilidad == true },
+                    ingresos = _homeState.value.saleInfo.total,
+                    fechaVenta = fechaVenta
+                )
+            )
+        ) resetState()
     }
 
     fun updateCurrentCliente(newClienteString: String) {
@@ -87,12 +129,10 @@ class HomeController {
     /**
      * Validates if the list of selected products is not empty
      */
-    fun selectedProductsListIsNotEmpty() = _homeState.value.selectedProductos.isNotEmpty()
-}
+    fun selectedProductsListIsNotEmpty() = _homeState.value.selectedProductos.isNotEmpty() && _homeState.value.currentCliente.id != null
 
-// Insertar SelectedProducto en la base de datos ProductoVenta
-// Insertar Venta en la base de datos Venta
-// Insertar el ID de SelectedProducto y el ID de Venta en la DetalleProductoVenta
+
+}
 
 
 /*
@@ -147,7 +187,7 @@ private fun SaleInfo.update(selectedProductosList: List<ProductoVenta>) {
     selectedProductosList.forEach { selectedProducto ->
         newSubtotal += selectedProducto.subtotal
         newIVA += selectedProducto.cantidadIVA
-        if(selectedProducto.promocion?.disponibilidad == true) {
+        if (selectedProducto.promocion?.disponibilidad == true) {
             newDescuento += (selectedProducto.subtotal + selectedProducto.cantidadIVA) * (selectedProducto.promocion?.descuento
                 ?: 0.0)
         }

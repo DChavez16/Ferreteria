@@ -54,9 +54,9 @@ object EmpleadoDatabase {
             currentEmpleado = Empleado()
 
             currentEmpleado.id = query.getInt("idEmpleado")
-            currentEmpleado.primerNombre = query.getString("priNomEmpleado")
-            currentEmpleado.segundoNombre = query.getString("segNomEmpleado")
-            currentEmpleado.apellido = query.getString("apeEmpleado")
+            currentEmpleado.primerNombre = query.getString("primerNombre")
+            currentEmpleado.segundoNombre = query.getString("segundoNombre")
+            currentEmpleado.apellido = query.getString("apellido")
             currentEmpleado.puesto = query.getByte("puesto").toUserType()
             currentEmpleado.cantidadVentas = query.getInt("ventas")
             currentEmpleado.contacto.id = query.getInt("idContacto")
