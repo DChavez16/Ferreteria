@@ -17,6 +17,28 @@ data class DetalleVentaProducto(
 object DetalleVentaProductoDatabase {
     private var statement: Statement = Database.connection.createStatement()
 
+    fun getProductosPorVenta(idVenta: Int): List<ProductoVenta> {
+        val newList = mutableListOf<ProductoVenta>()
+        var currentProductoVenta: ProductoVenta
+
+        val query = statement.executeQuery("execute productosPorVenta $idVenta")
+
+        while(query.next()) {
+            with(query) {
+                currentProductoVenta = ProductoVenta(
+                    id = getInt("idProductoVenta"),
+                    cantidad = query.getInt("cantidad"),
+                    producto = ProductoDatabase.getProducto(getInt("idProducto")),
+                    promocion = PromocionDatabase.getPromocion(query.getInt("idPromocion"))
+                )
+            }
+
+            newList.add(currentProductoVenta)
+        }
+
+        return newList.toList()
+    }
+
     /**
      * Get ProductoVenta for the indicated Venta and Cliente from the database
      * @param idVenta ID of the Venta which ProductoVenta will be retrieved from the database

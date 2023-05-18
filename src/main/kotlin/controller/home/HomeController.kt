@@ -57,7 +57,7 @@ class HomeController {
     fun resetState() {
         _homeState.update { currentState ->
             currentState.copy(
-                selectedProductos = emptyList(), saleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0)
+                selectedProductos = emptyList(), saleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0), currentCliente = Cliente()
             )
         }
     }
@@ -86,22 +86,24 @@ class HomeController {
         val fechaVenta = FechaVentaDatabase.getFechaVenta()
 
         // Crear venta
-        val idVenta = VentaDatabase.makeVenta(
+        val idVenta = VentaDatabase.makeVenta(with(_homeState.value.saleInfo) {
             Venta(
+                impRealVenta = subTotal,
+                ivaVenta = subTotal * 0.16,
+                impIvaVenta = incrementoIVA,
+                desVenta = descuento,
+                netoVenta = total,
                 fechaVenta = fechaVenta,
                 cliente = _homeState.value.currentCliente,
                 empleado = empleado,
             )
-        )
+        })
 
-        var idProductoVenta = 0
+        var idProductoVenta: Int
         // Llenar la venta de la informacion de los productos vendidos (Crear los correspondientes ProductoVenta)
         _homeState.value.selectedProductos.forEach { productoVenta ->
             // Inserta ProductoVenta en la base de datos y obtiene su id
             idProductoVenta = ProductoVentaDatabase.createProductoVenta(productoVenta)
-
-            // Actualizar los datos de la venta
-            VentaDatabase.updateVenta(idVenta, productoVenta)
 
             // Crea un registro para la tabla DetalleProductoVenta
             VentaDatabase.createDetalleProductoVenta(idProductoVenta, idVenta)
@@ -129,7 +131,8 @@ class HomeController {
     /**
      * Validates if the list of selected products is not empty
      */
-    fun selectedProductsListIsNotEmpty() = _homeState.value.selectedProductos.isNotEmpty() && _homeState.value.currentCliente.id != null
+    fun selectedProductsListIsNotEmpty() =
+        _homeState.value.selectedProductos.isNotEmpty() && _homeState.value.currentCliente.id != null
 
 
 }

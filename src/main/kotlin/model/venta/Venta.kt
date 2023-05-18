@@ -2,6 +2,8 @@ package model.venta
 
 import Database
 import model.cliente.Cliente
+import model.detalleVentaProducto.DetalleVentaProducto
+import model.detalleVentaProducto.DetalleVentaProductoDatabase
 import model.empleado.Empleado
 import model.fechaVenta.FechaVenta
 import model.productoVenta.ProductoVenta
@@ -27,6 +29,51 @@ data class Venta(
 object VentaDatabase {
     private val statement = Database.connection.createStatement()
 
+    fun getVentaList(): List<DetalleVentaProducto> {
+        val newList = mutableListOf<DetalleVentaProducto>()
+        var newProductosList: List<ProductoVenta>
+        var currentVenta: Venta
+
+        val query = statement.executeQuery("select * from vista_Venta")
+
+        while (query.next()) {
+            with(query) {
+                currentVenta = Venta(
+                    id = getInt("idVenta"),
+                    impRealVenta = getDouble("importeReal"),
+                    ivaVenta = getDouble("ivaVenta"),
+                    impIvaVenta = getDouble("importeConIVA"),
+                    desVenta = getDouble("descuento"),
+                    netoVenta = getDouble("importeNeto"),
+                    fechaVenta = FechaVenta(
+                        id = null,
+                        dia = getInt("dia"),
+                        mes = getInt("mes"),
+                        anio = getInt("anio")
+                    ),
+                    cliente = Cliente(
+                        id = getInt("idEmpleado"),
+                        primerNombre = getString("priNomEmpleado"),
+                        segundoNombre = getString("segNomEmpleado"),
+                        apellido = getString("apeEmpleado")
+                    ),
+                    empleado = Empleado(
+                        id = getInt("idCliente"),
+                        primerNombre = getString("priNomCliente"),
+                        segundoNombre = getString("segNomCliente"),
+                        apellido = getString("apeCliente")
+                    )
+                )
+            }
+
+            newProductosList = DetalleVentaProductoDatabase.getProductosPorVenta(currentVenta.id!!)
+
+            newList.add(DetalleVentaProducto(venta = currentVenta, productos = newProductosList))
+        }
+
+        return newList.toList()
+    }
+
     fun makeVenta(venta: Venta): Int {
         statement.executeUpdate(
             "execute efectuarVenta ${venta.fechaVenta.id}, ${venta.cliente.id}, ${venta.empleado.id}"
@@ -40,16 +87,6 @@ object VentaDatabase {
         }
 
         return idVenta
-    }
-
-    fun updateVenta(idVenta: Int, productoVenta: ProductoVenta): Boolean {
-        val resultado = statement.executeUpdate(
-            "execute updateVenta $idVenta, ${productoVenta.subtotal}, ${
-                (productoVenta.subtotal + productoVenta.cantidadIVA) * (if (productoVenta.promocion?.disponibilidad == true) 1.0 - productoVenta.promocion!!.descuento else 1.0)
-            }"
-        )
-
-        return resultado > 0
     }
 
     fun createDetalleProductoVenta(idProductoVenta: Int, idVenta: Int): Boolean {

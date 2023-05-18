@@ -3,7 +3,6 @@ package model.productoVenta
 import Database
 import model.producto.Producto
 import model.promocion.Promocion
-import model.venta.Venta
 
 data class ProductoVenta(
     // Primary key
@@ -41,9 +40,5 @@ object ProductoVentaDatabase {
         }
 
         return idProductoVenta
-    }
-
-    fun getProductoVentaPorVenta(venta: Venta) {
-
     }
 }

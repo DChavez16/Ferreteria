@@ -27,17 +27,19 @@ object PromocionDatabase {
      * Get data for the indicated Promocion from the database
      * @param idPromocion ID of the Promocion which data will be retrieved from the database
      */
-    fun getPromocion(idPromocion: Int): Promocion {
-        val promocion = Promocion(id = idPromocion)
+    fun getPromocion(idPromocion: Int): Promocion? {
+        var promocion: Promocion? = null
 
         val query = statement.executeQuery("select * from vista_Promocion where idPromocion = $idPromocion")
 
         while(query.next()) {
-            promocion.description = query.getString("descripcion")
-            promocion.descuento = query.getDouble("descuento")
-            promocion.disponibilidad = when(query.getByte("disponibilidad")) {
-                0.toByte() -> false
-                else -> true
+            with(query) {
+                promocion = Promocion(
+                    id = getInt("idPromocion"),
+                    description = getString("descripcion"),
+                    descuento = getDouble("descuento"),
+                    disponibilidad = query.getByte("disponibilidad").toBoolean()
+                )
             }
         }
 
