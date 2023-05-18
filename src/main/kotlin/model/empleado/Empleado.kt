@@ -4,6 +4,7 @@ import Database
 import model.contacto.Contacto
 import model.detalleVentaProducto.DetalleVentaProducto
 import model.detalleVentaProducto.DetalleVentaProductoDatabase
+import model.fechaVenta.FechaVenta
 import model.productoVenta.ProductoVenta
 import model.sucursal.Sucursal
 import model.venta.Venta
@@ -124,15 +125,23 @@ object EmpleadoDatabase {
         while (query.next()) {
             currentVenta = Venta()
 
-            currentVenta.id = query.getInt("idVenta")
-            currentVenta.impRealVenta = query.getDouble("importeReal")
-            currentVenta.ivaVenta = query.getDouble("ivaVenta")
-            currentVenta.impIvaVenta = query.getDouble("importeConIVA")
-            currentVenta.desVenta = query.getDouble("descuento")
-            currentVenta.netoVenta = query.getDouble("importeNeto")
+            with(query) {
+                currentVenta = Venta(
+                    id = getInt("idVenta"),
+                    impRealVenta = getDouble("importeReal"),
+                    ivaVenta = getDouble("ivaVenta"),
+                    impIvaVenta = getDouble("importeConIVA"),
+                    desVenta = getDouble("descuento"),
+                    netoVenta = getDouble("importeNeto"),
+                    FechaVenta(
+                        dia = getInt("dia"),
+                        mes = getInt("mes"),
+                        anio = getInt("anio")
+                    )
+                )
+            }
 
-            newProductosList =
-                DetalleVentaProductoDatabase.getProductosPorVentaPorEmpleado(currentVenta.id!!, idEmpleado)
+            newProductosList = DetalleVentaProductoDatabase.getProductosPorVentaPorEmpleado(currentVenta.id!!, idEmpleado)
 
             newList.add(DetalleVentaProducto(venta = currentVenta, productos = newProductosList))
         }

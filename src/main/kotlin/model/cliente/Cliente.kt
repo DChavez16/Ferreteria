@@ -4,6 +4,8 @@ import Database
 import model.contacto.Contacto
 import model.detalleVentaProducto.DetalleVentaProducto
 import model.detalleVentaProducto.DetalleVentaProductoDatabase
+import model.empleado.Empleado
+import model.fechaVenta.FechaVenta
 import model.productoVenta.ProductoVenta
 import model.venta.Venta
 import util.toByte
@@ -17,7 +19,8 @@ data class Cliente(
     var primerNombre: String = "",
     var segundoNombre: String = "",
     var apellido: String = "",
-    var suscrito: Boolean = false, var contacto: Contacto = Contacto(),    // Foreign key
+    var suscrito: Boolean = false,
+    var contacto: Contacto = Contacto(),    // Foreign key
     var cantidadCompras: Int = 0,
 
     // List of contents filled post retrieving
@@ -113,15 +116,25 @@ object ClienteDatabase {
         while (query.next()) {
             currentVenta = Venta()
 
-            currentVenta.id = query.getInt("idVenta")
-            currentVenta.impRealVenta = query.getDouble("importeReal")
-            currentVenta.ivaVenta = query.getDouble("ivaVenta")
-            currentVenta.impIvaVenta = query.getDouble("importeConIVA")
-            currentVenta.desVenta = query.getDouble("descuento")
-            currentVenta.netoVenta = query.getDouble("importeNeto")
-            currentVenta.empleado.primerNombre = query.getString("priNomEmpleado")
-            currentVenta.empleado.segundoNombre = query.getString("segNomEmpleado")
-            currentVenta.empleado.apellido = query.getString("apeEmpleado")
+            with(query) {
+                currentVenta = Venta(
+                    id = getInt("idVenta"),
+                    impRealVenta = getDouble("importeReal"),
+                    ivaVenta = getDouble("ivaVenta"),
+                    impIvaVenta = getDouble("importeConIVA"),
+                    desVenta = getDouble("descuento"),
+                    netoVenta = getDouble("importeNeto"),
+                    FechaVenta(
+                        dia = getInt("dia"), mes = getInt("mes"), anio = getInt("anio")
+                    ),
+                    empleado = Empleado(
+                        id = getInt("idEmpleado"),
+                        primerNombre = query.getString("priNomEmpleado"),
+                        segundoNombre = query.getString("segNomEmpleado"),
+                        apellido = query.getString("apeEmpleado")
+                    )
+                )
+            }
 
             newProductosList =
                 DetalleVentaProductoDatabase.getProductosPorCompraPorCliente(currentVenta.id!!, idCliente)
