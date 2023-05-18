@@ -1,6 +1,5 @@
 package ui.util
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
@@ -11,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -54,16 +52,11 @@ private fun AvailableProductsListItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.height(100.dp).padding(16.dp).fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource("icons/producto.png"),
-                contentDescription = null,
-                contentScale = ContentScale.FillHeight
-            )
             Text(
                 text = producto.nombre,
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.body2,
-                modifier = Modifier.weight(1f).padding(start = 4.dp)
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.weight(2f).padding(start = 4.dp)
             )
             Column(modifier = Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.Center) {
                 if (quantitySelectionEnabled) {

@@ -162,7 +162,7 @@ class ProductoController {
      * Updates the supplier of the product
      * @param newSupplierString New supplier of the producto
      */
-    fun updateEmployeeBranch(newSupplierString: String) {
+    fun updateSupplier(newSupplierString: String) {
         val proveedor = proveedorNamePair.find { it.first == newSupplierString }?.second ?: Proveedor()
 
         // TODO Complete code
