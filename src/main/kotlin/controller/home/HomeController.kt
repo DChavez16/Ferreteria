@@ -112,6 +112,7 @@ class HomeController {
         // Actualiza el reporte diario
         if (ReporteDatabase.updateReporte(
                 Reporte(
+                    ventas = _homeState.value.selectedProductos.size,
                     ventasPromocion = _homeState.value.selectedProductos.count { it.producto.promocion?.disponibilidad == true },
                     ingresos = _homeState.value.saleInfo.total,
                     fechaVenta = fechaVenta

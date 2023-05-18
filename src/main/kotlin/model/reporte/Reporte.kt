@@ -52,7 +52,7 @@ object ReporteDatabase {
     fun updateReporte(reporte: Reporte): Boolean {
         val resultado =
             statement.executeUpdate(
-                "execute upsertReporte ${reporte.ventasPromocion}, ${reporte.ingresos}, ${reporte.fechaVenta!!.id}"
+                "execute upsertReporte ${reporte.ventas}, ${reporte.ventasPromocion}, ${reporte.ingresos}, ${reporte.fechaVenta!!.id}"
             )
 
         return resultado > 0
