@@ -172,18 +172,14 @@ private fun List<ProductoVenta>.addProducto(
         if (producto.id == selectedProductos.producto.id) {
             isInTheList = true
             newList[index] = ProductoVenta(
-                cantidad = quantityValue,
-                producto = producto,
-                descripcionPromocion = producto.promocion?.description
+                cantidad = quantityValue, producto = producto, descripcionPromocion = producto.getDescripcion()
             )
         }
     }
 
     if (!isInTheList) newList.add(
         ProductoVenta(
-            cantidad = quantityValue,
-            producto = producto,
-            descripcionPromocion = producto.promocion?.description
+            cantidad = quantityValue, producto = producto, descripcionPromocion = producto.getDescripcion()
         )
     )
 
@@ -211,4 +207,8 @@ private fun SaleInfo.update(selectedProductosList: List<ProductoVenta>) {
     this.incrementoIVA = newIVA
     this.descuento = newDescuento
     this.total = newSubtotal + newIVA - newDescuento
+}
+
+private fun Producto.getDescripcion(): String? = with(this.promocion) {
+    if (this?.disponibilidad == true) this.description else null
 }
