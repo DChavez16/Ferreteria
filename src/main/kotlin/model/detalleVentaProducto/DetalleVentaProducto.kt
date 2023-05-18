@@ -1,16 +1,14 @@
 package model.detalleVentaProducto
 
 import Database
-import model.producto.ProductoDatabase
+import model.producto.Producto
 import model.productoVenta.ProductoVenta
-import model.promocion.PromocionDatabase
 import model.venta.Venta
 import java.sql.Statement
 
 data class DetalleVentaProducto(
     // Foreign key
-    var venta: Venta = Venta(),
-    var productos: List<ProductoVenta> = emptyList()
+    var venta: Venta = Venta(), var productos: List<ProductoVenta> = emptyList()
 )
 
 
@@ -23,13 +21,19 @@ object DetalleVentaProductoDatabase {
 
         val query = statement.executeQuery("execute productosPorVenta $idVenta")
 
-        while(query.next()) {
+        while (query.next()) {
             with(query) {
                 currentProductoVenta = ProductoVenta(
                     id = getInt("idProductoVenta"),
-                    cantidad = query.getInt("cantidad"),
-                    producto = ProductoDatabase.getProducto(getInt("idProducto")),
-                    promocion = PromocionDatabase.getPromocion(query.getInt("idPromocion"))
+                    cantidad = getInt("cantidad"),
+                    producto = Producto(
+                        id = getInt("idProducto"),
+                        nombre = getString("nomProducto")
+                    ),
+                    subtotal = getDouble("subtotal"),
+                    cantidadIVA = getDouble("precioIVA"),
+                    descripcionPromocion = getString("descripcionPromocion"),
+                    precioVenta = getDouble("importe")
                 )
             }
 
@@ -50,13 +54,21 @@ object DetalleVentaProductoDatabase {
 
         val query = statement.executeQuery("execute productosPorCompraPorCliente $idVenta, $idCliente")
 
-        while(query.next()) {
-            currentProductoVenta = ProductoVenta()
-
-            currentProductoVenta.id = query.getInt("idProductoVenta")
-            currentProductoVenta.cantidad = query.getInt("cantidad")
-            currentProductoVenta.producto = ProductoDatabase.getProducto(query.getInt("idProducto"))
-            currentProductoVenta.promocion = PromocionDatabase.getPromocion(query.getInt("idPromocion"))
+        while (query.next()) {
+            with(query) {
+                currentProductoVenta = ProductoVenta(
+                    id = getInt("idProductoVenta"),
+                    cantidad = getInt("cantidad"),
+                    producto = Producto(
+                        id = getInt("idProducto"),
+                        nombre = getString("nomProducto")
+                    ),
+                    subtotal = getDouble("subtotal"),
+                    cantidadIVA = getDouble("precioIVA"),
+                    descripcionPromocion = getString("descripcionPromocion"),
+                    precioVenta = getDouble("importe")
+                )
+            }
 
             newList.add(currentProductoVenta)
         }
@@ -75,13 +87,21 @@ object DetalleVentaProductoDatabase {
 
         val query = statement.executeQuery("execute productosPorVentaPorEmpleado $idVenta, $idEmpleado")
 
-        while(query.next()) {
-            currentProductoVenta = ProductoVenta()
-
-            currentProductoVenta.id = query.getInt("idProductoVenta")
-            currentProductoVenta.cantidad = query.getInt("cantidad")
-            currentProductoVenta.producto = ProductoDatabase.getProducto(query.getInt("idProducto"))
-            currentProductoVenta.promocion = PromocionDatabase.getPromocion(query.getInt("idPromocion"))
+        while (query.next()) {
+            with(query) {
+                currentProductoVenta = ProductoVenta(
+                    id = getInt("idProductoVenta"),
+                    cantidad = getInt("cantidad"),
+                    producto = Producto(
+                        id = getInt("idProducto"),
+                        nombre = getString("nomProducto")
+                    ),
+                    subtotal = getDouble("subtotal"),
+                    cantidadIVA = getDouble("precioIVA"),
+                    descripcionPromocion = getString("descripcionPromocion"),
+                    precioVenta = getDouble("importe")
+                )
+            }
 
             newList.add(currentProductoVenta)
         }

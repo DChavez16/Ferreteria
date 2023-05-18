@@ -31,16 +31,21 @@ object ProductoDatabase {
      * @param idProducto ID of the Producto which data will be retrieved from the database
      */
     fun getProducto(idProducto: Int): Producto {
-        val producto = Producto(id = idProducto)
+        var producto: Producto = Producto()
 
         val query = statement.executeQuery("select * from vista_Producto where idProducto = $idProducto")
 
-        while(query.next()) {
-            producto.nombre = query.getString("nombre")
-            producto.precioReal = query.getDouble("precioReal")
-            producto.cantidadIVA = query.getDouble("cantidadIVA")
-            producto.precioVenta = query.getDouble("precioVenta")
-            producto.descripcion = query.getString("descripcion")
+        while (query.next()) {
+            with(query) {
+                producto = Producto(
+                    id = getInt("idProducto"),
+                    nombre = getString("nombre"),
+                    precioReal = getDouble("precioReal"),
+                    cantidadIVA = getDouble("cantidadIVA"),
+                    precioVenta = getDouble("precioVenta"),
+                    descripcion = getString("descripcion")
+                )
+            }
         }
 
         return producto
@@ -54,22 +59,26 @@ object ProductoDatabase {
         var currentProducto: Producto
 
         val query = statement.executeQuery(
-            "select * from vista_Producto${if(promocionFilter) " where idPromocion is null" else ""}"
+            "select * from vista_Producto${if (promocionFilter) " where idPromocion is null" else ""}"
         )
 
         while (query.next()) {
             currentProducto = Producto()
 
-            currentProducto.id = query.getInt("idProducto")
-            currentProducto.nombre = query.getString("nombre")
-            currentProducto.precioReal = query.getDouble("precioReal")
-            currentProducto.cantidadIVA = query.getDouble("cantidadIVA")
-            currentProducto.precioVenta = query.getDouble("precioVenta")
-            currentProducto.descripcion = query.getString("descripcion")
-            currentProducto.proveedor.id = query.getInt("idProveedor")
-            currentProducto.proveedor.nombre = query.getString("nombreProveedor")
-            query.getInt("idPromocion").let {
-                currentProducto.promocion = if(it > 0) PromocionDatabase.getPromocion(it) else null
+            with(query) {
+                currentProducto = Producto(id = getInt("idProducto"),
+                    nombre = getString("nombre"),
+                    precioReal = getDouble("precioReal"),
+                    cantidadIVA = getDouble("cantidadIVA"),
+                    precioVenta = getDouble("precioVenta"),
+                    descripcion = getString("descripcion"),
+                    proveedor = Proveedor(
+                        id = getInt("idProveedor"),
+                        nombre = getString("nombreProveedor"),
+                    ),
+                    promocion = getInt("idPromocion").let {
+                        if (it > 0) PromocionDatabase.getPromocion(it) else null
+                    })
             }
 
             newList.add(currentProducto)
@@ -84,10 +93,9 @@ object ProductoDatabase {
      * @param producto Producto to be added to the database
      */
     fun insertProducto(producto: Producto): Boolean {
-        val resultado =
-            statement.executeUpdate(
-                "execute insertProducto '${producto.nombre}', ${producto.precioReal}, ${producto.cantidadIVA}, ${producto.precioVenta}, '${producto.descripcion}', ${producto.proveedor.id}"
-            )
+        val resultado = statement.executeUpdate(
+            "execute insertProducto '${producto.nombre}', ${producto.precioReal}, ${producto.cantidadIVA}, ${producto.precioVenta}, '${producto.descripcion}', ${producto.proveedor.id}"
+        )
 
         return resultado > 0
     }

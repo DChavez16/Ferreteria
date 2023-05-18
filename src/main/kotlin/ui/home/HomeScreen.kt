@@ -135,7 +135,7 @@ private fun SelectedProductListContent(selectedProducto: ProductoVenta) {
                 textAlign = TextAlign.Center
             )
         }
-        selectedProducto.promocion?.let {
+        selectedProducto.producto.promocion?.let {
             if (it.disponibilidad) {
                 Text(
                     text = "${it.description} (${(it.descuento * 100).toInt()} %)",

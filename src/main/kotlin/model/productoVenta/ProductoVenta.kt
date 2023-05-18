@@ -2,7 +2,6 @@ package model.productoVenta
 
 import Database
 import model.producto.Producto
-import model.promocion.Promocion
 
 data class ProductoVenta(
     // Primary key
@@ -14,11 +13,14 @@ data class ProductoVenta(
     // Foreign key
     var producto: Producto = Producto(),
     // Atributes
-    var subtotal: Double = producto.precioReal * cantidad, var cantidadIVA: Double = producto.cantidadIVA * cantidad,
+    var subtotal: Double = producto.precioReal * cantidad,
+    var cantidadIVA: Double = producto.cantidadIVA * cantidad,
 
-    var promocion: Promocion? = producto.promocion,
+    var descripcionPromocion: String? = if (producto.promocion?.disponibilidad == true) producto.promocion?.description else null,
     // Atributes
-    var precioVenta: Double = (subtotal + cantidadIVA) * (if (promocion?.disponibilidad == true) 1.0 - promocion.descuento else 1.0)
+    var precioVenta: Double = (subtotal + cantidadIVA).times(
+        1.0 - if (producto.promocion?.disponibilidad == true) producto.promocion?.descuento ?: 0.0 else 0.0
+    )
 )
 
 
@@ -27,15 +29,14 @@ object ProductoVentaDatabase {
 
     fun createProductoVenta(productoVenta: ProductoVenta): Int {
         statement.executeUpdate(
-            "execute createProductoVenta ${productoVenta.cantidad}, ${productoVenta.subtotal}, ${productoVenta.cantidadIVA + productoVenta.subtotal}, ${
-                (productoVenta.subtotal + productoVenta.cantidadIVA) * (productoVenta.promocion?.descuento ?: 0.0)
-            }, ${productoVenta.precioVenta}, ${productoVenta.producto.id}, ${productoVenta.promocion?.id}"
+            "execute createProductoVenta ${productoVenta.cantidad}, ${productoVenta.subtotal}, ${productoVenta.cantidadIVA}, '${productoVenta.descripcionPromocion}', ${productoVenta.precioVenta}, ${productoVenta.producto.id}"
         )
 
-        val query = statement.executeQuery("select idProductoVenta from ProductoVenta where idProductoVenta = IDENT_CURRENT('ProductoVenta')")
+        val query =
+            statement.executeQuery("select idProductoVenta from ProductoVenta where idProductoVenta = IDENT_CURRENT('ProductoVenta')")
 
         var idProductoVenta = 0
-        while(query.next()) {
+        while (query.next()) {
             idProductoVenta = query.getInt("idProductoVenta")
         }
 

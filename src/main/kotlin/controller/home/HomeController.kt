@@ -112,7 +112,7 @@ class HomeController {
         // Actualiza el reporte diario
         if (ReporteDatabase.updateReporte(
                 Reporte(
-                    ventasPromocion = _homeState.value.selectedProductos.count { it.promocion?.disponibilidad == true },
+                    ventasPromocion = _homeState.value.selectedProductos.count { it.producto.promocion?.disponibilidad == true },
                     ingresos = _homeState.value.saleInfo.total,
                     fechaVenta = fechaVenta
                 )
@@ -170,11 +170,21 @@ private fun List<ProductoVenta>.addProducto(
     newList.forEachIndexed { index, selectedProductos ->
         if (producto.id == selectedProductos.producto.id) {
             isInTheList = true
-            newList[index] = ProductoVenta(cantidad = quantityValue, producto = producto)
+            newList[index] = ProductoVenta(
+                cantidad = quantityValue,
+                producto = producto,
+                descripcionPromocion = producto.promocion?.description
+            )
         }
     }
 
-    if (!isInTheList) newList.add(ProductoVenta(cantidad = quantityValue, producto = producto))
+    if (!isInTheList) newList.add(
+        ProductoVenta(
+            cantidad = quantityValue,
+            producto = producto,
+            descripcionPromocion = producto.promocion?.description
+        )
+    )
 
     return newList.toList()
 }
@@ -190,8 +200,8 @@ private fun SaleInfo.update(selectedProductosList: List<ProductoVenta>) {
     selectedProductosList.forEach { selectedProducto ->
         newSubtotal += selectedProducto.subtotal
         newIVA += selectedProducto.cantidadIVA
-        if (selectedProducto.promocion?.disponibilidad == true) {
-            newDescuento += (selectedProducto.subtotal + selectedProducto.cantidadIVA) * (selectedProducto.promocion?.descuento
+        if (selectedProducto.producto.promocion?.disponibilidad == true) {
+            newDescuento += (selectedProducto.subtotal + selectedProducto.cantidadIVA) * (selectedProducto.producto.promocion?.descuento
                 ?: 0.0)
         }
     }

@@ -76,7 +76,7 @@ object VentaDatabase {
 
     fun makeVenta(venta: Venta): Int {
         statement.executeUpdate(
-            "execute efectuarVenta ${venta.fechaVenta.id}, ${venta.cliente.id}, ${venta.empleado.id}"
+            "execute efectuarVenta ${venta.impRealVenta}, ${venta.ivaVenta}, ${venta.impIvaVenta}, ${venta.desVenta}, ${venta.netoVenta}, ${venta.fechaVenta.id}, ${venta.cliente.id}, ${venta.empleado.id}"
         )
 
         val query = statement.executeQuery("select idVenta from Venta where idVenta = IDENT_CURRENT('Venta')")
