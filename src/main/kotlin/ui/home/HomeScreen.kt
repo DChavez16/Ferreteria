@@ -8,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import controller.home.HomeController
+import controller.home.HomeState
 import controller.home.SaleInfo
 import model.cliente.getFullName
 import model.productoVenta.ProductoVenta
@@ -24,12 +26,13 @@ import ui.util.BottomButtons
 import ui.util.ExpandableDropDownMenu
 import util.decimalFormat
 
+private lateinit var homeState: State<HomeState>
 
 @Composable
 fun HomeScreen() {
     val homeController = HomeController()
 
-    val homeState = homeController.homeState.collectAsState()
+    homeState = homeController.homeState.collectAsState()
 
     Surface(color = MaterialTheme.colors.background) {
         Column(verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxHeight().padding(16.dp)) {
@@ -49,9 +52,15 @@ fun HomeScreen() {
                     // Current client
                     Column {
                         Text(text = "Cliente:", style = MaterialTheme.typography.h6)
-                        ExpandableDropDownMenu(value = homeState.value.currentCliente.getFullName(),
+                        ExpandableDropDownMenu(value = homeState.value.currentCliente?.getFullName() ?: "",
                             optionsList = homeController.clienteNamePair.map { it.first },
                             onValueChange = { homeController.updateCurrentCliente(it) })
+                        if (homeState.value.firstSalePromotion.primeraCompra) {
+                            Text(
+                                text = "Promocion aplicable: ${homeState.value.firstSalePromotion.descuento?.times(100)} %",
+                                style = MaterialTheme.typography.h6
+                            )
+                        }
                     }
                 }
             }
@@ -135,10 +144,17 @@ private fun SelectedProductListContent(selectedProducto: ProductoVenta) {
                 textAlign = TextAlign.Center
             )
         }
-        selectedProducto.producto.promocion?.let {
-            if (it.disponibilidad) {
+        if (selectedProducto.descripcionPromocion != null) {
+            if (selectedProducto.producto.promocion?.disponibilidad == true) {
                 Text(
-                    text = "${it.description} (${(it.descuento * 100).toInt()} %)",
+                    text = "${selectedProducto.descripcionPromocion}",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            } else if (homeState.value.firstSalePromotion.primeraCompra) {
+                Text(
+                    text = "${selectedProducto.descripcionPromocion}",
                     color = Color.Red,
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier.padding(start = 4.dp)

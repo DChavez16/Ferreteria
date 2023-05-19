@@ -35,12 +35,31 @@ data class Empleado(
 // Empleado extension functions
 fun Empleado.getSueldo() = if (this.puesto == UserType.ADMINISTRATOR) 15000.0 else 5000.0
 
-fun Empleado.getFullName() = "${this.primerNombre} ${this.segundoNombre} ${this.apellido}"
+fun Empleado.getFullName() = if(id == null) "Empleado no disponible" else "$primerNombre $segundoNombre $apellido"
 
 
 
 object EmpleadoDatabase {
     private var statement: Statement = Database.connection.createStatement()
+
+    fun getEmpleado(idEmpleado: Int): Empleado {
+        var empleado = Empleado()
+
+        val query = statement.executeQuery("select * from vista_Empleado where idEmpleado = $idEmpleado")
+
+        while(query.next()) {
+            with(query) {
+                empleado = Empleado(
+                    id = getInt("idEmpleado"),
+                    primerNombre = getString("primerNombre"),
+                    segundoNombre = getString("segundoNombre"),
+                    apellido = getString("apellido")
+                )
+            }
+        }
+
+        return empleado
+    }
 
     /**
      * Collects all the employees stored in the database

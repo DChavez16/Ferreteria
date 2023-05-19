@@ -5,9 +5,11 @@ import model.contacto.Contacto
 import model.detalleVentaProducto.DetalleVentaProducto
 import model.detalleVentaProducto.DetalleVentaProductoDatabase
 import model.empleado.Empleado
+import model.empleado.EmpleadoDatabase
 import model.fechaVenta.FechaVenta
 import model.productoVenta.ProductoVenta
 import model.venta.Venta
+import util.toBoolean
 import util.toByte
 import java.sql.Statement
 
@@ -28,11 +30,32 @@ data class Cliente(
 )
 
 // Extension functions
-fun Cliente.getFullName() = "${this.primerNombre} ${this.segundoNombre} ${this.apellido}"
+fun Cliente.getFullName() = if(id == null) "Cliente no disponible" else "$primerNombre $segundoNombre $apellido"
 
 
 object ClienteDatabase {
     private var statement: Statement = Database.connection.createStatement()
+
+    fun getCliente(idCliente: Int): Cliente {
+        var cliente = Cliente()
+
+        val query = statement.executeQuery("select * from vista_Cliente where idCliente = $idCliente")
+
+        while(query.next()) {
+            with(query) {
+                cliente = Cliente(
+                    id = getInt("idCliente"),
+                    primerNombre = getString("primerNombre"),
+                    segundoNombre = getString("segundoNombre"),
+                    apellido = getString("apellido"),
+                    suscrito = getByte("suscrito").toBoolean(),
+                    cantidadCompras = getInt("compras")
+                )
+            }
+        }
+
+        return cliente
+    }
 
     /**
      * Collects all the clients stored in the database
@@ -46,18 +69,21 @@ object ClienteDatabase {
         while (query.next()) {
             currentCliente = Cliente()
 
-            currentCliente.id = query.getInt("idCliente")
-            currentCliente.primerNombre = query.getString("primerNombre")
-            currentCliente.segundoNombre = query.getString("segundoNombre")
-            currentCliente.apellido = query.getString("apellido")
-            currentCliente.suscrito = when (query.getByte("suscrito")) {
-                0.toByte() -> false
-                else -> true
+            with(query) {
+                currentCliente = Cliente(
+                    id = query.getInt("idCliente"),
+                    primerNombre = getString("primerNombre"),
+                    segundoNombre = getString("segundoNombre"),
+                    apellido = getString("apellido"),
+                    suscrito = getByte("suscrito").toBoolean(),
+                    cantidadCompras = getInt("compras"),
+                    contacto = Contacto(
+                        id = getInt("idContacto"),
+                        correo = getString("correo"),
+                        telefono = getString("telefono")
+                    )
+                )
             }
-            currentCliente.cantidadCompras = query.getInt("compras")
-            currentCliente.contacto.id = query.getInt("idContacto")
-            currentCliente.contacto.correo = query.getString("correo")
-            currentCliente.contacto.telefono = query.getString("telefono")
 
             newList.add(currentCliente)
         }
@@ -110,6 +136,7 @@ object ClienteDatabase {
         val newList = mutableListOf<DetalleVentaProducto>()
         var newProductosList: List<ProductoVenta>
         var currentVenta: Venta
+        var currentEmpleado: Empleado
 
         val query = statement.executeQuery("execute comprasCliente $idCliente")
 
@@ -117,6 +144,8 @@ object ClienteDatabase {
             currentVenta = Venta()
 
             with(query) {
+                currentEmpleado = EmpleadoDatabase.getEmpleado(getInt("idEmpleado"))
+
                 currentVenta = Venta(
                     id = getInt("idVenta"),
                     impRealVenta = getDouble("importeReal"),
@@ -127,12 +156,7 @@ object ClienteDatabase {
                     FechaVenta(
                         dia = getInt("dia"), mes = getInt("mes"), anio = getInt("anio")
                     ),
-                    empleado = Empleado(
-                        id = getInt("idEmpleado"),
-                        primerNombre = query.getString("priNomEmpleado"),
-                        segundoNombre = query.getString("segNomEmpleado"),
-                        apellido = query.getString("apeEmpleado")
-                    )
+                    empleado = currentEmpleado
                 )
             }
 

@@ -2,9 +2,11 @@ package model.venta
 
 import Database
 import model.cliente.Cliente
+import model.cliente.ClienteDatabase
 import model.detalleVentaProducto.DetalleVentaProducto
 import model.detalleVentaProducto.DetalleVentaProductoDatabase
 import model.empleado.Empleado
+import model.empleado.EmpleadoDatabase
 import model.fechaVenta.FechaVenta
 import model.productoVenta.ProductoVenta
 
@@ -33,11 +35,16 @@ object VentaDatabase {
         val newList = mutableListOf<DetalleVentaProducto>()
         var newProductosList: List<ProductoVenta>
         var currentVenta: Venta
+        var currentCliente: Cliente
+        var currentEmpleado: Empleado
 
         val query = statement.executeQuery("select * from vista_Venta")
 
         while (query.next()) {
             with(query) {
+                currentCliente = ClienteDatabase.getCliente(getInt("idCliente"))
+                currentEmpleado = EmpleadoDatabase.getEmpleado(getInt("idEmpleado"))
+
                 currentVenta = Venta(
                     id = getInt("idVenta"),
                     impRealVenta = getDouble("importeReal"),
@@ -51,18 +58,8 @@ object VentaDatabase {
                         mes = getInt("mes"),
                         anio = getInt("anio")
                     ),
-                    cliente = Cliente(
-                        id = getInt("idEmpleado"),
-                        primerNombre = getString("priNomEmpleado"),
-                        segundoNombre = getString("segNomEmpleado"),
-                        apellido = getString("apeEmpleado")
-                    ),
-                    empleado = Empleado(
-                        id = getInt("idCliente"),
-                        primerNombre = getString("priNomCliente"),
-                        segundoNombre = getString("segNomCliente"),
-                        apellido = getString("apeCliente")
-                    )
+                    empleado = currentEmpleado,
+                    cliente = currentCliente
                 )
             }
 

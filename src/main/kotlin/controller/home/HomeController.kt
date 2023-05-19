@@ -24,7 +24,7 @@ class HomeController {
 
     var productsList: List<Producto> = emptyList()
 
-    val clienteNamePair: MutableList<Pair<String, Cliente>> = mutableListOf()
+    var clienteNamePair: MutableList<Pair<String, Cliente>> = mutableListOf()
 
     init {
         getClientList()
@@ -36,8 +36,13 @@ class HomeController {
      * Retrieves a list of clients from the database
      */
     private fun getClientList() {
-        _homeState.value.clientList = ClienteDatabase.getClienteList()
+        val newList = ClienteDatabase.getClienteList()
 
+        _homeState.update { currentState ->
+            currentState.copy(clientList = newList)
+        }
+
+        clienteNamePair = mutableListOf()
         _homeState.value.clientList.forEach { cliente ->
             clienteNamePair.add(Pair(cliente.getFullName(), cliente))
         }
@@ -57,9 +62,14 @@ class HomeController {
     fun resetState() {
         _homeState.update { currentState ->
             currentState.copy(
-                selectedProductos = emptyList(), saleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0), currentCliente = Cliente()
+                selectedProductos = emptyList(),
+                saleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0),
+                currentCliente = null,
+                firstSalePromotion = ClientFirstSalePromotion()
             )
         }
+
+        getClientList()
     }
 
     /**
@@ -72,11 +82,24 @@ class HomeController {
         _homeState.update { currentState ->
             currentState.copy(selectedProductos = currentState.selectedProductos.addProducto(producto, quantity!!))
         }
+        _homeState.update { currentState ->
+            currentState.copy(
+                selectedProductos = currentState.selectedProductos.actualizarPromocion(
+                    clienteRegistrado = _homeState.value.currentCliente?.suscrito ?: false,
+                    primeraCompra = _homeState.value.firstSalePromotion
+                )
+            )
+        }
         updateSaleInfo(_homeState.value.selectedProductos)
     }
 
     private fun updateSaleInfo(selectedProductos: List<ProductoVenta>) {
-        _homeState.value.saleInfo.update(selectedProductos)
+        _homeState.value.saleInfo.update(
+            selectedProductos,
+            clienteRegistrado = _homeState.value.currentCliente?.suscrito ?: false,
+            primeraCompra = _homeState.value.firstSalePromotion
+
+        )
     }
 
     fun makeSale() {
@@ -94,7 +117,7 @@ class HomeController {
                 desVenta = descuento,
                 netoVenta = total,
                 fechaVenta = fechaVenta,
-                cliente = _homeState.value.currentCliente,
+                cliente = _homeState.value.currentCliente ?: Cliente(),
                 empleado = empleado,
             )
         })
@@ -113,7 +136,7 @@ class HomeController {
         if (ReporteDatabase.updateReporte(
                 Reporte(
                     ventas = _homeState.value.selectedProductos.size,
-                    ventasPromocion = _homeState.value.selectedProductos.count { it.producto.promocion?.disponibilidad == true },
+                    ventasPromocion = _homeState.value.selectedProductos.count { it.descripcionPromocion != null },
                     ingresos = _homeState.value.saleInfo.total,
                     fechaVenta = fechaVenta
                 )
@@ -127,13 +150,44 @@ class HomeController {
         _homeState.update { currentState ->
             currentState.copy(currentCliente = cliente)
         }
+
+        defineFirstSalePromotion(cliente)
+    }
+
+    private fun defineFirstSalePromotion(cliente: Cliente) {
+        var currentFirstSalePromotion = ClientFirstSalePromotion()
+
+        val firstSale = cliente.cantidadCompras == 0
+
+        if (firstSale) {
+            currentFirstSalePromotion = if (cliente.suscrito) {
+                ClientFirstSalePromotion(true, 0.1)
+            } else {
+                ClientFirstSalePromotion(true, 0.05)
+            }
+        }
+
+        _homeState.update { currentState ->
+            currentState.copy(firstSalePromotion = currentFirstSalePromotion)
+        }
+
+        _homeState.update { currentState ->
+            currentState.copy(
+                selectedProductos = currentState.selectedProductos.actualizarPromocion(
+                    clienteRegistrado = _homeState.value.currentCliente?.suscrito ?: false,
+                    primeraCompra = _homeState.value.firstSalePromotion
+                )
+            )
+        }
+
+        updateSaleInfo(_homeState.value.selectedProductos)
     }
 
     /**
      * Validates if the list of selected products is not empty
      */
     fun selectedProductsListIsNotEmpty() =
-        _homeState.value.selectedProductos.isNotEmpty() && _homeState.value.currentCliente.id != null
+        _homeState.value.selectedProductos.isNotEmpty() && _homeState.value.currentCliente?.id != null
 
 
 }
@@ -146,11 +200,16 @@ data class HomeState(
     var selectedProductos: List<ProductoVenta> = emptyList(),
     var saleInfo: SaleInfo = SaleInfo(0.0, 0.0, 0.0, 0.0),
     var clientList: List<Cliente> = emptyList(),
-    var currentCliente: Cliente = Cliente()
+    var currentCliente: Cliente? = null,
+    var firstSalePromotion: ClientFirstSalePromotion = ClientFirstSalePromotion()
 )
 
 data class SaleInfo(
     var subTotal: Double, var incrementoIVA: Double, var descuento: Double, var total: Double = subTotal - descuento
+)
+
+data class ClientFirstSalePromotion(
+    var primeraCompra: Boolean = false, var descuento: Double? = null
 )
 
 /*
@@ -186,10 +245,48 @@ private fun List<ProductoVenta>.addProducto(
     return newList.toList()
 }
 
+private fun List<ProductoVenta>.actualizarPromocion(
+    clienteRegistrado: Boolean, primeraCompra: ClientFirstSalePromotion
+): List<ProductoVenta> {
+    val newList = mutableListOf<ProductoVenta>()
+
+    // Lasciate ogni speranza, voi ch'entrate
+    this.forEach { productoVenta ->
+        productoVenta.let {
+            it.descripcionPromocion = if (clienteRegistrado) {
+                if (it.producto.promocion?.disponibilidad == true) productoVenta.producto.getDescripcion()
+                else if (primeraCompra.primeraCompra) "Primer compra (${
+                    primeraCompra.descuento!!.times(100).toInt()
+                } %)"
+                else null
+            } else {
+                if (primeraCompra.primeraCompra) "Primer compra (${primeraCompra.descuento!!.times(100).toInt()} %)"
+                else null
+            }
+            it.precioVenta = (it.subtotal + it.cantidadIVA).times(
+                1.0 - if (clienteRegistrado) {
+                    if (it.producto.promocion?.disponibilidad == true) it.producto.promocion!!.descuento
+                    else if (primeraCompra.primeraCompra) primeraCompra.descuento!!
+                    else 0.0
+                } else {
+                    if (primeraCompra.primeraCompra) primeraCompra.descuento!!
+                    else 0.0
+                }
+            )
+        }
+
+        newList.add(productoVenta)
+    }
+
+    return newList.toList()
+}
+
 /**
  * Navigates within selectedProductosList to calculate the SaleInfo's subtotal, descuento and total
  */
-private fun SaleInfo.update(selectedProductosList: List<ProductoVenta>) {
+private fun SaleInfo.update(
+    selectedProductosList: List<ProductoVenta>, clienteRegistrado: Boolean, primeraCompra: ClientFirstSalePromotion
+) {
     var newSubtotal = 0.0
     var newIVA = 0.0
     var newDescuento = 0.0
@@ -197,10 +294,16 @@ private fun SaleInfo.update(selectedProductosList: List<ProductoVenta>) {
     selectedProductosList.forEach { selectedProducto ->
         newSubtotal += selectedProducto.subtotal
         newIVA += selectedProducto.cantidadIVA
-        if (selectedProducto.producto.promocion?.disponibilidad == true) {
-            newDescuento += (selectedProducto.subtotal + selectedProducto.cantidadIVA) * (selectedProducto.producto.promocion?.descuento
-                ?: 0.0)
-        }
+        newDescuento += (selectedProducto.subtotal + selectedProducto.cantidadIVA).times(
+            if (clienteRegistrado) {
+                if (selectedProducto.producto.promocion?.disponibilidad == true) selectedProducto.producto.promocion!!.descuento
+                else if (primeraCompra.primeraCompra) primeraCompra.descuento!!
+                else 0.0
+            } else {
+                if (primeraCompra.primeraCompra) primeraCompra.descuento!!
+                else 0.0
+            }
+        )
     }
 
     this.subTotal = newSubtotal
