@@ -13,7 +13,7 @@ private lateinit var cal: Calendar
 class MainController {
     // StateFlow of the user type
     private var _userType = MutableStateFlow(UserType.ADMINISTRATOR)
-    val userType: StateFlow<UserType> = _userType.asStateFlow()
+    var userType: StateFlow<UserType> = _userType.asStateFlow()
 
     // List of options showing depending on the user type
     var optionsList: List<NavigationOption>
@@ -50,8 +50,8 @@ class MainController {
     }
 
     // Changes the type of the user and updates the list of options
-    fun changeUserType() {
-        _userType.value = if(_userType.value == UserType.CASHIER) UserType.ADMINISTRATOR else UserType.CASHIER
+    fun changeUserType(tipo: UserType) {
+        _userType.value = tipo
         optionsList = NavigationOptions(_userType.value).navigationList
     }
 }

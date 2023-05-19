@@ -1,5 +1,6 @@
 package ui.mainContainer
 
+import ProgramEscencials
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import controller.mainContainer.MainController
 import kotlinx.coroutines.delay
+import model.direccion.getFormat
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -24,6 +26,8 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun TopBar(mainController: MainController) {
+    val sucursal = ProgramEscencials.selectedSucursal
+
     var dateTime by remember { mutableStateOf(mainController.getDateTime()) }
     val day by remember { mutableStateOf(mainController.getDay()) }
 
@@ -53,9 +57,9 @@ fun TopBar(mainController: MainController) {
                     )
                     Spacer(Modifier.width(16.dp))
                     Column {
-                        Text("Sucursal Anáhuac", style = MaterialTheme.typography.h6)
+                        Text(sucursal.name, style = MaterialTheme.typography.h6)
                         Spacer(Modifier.height(8.dp))
-                        Text("San Nicolás, Nuevo León, 123", style = MaterialTheme.typography.h6)
+                        Text(sucursal.contacto.direccion.getFormat(), style = MaterialTheme.typography.h6)
                     }
                 }
                 // Current hour and date

@@ -2,6 +2,7 @@ package model.sucursal
 
 import Database
 import model.contacto.Contacto
+import model.direccion.Direccion
 
 data class Sucursal(
     // Primary key
@@ -17,6 +18,36 @@ data class Sucursal(
 
 object SucursalDatabase {
     private val statement = Database.connection.createStatement()
+
+    fun getSucursal(idSucursal: Int): Sucursal? {
+        var currentSucursal: Sucursal? = null
+
+        val query = statement.executeQuery("select * from vista_Sucursal where idSucursal = $idSucursal")
+
+        while (query.next()) {
+            currentSucursal = with(query) {
+                Sucursal(
+                    id = getInt("idSucursal"),
+                    name = getString("nombre"),
+                    contacto = Contacto(
+                        id = getInt("idContacto"),
+                        telefono = getString("telefono"),
+                        direccion = Direccion(
+                            id = getInt("idDireccion"),
+                            municipio = getString("municipio"),
+                            colonia = getString("colonia"),
+                            calle = getString("calle"),
+                            numero = getInt("numero"),
+                            codigoPostal = getString("codigoPostal")
+                        )
+                    )
+                )
+            }
+        }
+
+        return currentSucursal
+
+    }
 
     /**
      * Collects all the branches stored in the database

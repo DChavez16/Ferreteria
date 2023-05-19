@@ -1,5 +1,6 @@
 package ui.mainContainer
 
+import ProgramEscencials
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -14,12 +15,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import controller.mainContainer.MainController
@@ -28,7 +29,6 @@ import util.NavigationOptions
 import util.NavigationOptionsCodes
 import util.UserType
 
-
 @Composable
 fun NavigationSideBar(
     mainController: MainController,
@@ -36,7 +36,8 @@ fun NavigationSideBar(
     selectedItem: NavigationOptionsCodes,
     onNavigationOptionClicked: (NavigationOptionsCodes) -> Unit
 ) {
-    val userType = mainController.userType.collectAsState()
+    val empleado = ProgramEscencials.selectedEmpleado
+    mainController.changeUserType(empleado.puesto)
 
     Surface(
         color = MaterialTheme.colors.secondaryVariant, elevation = 8.dp
@@ -61,9 +62,10 @@ fun NavigationSideBar(
                         )
                     }
                 }
-                UserInfo(userType = userType.value,
+                UserInfo(nombre = "${empleado.primerNombre} ${empleado.apellido}",
+                    userType = mainController.userType.value,
                     closeProgram = closeProgram,
-                    onUserInfoClicked = { mainController.changeUserType() })
+                    onLogoutClick = { ProgramEscencials.changeWindow() })
             }
             Divider(color = Color.Gray, modifier = Modifier.fillMaxHeight().width(Dp.Hairline))
         }
@@ -113,11 +115,12 @@ private fun NavigationOptionItem(
 }
 
 @Composable
-private fun UserInfo(userType: UserType, closeProgram: () -> Unit, onUserInfoClicked: () -> Unit) {
+private fun UserInfo(nombre: String, userType: UserType, closeProgram: () -> Unit, onLogoutClick: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Daniel Chavez",
+        Text(
+            text = nombre,
             style = MaterialTheme.typography.body1,
-            modifier = Modifier.clickable { onUserInfoClicked() })
+        )
         if (userType == UserType.ADMINISTRATOR) {
             Spacer(Modifier.height(4.dp))
             Text(text = "Administrador", style = MaterialTheme.typography.body1)
@@ -132,6 +135,11 @@ private fun UserInfo(userType: UserType, closeProgram: () -> Unit, onUserInfoCli
             Spacer(Modifier.width(8.dp))
             Text(text = "Salir", style = MaterialTheme.typography.button)
         }
+        Spacer(Modifier.height(4.dp))
+        Text(text = "Cerrar sesión",
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().clickable { onLogoutClick() })
     }
 }
 

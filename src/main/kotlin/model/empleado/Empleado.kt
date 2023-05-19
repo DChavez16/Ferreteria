@@ -35,8 +35,7 @@ data class Empleado(
 // Empleado extension functions
 fun Empleado.getSueldo() = if (this.puesto == UserType.ADMINISTRATOR) 15000.0 else 5000.0
 
-fun Empleado.getFullName() = if(id == null) "Empleado no disponible" else "$primerNombre $segundoNombre $apellido"
-
+fun Empleado.getFullName() = if (id == null) "Empleado no disponible" else "$primerNombre $segundoNombre $apellido"
 
 
 object EmpleadoDatabase {
@@ -47,7 +46,7 @@ object EmpleadoDatabase {
 
         val query = statement.executeQuery("select * from vista_Empleado where idEmpleado = $idEmpleado")
 
-        while(query.next()) {
+        while (query.next()) {
             with(query) {
                 empleado = Empleado(
                     id = getInt("idEmpleado"),
@@ -71,19 +70,22 @@ object EmpleadoDatabase {
         val query = statement.executeQuery("select * from vista_Empleado")
 
         while (query.next()) {
-            currentEmpleado = Empleado()
-
-            currentEmpleado.id = query.getInt("idEmpleado")
-            currentEmpleado.primerNombre = query.getString("primerNombre")
-            currentEmpleado.segundoNombre = query.getString("segundoNombre")
-            currentEmpleado.apellido = query.getString("apellido")
-            currentEmpleado.puesto = query.getByte("puesto").toUserType()
-            currentEmpleado.cantidadVentas = query.getInt("ventas")
-            currentEmpleado.contacto.id = query.getInt("idContacto")
-            currentEmpleado.contacto.correo = query.getString("correo")
-            currentEmpleado.contacto.telefono = query.getString("telefono")
-            currentEmpleado.sucursal.id = query.getInt("idSucursal")
-            currentEmpleado.sucursal.name = query.getString("nombreSucursal")
+            currentEmpleado = with(query) {
+                Empleado(
+                    id = query.getInt("idEmpleado"),
+                    primerNombre = getString("primerNombre"),
+                    segundoNombre = getString("segundoNombre"),
+                    apellido = getString("apellido"),
+                    puesto = getByte("puesto").toUserType(),
+                    cantidadVentas = getInt("ventas"),
+                    contacto = Contacto(
+                        id = getInt("idContacto"), correo = getString("correo"), telefono = getString("telefono")
+                    ),
+                    sucursal = Sucursal(
+                        id = getInt("idSucursal"), name = getString("nombreSucursal")
+                    )
+                )
+            }
 
             newList.add(currentEmpleado)
         }
@@ -97,10 +99,9 @@ object EmpleadoDatabase {
      * @param empleado Empleado to be added to the database
      */
     fun insertEmpleado(empleado: Empleado): Boolean {
-        val resultado =
-            statement.executeUpdate(
-                "execute insertEmpleado '${empleado.primerNombre}', '${empleado.segundoNombre}', '${empleado.apellido}', ${empleado.puesto.toByte()}, '${empleado.contacto.correo}', '${empleado.contacto.telefono}', ${empleado.sucursal.id}"
-            )
+        val resultado = statement.executeUpdate(
+            "execute insertEmpleado '${empleado.primerNombre}', '${empleado.segundoNombre}', '${empleado.apellido}', ${empleado.puesto.toByte()}, '${empleado.contacto.correo}', '${empleado.contacto.telefono}', ${empleado.sucursal.id}"
+        )
 
         return resultado > 0
     }
@@ -153,14 +154,13 @@ object EmpleadoDatabase {
                     desVenta = getDouble("descuento"),
                     netoVenta = getDouble("importeNeto"),
                     FechaVenta(
-                        dia = getInt("dia"),
-                        mes = getInt("mes"),
-                        anio = getInt("anio")
+                        dia = getInt("dia"), mes = getInt("mes"), anio = getInt("anio")
                     )
                 )
             }
 
-            newProductosList = DetalleVentaProductoDatabase.getProductosPorVentaPorEmpleado(currentVenta.id!!, idEmpleado)
+            newProductosList =
+                DetalleVentaProductoDatabase.getProductosPorVentaPorEmpleado(currentVenta.id!!, idEmpleado)
 
             newList.add(DetalleVentaProducto(venta = currentVenta, productos = newProductosList))
         }
