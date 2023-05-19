@@ -1,5 +1,6 @@
 package controller.home
 
+import ProgramEscencials
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -7,7 +8,6 @@ import kotlinx.coroutines.flow.update
 import model.cliente.Cliente
 import model.cliente.ClienteDatabase
 import model.cliente.getFullName
-import model.empleado.EmpleadoDatabase
 import model.fechaVenta.FechaVentaDatabase
 import model.producto.Producto
 import model.producto.ProductoDatabase
@@ -103,7 +103,7 @@ class HomeController {
     }
 
     fun makeSale() {
-        val empleado = EmpleadoDatabase.getEmpleadoList()[0]
+        val empleado = ProgramEscencials.selectedEmpleado
 
         // Obtiene la FechaVenta
         val fechaVenta = FechaVentaDatabase.getFechaVenta()

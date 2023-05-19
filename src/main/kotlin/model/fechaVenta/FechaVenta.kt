@@ -7,25 +7,27 @@ data class FechaVenta(
     var id: Int? = null,
 
     // Atributes
-    var dia: Int = 0,
-    var mes: Int = 0,
-    var anio: Int = 0
+    var dia: Int = 0, var mes: Int = 0, var anio: Int = 0
 )
 
 
 object FechaVentaDatabase {
-    val statement = Database.connection.createStatement()
+    private val statement = Database.connection.createStatement()
 
     fun getFechaVenta(): FechaVenta {
-        val currentFechaVenta = FechaVenta()
+        var currentFechaVenta = FechaVenta()
 
         val query = statement.executeQuery("execute obtenerFechaVenta")
 
-        while(query.next()) {
-            currentFechaVenta.id = query.getInt("idFechaVenta")
-            currentFechaVenta.dia = query.getInt("diaFechaVenta")
-            currentFechaVenta.mes = query.getInt("mesFechaVenta")
-            currentFechaVenta.anio = query.getInt("anioFechaVenta")
+        while (query.next()) {
+            with(query) {
+                currentFechaVenta = FechaVenta(
+                    id = getInt("idFechaVenta"),
+                    dia = getInt("diaFechaVenta"),
+                    mes = getInt("mesFechaVenta"),
+                    anio = getInt("anioFechaVenta")
+                )
+            }
         }
 
         return currentFechaVenta
