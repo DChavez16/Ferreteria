@@ -31,7 +31,7 @@ object ProductoDatabase {
      * @param idProducto ID of the Producto which data will be retrieved from the database
      */
     fun getProducto(idProducto: Int): Producto {
-        var producto: Producto = Producto()
+        var producto = Producto()
 
         val query = statement.executeQuery("select * from vista_Producto where idProducto = $idProducto")
 
@@ -54,12 +54,12 @@ object ProductoDatabase {
     /**
      * Collects all the products stored in the database
      */
-    fun getProductList(promocionFilter: Boolean = false): List<Producto> {
+    fun getProductList(): List<Producto> {
         val newList = mutableListOf<Producto>()
         var currentProducto: Producto
 
         val query = statement.executeQuery(
-            "select * from vista_Producto${if (promocionFilter) " where idPromocion is null" else ""}"
+            "select * from vista_Producto"
         )
 
         while (query.next()) {

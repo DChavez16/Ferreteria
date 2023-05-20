@@ -70,13 +70,15 @@ private fun PromocionForm(
                 ProductoPromocionDetailsList(
                     productsList = promocionState.value.currentPromocion.productos,
                     currentPromotionDiscount = promocionState.value.currentPromocion.descuento,
-                    modifier = Modifier.weight(2f)
+                    modifier = Modifier.weight(2f),
+                    editable = true,
+                    onRemoveButtonClick = { promocionController.removeProductFromPromotion(it) }
                 )
             }
 
             // List of available products to add to the promotion
             AvailableProductsList(modifier = Modifier.weight(1f),
-                productoList = promocionState.value.productosList,
+                productoList = promocionState.value.filteredProductoList,
                 quantitySelectionEnabled = false,
                 onAddProductoClick = { producto, _ -> promocionController.addProductToPromotion(producto) })
         }

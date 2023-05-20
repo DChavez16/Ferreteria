@@ -52,7 +52,28 @@ class PromocionController {
      * Retrieves a list of products from the database
      */
     private fun getProductoList() {
-        _promocionState.value.productosList = ProductoDatabase.getProductList(promocionFilter = true)
+        val newList = ProductoDatabase.getProductList()
+
+        _promocionState.update { currentState ->
+            currentState.copy(productosList = newList)
+        }
+
+        filterProductoList()
+    }
+
+    /**
+     * Filters the current list of products to show only those who don't have a promotion assigned, and have the current
+     * promotion assigned but aren't on the current list of products of the promotion
+     */
+    private fun filterProductoList() {
+        val filteredList = _promocionState.value.productosList.filter { producto ->
+            (producto.promocion?.id == null  ||  producto.promocion?.id == _promocionState.value.currentPromocion.id)  &&
+                    !_promocionState.value.currentPromocion.productos.any { it.id == producto.id }
+        }
+
+        _promocionState.update { currentState ->
+            currentState.copy(filteredProductoList = filteredList)
+        }
     }
 
     /**
@@ -110,6 +131,7 @@ class PromocionController {
                 )
             )
         }
+        filterProductoList()
     }
 
     /**
@@ -176,17 +198,32 @@ class PromocionController {
                 )
             )
         }
+
+        filterProductoList()
     }
 
-    // TODO Add a function to delete a product from the list
-    // TODO Retrieve Products list at promotion insert, update and delete
-    // TODO Use filter function to filter products with promotions at the products selection list
+    /**
+     * Removes a product to the list of products afected by the promotion
+     * @param productoID Product to be removed to the list
+     */
+    fun removeProductFromPromotion(productoID: Int) {
+        _promocionState.update { currentState ->
+            currentState.copy(
+                currentPromocion = currentState.currentPromocion.copy(
+                    productos = currentState.currentPromocion.productos.removeProducto(productoID)
+                )
+            )
+        }
+
+        filterProductoList()
+    }
 }
 
 data class PromocionState(
     var currentPromocion: Promocion = Promocion(),
     var promocionList: List<Promocion> = emptyList(),
-    var productosList: List<Producto> = emptyList()
+    var productosList: List<Producto> = emptyList(),
+    var filteredProductoList: List<Producto> = emptyList()
 )
 
 /*
@@ -198,6 +235,17 @@ private fun List<Producto>.addProducto(producto: Producto): List<Producto> {
     // Validate if is already in the list, if so, update the element content
     if (!this.contains(producto)) {
         newList.add(producto)
+    }
+
+    return newList.toList()
+}
+
+private fun List<Producto>.removeProducto(removedProductoID: Int): List<Producto> {
+    val newList = this.toMutableList()
+
+    // Validate if is already in the list, if so, update the element content
+    newList.removeIf { producto ->
+        producto.id == removedProductoID
     }
 
     return newList.toList()

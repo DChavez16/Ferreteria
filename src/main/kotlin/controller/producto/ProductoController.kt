@@ -165,7 +165,6 @@ class ProductoController {
     fun updateSupplier(newSupplierString: String) {
         val proveedor = proveedorNamePair.find { it.first == newSupplierString }?.second ?: Proveedor()
 
-        // TODO Complete code
         _productoState.update { currentState ->
             currentState.copy(currentProduct = currentState.currentProduct.copy(proveedor = proveedor))
         }
