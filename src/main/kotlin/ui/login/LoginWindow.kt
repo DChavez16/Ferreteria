@@ -52,7 +52,7 @@ fun LoginWindow() {
                         colors = getCustomOutlinedTextFieldColor(),
                         isError = !correo.value.isValidEmail(),
                         singleLine = true,
-                        modifier = Modifier.weight(2f)
+                        modifier = Modifier.weight(3f)
                     )
                 }
                 Spacer(Modifier.weight(0.1f))
@@ -71,7 +71,7 @@ fun LoginWindow() {
                         colors = getCustomOutlinedTextFieldColor(),
                         isError = !telefono.value.isValidPhoneNumber(),
                         singleLine = true,
-                        modifier = Modifier.weight(2f)
+                        modifier = Modifier.weight(3f)
                     )
                 }
             }

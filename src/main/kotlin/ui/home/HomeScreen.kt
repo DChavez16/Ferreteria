@@ -57,7 +57,7 @@ fun HomeScreen() {
                             onValueChange = { homeController.updateCurrentCliente(it) })
                         if (homeState.value.firstSalePromotion.primeraCompra) {
                             Text(
-                                text = "Promocion aplicable: ${homeState.value.firstSalePromotion.descuento?.times(100)} %",
+                                text = "Promoción aplicable: ${homeState.value.firstSalePromotion.descuento?.times(100)} %",
                                 style = MaterialTheme.typography.h6
                             )
                         }
@@ -138,7 +138,7 @@ private fun SelectedProductListContent(selectedProducto: ProductoVenta) {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = decimalFormat(selectedProducto.precioVenta),
+                text = "$ ${decimalFormat(selectedProducto.precioVenta)}",
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center

@@ -65,7 +65,7 @@ Buttons to delete product, clear fields or add product
             }
             BottomButtons(
                 twoButtons = true,
-                firstButtonText = "Modificar",
+                firstButtonText = if(editProduct) "Actualizar" else "Agregar",
                 firstButtonAction = onMainButtonClick,
                 secondButtonText = "Limpiar campos",
                 secondButtonAction = { productoController.clearProduct() },

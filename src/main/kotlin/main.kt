@@ -24,7 +24,7 @@ fun main() = application {
             onCloseRequest = { exitApplication() }, title = "Ferreteria", state = WindowState(
                 placement = WindowPlacement.Floating,
                 position = WindowPosition(alignment = Alignment.Center),
-                size = DpSize(width = 800.dp, height = 500.dp)
+                size = DpSize(width = 1000.dp, height = 500.dp)
             ), resizable = false, icon = painterResource("images/logo_icon.png")
         ) {
             FerreteriaTheme {
