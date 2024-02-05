@@ -1,12 +1,7 @@
-# Ferreteria
-Proyecto Integrador de Aprendizaje
+Desktop App usando Compose Multiplatform (1.4.0) con Kotlin (1.8.10)
 
-Materia: Base de Datos y Lenguajes
+Proyecto para la materia Bases de Datos y Lenguajes
 
-Semestre: Ene-Jun 2023
+Punto de venta y administracion de una franquicia de Ferreterias
 
-Hora: M1
-
-Frecuencia: LXV
-
-Salon: 9-105
+Integracion con base de datos usando la libreria Microsoft SQL Java Database Controller (12.2.0)
